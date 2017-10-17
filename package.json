@@ -6,7 +6,8 @@
   "scripts": {
     "build": "./node_modules/.bin/webpack",
     "buildp": "./node_modules/.bin/webpack -p",
-    "start": "./node_modules/.bin/webpack-dev-server"
+    "start": "npm run server",
+    "server": "./node_modules/.bin/webpack-dev-server"
   },
   "author": "",
   "license": "SEE LICENSE IN LICENSE",

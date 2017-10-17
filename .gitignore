@@ -5,3 +5,6 @@ Desktop.ini
 
 # npm
 node_modules
+
+# Built JS
+app.js
