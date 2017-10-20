@@ -11,6 +11,7 @@ STATE.scene = new THREE.Scene();
 STATE.scene.background = new THREE.Color( 0xffffff );
 
 STATE.camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 2000 );
+STATE.camera.rotation.x = -(Math.PI*0.05);
 STATE.camera.position.set( -75, 75, 300 );
 
 STATE.clock = new THREE.Clock();
@@ -28,18 +29,33 @@ ENTITIES.init(STATE);
 
 // TEST lighting
 
-let light = new THREE.AmbientLight( 0xaaaaaa );
+let light = new THREE.AmbientLight( 0x555555 );
 STATE.scene.add( light );
 
-let directionalLight = new THREE.DirectionalLight( 0xffeedd, 1.5 );
-directionalLight.position.set( -2, 1, 1 );
+let directionalLight = new THREE.DirectionalLight( 0xddeedd, 1.75 );
+directionalLight.position.set( -500, 200, 300 );
+directionalLight.castShadow = true;
+
+directionalLight.shadow.mapSize.width = 512;
+directionalLight.shadow.mapSize.height = 512;
+
+directionalLight.shadow.camera.near = 0.5;
+directionalLight.shadow.camera.far = 1500;
+directionalLight.shadow.camera.left = -250;
+directionalLight.shadow.camera.bottom = -250;
+directionalLight.shadow.camera.right = 250;
+directionalLight.shadow.camera.top = 250;
+
 STATE.scene.add( directionalLight );
+
 
 // Renderer
 
 let renderer = new THREE.WebGLRenderer();
 renderer.setPixelRatio( window.devicePixelRatio );
 renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFShadowMap;
 
 let container = document.getElementById('app');
 container.appendChild( renderer.domElement );

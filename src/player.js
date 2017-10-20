@@ -6,10 +6,11 @@ export default class PLAYER {
 
     // Instantiate all player properties (eg. acceleration, state, etc.)
 
-    let geo = new THREE.PlaneGeometry( 20, 32 );
+    let geo = new THREE.BoxBufferGeometry( 20, 32, 1 );
     let mat = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
     let obj = new THREE.Mesh( geo, mat );
     obj.position.set( -150, 50, 25 );
+    obj.castShadow = true;
 
     STATE.player = {
       obj: obj
@@ -49,7 +50,7 @@ export default class PLAYER {
     // Adjust camera as necessary.
     STATE.camera.position.set(
       STATE.player.obj.position.x,
-      STATE.player.obj.position.y + 25,
+      STATE.player.obj.position.y + 60,
       300
     );
 

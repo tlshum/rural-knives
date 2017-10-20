@@ -8,6 +8,14 @@ export default class WORLD {
     loader.load( 'resources/test_level/level.json', ( obj ) => {
       STATE.world = obj;
       STATE.world.scale.set(20, 20, 20);
+
+      STATE.world.traverse ( (child) => {
+          if (child instanceof THREE.Mesh) {
+              child.castShadow = true;
+              child.receiveShadow = true;
+          }
+      });
+
       STATE.scene.add( STATE.world );
     }, (xhr) => { // onProgress
       if (xhr.lengthComputable) {
