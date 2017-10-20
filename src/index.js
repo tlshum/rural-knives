@@ -1,113 +1,102 @@
 import * as THREE from 'three';
+import * as STATE from './state.js';
 
-var container;
-var camera, scene, renderer;
-var mouseX, mouseY;
+import PLAYER from './player.js';
+import ENTITIES from './entities.js';
+import WORLD from './world.js';
 
-var gltf;
-var object;
+// Set up scene.
 
-var windowHalfX = window.innerWidth / 2;
-var windowHalfY = window.innerHeight / 2;
+STATE.scene = new THREE.Scene();
+STATE.scene.background = new THREE.Color( 0xffffff );
 
-init();
-animate();
+STATE.camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 2000 );
+STATE.camera.position.set( -75, 75, 300 );
 
-function init() {
+STATE.clock = new THREE.Clock();
 
-	container = document.getElementById('app');
-	document.body.appendChild( container );
+// Instantiate all game objects.
 
-	// stage
+STATE.loader = new THREE.LoadingManager();
+STATE.loader.onProgress = (item, loaded, total) => {
+	console.log( item, loaded, total );
+};
 
-	camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 2000 );
-	camera.position.x = -75;
-  camera.position.y = 75;
-	camera.position.z = 300;
+PLAYER.init(STATE);
+WORLD.init(STATE);
+ENTITIES.init(STATE);
 
-	scene = new THREE.Scene();
-  scene.background = new THREE.Color( 0xffffff );
+// TEST lighting
 
-	// lights
+let light = new THREE.AmbientLight( 0xaaaaaa );
+STATE.scene.add( light );
 
-  var light = new THREE.AmbientLight( 0xaaaaaa );
-  scene.add( light );
+let directionalLight = new THREE.DirectionalLight( 0xffeedd, 1.5 );
+directionalLight.position.set( -2, 1, 1 );
+STATE.scene.add( directionalLight );
 
-	var directionalLight = new THREE.DirectionalLight( 0xffeedd, 1.5 );
-	directionalLight.position.set( -2, 1, 1 );
-	scene.add( directionalLight );
+// Renderer
 
-  // loading manager
+let renderer = new THREE.WebGLRenderer();
+renderer.setPixelRatio( window.devicePixelRatio );
+renderer.setSize( window.innerWidth, window.innerHeight );
 
-	var manager = new THREE.LoadingManager();
-	manager.onProgress = function ( item, loaded, total ) {
-		console.log( item, loaded, total );
+let container = document.getElementById('app');
+container.appendChild( renderer.domElement );
+
+// Controllers
+
+window.addEventListener( 'resize', onWindowResize, false );
+window.addEventListener( 'keydown', onKeyDown, false );
+window.addEventListener( 'keyup', onKeyUp, false );
+
+loop();
+
+function loop() {
+
+	let deltaTime = STATE.clock.getDelta();
+
+	update(deltaTime);
+	requestAnimationFrame( loop );
+	render();
+
+}
+
+function update(deltaTime) {
+
+	PLAYER.update(STATE, deltaTime);
+	ENTITIES.update(STATE, deltaTime);
+	WORLD.update(STATE, deltaTime);
+
+}
+
+function render() {
+	renderer.render( STATE.scene, STATE.camera );
+}
+
+function onKeyDown(evt) {
+
+	STATE.keyboard.keys[evt.keyCode] = {
+		prev: STATE.keyboard[evt.keyCode] ? STATE.keyboard[evt.keyCode] : null,
+		curr: 1
 	};
 
-	var onProgress = function ( xhr ) {
-		if ( xhr.lengthComputable ) {
-			var percentComplete = xhr.loaded / xhr.total * 100;
-			console.log( Math.round(percentComplete, 2) + '% downloaded' );
-		}
+}
+
+function onKeyUp(evt) {
+
+	STATE.keyboard.keys[evt.keyCode] = {
+		prev: STATE.keyboard[evt.keyCode] ? STATE.keyboard[evt.keyCode] : null,
+		curr: 0
 	};
-	var onError = function ( xhr ) { };
-
-	// model
-
-  var loader = new THREE.ObjectLoader ( manager );
-  loader.load( 'resources/test_level/level.json', function ( obj ) {
-
-    object = obj;
-    object.scale.set(20, 20, 20);
-
-    scene.add( object );
-
-  }, onProgress, onError );
-
-	// renderer
-
-	renderer = new THREE.WebGLRenderer();
-	renderer.setPixelRatio( window.devicePixelRatio );
-	renderer.setSize( window.innerWidth, window.innerHeight );
-	container.appendChild( renderer.domElement );
-
-	// listeners
-
-	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-	window.addEventListener( 'resize', onWindowResize, false );
 
 }
 
 function onWindowResize() {
 
-	windowHalfX = window.innerWidth / 2;
-	windowHalfY = window.innerHeight / 2;
-
-	camera.aspect = window.innerWidth / window.innerHeight;
-	camera.updateProjectionMatrix();
+	STATE.camera.aspect = window.innerWidth / window.innerHeight;
+	STATE.camera.updateProjectionMatrix();
 
 	renderer.setSize( window.innerWidth, window.innerHeight );
-
-}
-
-function onDocumentMouseMove( event ) {
-
-	mouseX = ( event.clientX - windowHalfX ) / 2;
-	mouseY = ( event.clientY - windowHalfY ) / 2;
-
-}
-
-//
-
-function animate() {
-
-	requestAnimationFrame( animate );
-	render();
-
-}
-
-function render() {
-
-	renderer.render( scene, camera );
 
 }
