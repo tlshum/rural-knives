@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import * as STATE from './state.js';
+import Stats from 'stats.js';
 
 import PLAYER from './player.js';
 import ENTITIES from './entities.js';
@@ -10,8 +11,8 @@ import WORLD from './world.js';
 STATE.scene = new THREE.Scene();
 STATE.scene.background = new THREE.Color( 0xffffff );
 
-STATE.camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 2000 );
-STATE.camera.rotation.x = -(Math.PI*0.05);
+STATE.camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 1, 2000 );
+STATE.camera.rotation.x = -(Math.PI*0.1);
 STATE.camera.position.set( -75, 75, 300 );
 
 STATE.clock = new THREE.Clock();
@@ -57,6 +58,10 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFShadowMap;
 
+var stats = new Stats();
+stats.showPanel( 0 );
+document.body.appendChild( stats.dom );
+
 let container = document.getElementById('app');
 container.appendChild( renderer.domElement );
 
@@ -72,9 +77,12 @@ function loop() {
 
 	let deltaTime = STATE.clock.getDelta();
 
+	stats.begin();
 	update(deltaTime);
-	requestAnimationFrame( loop );
 	render();
+	stats.end();
+
+	requestAnimationFrame( loop );
 
 }
 

@@ -5,7 +5,7 @@ export default class WORLD {
   static init ( STATE ) {
 
     let loader = new THREE.ObjectLoader( STATE.loader );
-    loader.load( 'resources/test_level/level.json', ( obj ) => {
+    loader.load( 'resources/test_city/level.json', ( obj ) => {
       STATE.world = obj;
       STATE.world.scale.set(20, 20, 20);
 
