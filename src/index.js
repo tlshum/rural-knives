@@ -6,6 +6,7 @@ import PLAYER from './player.js';
 import ENTITIES from './entities.js';
 import WORLD from './world.js';
 import MATERIALS from './materials.js';
+import SOUNDS from './sounds.js';
 
 // Set up scene.
 
@@ -33,13 +34,15 @@ PLAYER.load(STATE);
 WORLD.load(STATE);
 ENTITIES.load(STATE);
 MATERIALS.load(STATE);
+SOUNDS.load(STATE);
 
 function loaded () {
 
-	MATERIALS.init(STATE);
 	PLAYER.init(STATE);
 	WORLD.init(STATE);
 	ENTITIES.init(STATE);
+	MATERIALS.init(STATE);
+	SOUNDS.init(STATE);
 
 	// TEST lighting
 
@@ -104,6 +107,7 @@ function update(deltaTime) {
 	PLAYER.update(STATE, deltaTime);
 	ENTITIES.update(STATE, deltaTime);
 	WORLD.update(STATE, deltaTime);
+	STATE.keyboard.update( deltaTime );
 
 }
 
@@ -113,19 +117,14 @@ function render() {
 
 function onKeyDown(evt) {
 
-	STATE.keyboard.keys[evt.keyCode] = {
-		prev: STATE.keyboard[evt.keyCode] ? STATE.keyboard[evt.keyCode] : null,
-		curr: 1
-	};
+	if (STATE.keyboard.keys[evt.keyCode] === 0)
+		STATE.keyboard.keys[evt.keyCode] = 1;
 
 }
 
 function onKeyUp(evt) {
 
-	STATE.keyboard.keys[evt.keyCode] = {
-		prev: STATE.keyboard[evt.keyCode] ? STATE.keyboard[evt.keyCode] : null,
-		curr: 0
-	};
+	STATE.keyboard.keys[evt.keyCode] = 0;
 
 }
 

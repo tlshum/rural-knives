@@ -30,23 +30,28 @@ export default class PLAYER {
   static update ( STATE, deltaTime ) {
 
     // left
-    if (STATE.keyboard.getKey(37) === 1) {
+    if (STATE.keyboard.isPressed(37)) {
       STATE.player.obj.position.x -= 100 * deltaTime;
     }
 
     // Up
-    if (STATE.keyboard.getKey(38) === 1) {
+    if (STATE.keyboard.isPressed(38)) {
       STATE.player.obj.position.y += 100 * deltaTime;
     }
 
     // Right
-    if (STATE.keyboard.getKey(39) === 1) {
+    if (STATE.keyboard.isPressed(39)) {
       STATE.player.obj.position.x += 100 * deltaTime;
     }
 
     // Down
-    if (STATE.keyboard.getKey(40) === 1) {
+    if (STATE.keyboard.isPressed(40)) {
       STATE.player.obj.position.y -= 100 * deltaTime;
+    }
+
+    // Space
+    if (STATE.keyboard.startPressed(32)) {
+      STATE.sounds.play('test');
     }
 
     // Use the above the modify player state.

@@ -11,15 +11,25 @@ let state = {
   entities: [],
   keyboard: {
     keys: [],
-    getKey: function(keyCode) {
-      return (typeof this.keys[keyCode] !== "undefined") ? this.keys[keyCode].curr : null;
+    isPressed: function (keyCode) {
+      return (typeof this.keys[keyCode] !== "undefined") ? (this.keys[keyCode] >= 1) : false;
+    },
+    startPressed: function (keyCode) {
+      return (typeof this.keys[keyCode] !== "undefined") ? (this.keys[keyCode] === 1) : false;
+    },
+    update: function (deltaTime) {
+      let len = this.keys.length;
+      while (len--) {
+        if (this.keys[len] >= 1) {
+          this.keys[len] += deltaTime;
+        }
+      }
     }
   },
   materials: {
   	mats: {},
-  	get: function(name) {
-  		console.log(this.mats);
-  		console.log(this.mats[name]);
+  	get: function (name) {
+
   		return this.mats[name];
   	}
   },
@@ -31,6 +41,12 @@ let state = {
       if (this.items === 0) {
         this.finishedLoading();
       }
+    }
+  },
+  sounds: {
+    pool: {},
+    play: function (name) {
+      this.pool[name].play();
     }
   }
 };
