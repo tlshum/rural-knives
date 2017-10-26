@@ -85,6 +85,20 @@ function loaded () {
 	window.addEventListener( 'keydown', onKeyDown, false );
 	window.addEventListener( 'keyup', onKeyUp, false );
 
+	// Test voice commands
+
+	if (annyang) {
+		let commands = {
+			'please respond': function() {
+				let msg = new SpeechSynthesisUtterance();
+	      msg.text = "Hello, Jonathan.";
+	      window.speechSynthesis.speak(msg);
+			}
+		};
+		annyang.addCommands(commands);
+		annyang.start();
+	}
+
 	loop();
 
 }
