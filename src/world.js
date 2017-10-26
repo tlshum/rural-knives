@@ -2,21 +2,24 @@ import * as THREE from 'three';
 
 export default class WORLD {
 
-  static init ( STATE ) {
+  static load ( STATE ) {
 
-    let loader = new THREE.ObjectLoader( STATE.loader );
+    STATE.loader.changeCount(1);
+
+    let loader = new THREE.ObjectLoader();
     loader.load( 'resources/test_city/level.json', ( obj ) => {
+
       STATE.world = obj;
       STATE.world.scale.set(20, 20, 20);
-
       STATE.world.traverse ( (child) => {
           if (child instanceof THREE.Mesh) {
               child.castShadow = true;
               child.receiveShadow = true;
           }
       });
-
       STATE.scene.add( STATE.world );
+      STATE.loader.changeCount(-1);
+
     }, (xhr) => { // onProgress
       if (xhr.lengthComputable) {
         const percentComplete = xhr.loaded / xhr.total * 100;
@@ -26,12 +29,11 @@ export default class WORLD {
       console.log('Error loading WORLD.');
     });
 
-  }
-
-  static update ( STATE, deltaTime ) {
-
-    // Probably nothing?
 
   }
+
+  static init ( STATE ) { }
+
+  static update ( STATE, deltaTime ) { }
 
 }

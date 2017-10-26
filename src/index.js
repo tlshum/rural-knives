@@ -5,6 +5,7 @@ import Stats from 'stats.js';
 import PLAYER from './player.js';
 import ENTITIES from './entities.js';
 import WORLD from './world.js';
+import MATERIALS from './materials.js';
 
 // Set up scene.
 
@@ -17,70 +18,82 @@ STATE.camera.position.set( -75, 75, 300 );
 
 STATE.clock = new THREE.Clock();
 
+STATE.stats = new Stats();
+
 // Instantiate all game objects.
 
-STATE.loader = new THREE.LoadingManager();
-STATE.loader.onProgress = (item, loaded, total) => {
+STATE.loadingManager = new THREE.LoadingManager();
+STATE.loadingManager.onProgress = (item, loaded, total) => {
 	console.log( item, loaded, total );
 };
 
-PLAYER.init(STATE);
-WORLD.init(STATE);
-ENTITIES.init(STATE);
+STATE.loader.finishedLoading = loaded;
 
-// TEST lighting
+PLAYER.load(STATE);
+WORLD.load(STATE);
+ENTITIES.load(STATE);
+MATERIALS.load(STATE);
 
-let light = new THREE.AmbientLight( 0x555555 );
-STATE.scene.add( light );
+function loaded () {
 
-let directionalLight = new THREE.DirectionalLight( 0xddeedd, 1.75 );
-directionalLight.position.set( -500, 200, 300 );
-directionalLight.castShadow = true;
+	MATERIALS.init(STATE);
+	PLAYER.init(STATE);
+	WORLD.init(STATE);
+	ENTITIES.init(STATE);
 
-directionalLight.shadow.mapSize.width = 512;
-directionalLight.shadow.mapSize.height = 512;
+	// TEST lighting
 
-directionalLight.shadow.camera.near = 0.5;
-directionalLight.shadow.camera.far = 1500;
-directionalLight.shadow.camera.left = -250;
-directionalLight.shadow.camera.bottom = -250;
-directionalLight.shadow.camera.right = 250;
-directionalLight.shadow.camera.top = 250;
+	let light = new THREE.AmbientLight( 0x555555 );
+	STATE.scene.add( light );
 
-STATE.scene.add( directionalLight );
+	let directionalLight = new THREE.DirectionalLight( 0xddeedd, 1.75 );
+	directionalLight.position.set( -500, 200, 300 );
+	directionalLight.castShadow = true;
 
+	directionalLight.shadow.mapSize.width = 512;
+	directionalLight.shadow.mapSize.height = 512;
 
-// Renderer
+	directionalLight.shadow.camera.near = 0.5;
+	directionalLight.shadow.camera.far = 1500;
+	directionalLight.shadow.camera.left = -250;
+	directionalLight.shadow.camera.bottom = -250;
+	directionalLight.shadow.camera.right = 250;
+	directionalLight.shadow.camera.top = 250;
 
-let renderer = new THREE.WebGLRenderer();
-renderer.setPixelRatio( window.devicePixelRatio );
-renderer.setSize( window.innerWidth, window.innerHeight );
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFShadowMap;
+	STATE.scene.add( directionalLight );
 
-var stats = new Stats();
-stats.showPanel( 0 );
-document.body.appendChild( stats.dom );
+	// Renderer
 
-let container = document.getElementById('app');
-container.appendChild( renderer.domElement );
+	STATE.renderer = new THREE.WebGLRenderer();
+	STATE.renderer.setPixelRatio( window.devicePixelRatio );
+	STATE.renderer.setSize( window.innerWidth, window.innerHeight );
+	STATE.renderer.shadowMap.enabled = true;
+	STATE.renderer.shadowMap.type = THREE.PCFShadowMap;
 
-// Controllers
+	STATE.stats.showPanel( 0 );
+	document.body.appendChild( STATE.stats.dom );
 
-window.addEventListener( 'resize', onWindowResize, false );
-window.addEventListener( 'keydown', onKeyDown, false );
-window.addEventListener( 'keyup', onKeyUp, false );
+	STATE.container = document.getElementById('app');
+	STATE.container.appendChild( STATE.renderer.domElement );
 
-loop();
+	// Controllers
+
+	window.addEventListener( 'resize', onWindowResize, false );
+	window.addEventListener( 'keydown', onKeyDown, false );
+	window.addEventListener( 'keyup', onKeyUp, false );
+
+	loop();
+
+}
 
 function loop() {
 
 	let deltaTime = STATE.clock.getDelta();
 
-	stats.begin();
-	update(deltaTime);
-	render();
-	stats.end();
+	STATE.stats.begin();
+		update(deltaTime);
+		render();
+	STATE.stats.end();
 
 	requestAnimationFrame( loop );
 
@@ -95,7 +108,7 @@ function update(deltaTime) {
 }
 
 function render() {
-	renderer.render( STATE.scene, STATE.camera );
+	STATE.renderer.render( STATE.scene, STATE.camera );
 }
 
 function onKeyDown(evt) {

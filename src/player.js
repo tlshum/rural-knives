@@ -2,16 +2,20 @@ import * as THREE from 'three';
 
 export default class PLAYER {
 
+  static load ( STATE ) { }
+
   static init ( STATE ) {
 
     // Instantiate all player properties (eg. acceleration, state, etc.)
+  	let geo = new THREE.BoxBufferGeometry( 20, 32, 1);
 
-    let geo = new THREE.BoxBufferGeometry( 20, 32, 1 );
-    let mat = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
-    mat.transparent = true;
-    mat.opacity = 0.5;
-    let obj = new THREE.Mesh( geo, mat );
-    obj.position.set( -150, 50, 75 );
+    //let mat = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+  	let mat = STATE.materials.get('player');
+  	//mat.transparent = true;
+    //mat.opacity = 0.5;
+
+  	let obj = new THREE.Mesh( geo, mat );
+  	obj.position.set( -150, 50, 75 );
     obj.castShadow = true;
 
     STATE.player = {

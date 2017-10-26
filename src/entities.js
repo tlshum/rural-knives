@@ -2,6 +2,8 @@ import * as THREE from 'three';
 
 export default class ENTITIES {
 
+  static load ( STATE ) { }
+
   static init ( STATE ) {
 
     // Instantiate entities.
