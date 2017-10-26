@@ -7,7 +7,8 @@ export default class SOUNDS {
     // SFX
 
     STATE.sounds.pool['test'] = new Howl({
-      src: ['resources/audio/test.mp3']
+      src: ['resources/audio/test.mp3'],
+      volume: 0.75
     });
 
     // Speech Synthesis

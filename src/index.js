@@ -91,7 +91,17 @@ function loaded () {
 		let commands = {
 			'please respond': function() {
 				let msg = new SpeechSynthesisUtterance();
-	      msg.text = "Hello, Jonathan.";
+	      msg.text = "Hello Jonathan.";
+	      window.speechSynthesis.speak(msg);
+			},
+			'default message': function() {
+				let msg = new SpeechSynthesisUtterance();
+	      msg.text = "Hello, CMPS 115-02. I hope you are having a nice day.";
+	      window.speechSynthesis.speak(msg);
+			},
+			'thank you': function() {
+				let msg = new SpeechSynthesisUtterance();
+	      msg.text = "You are very welcome.";
 	      window.speechSynthesis.speak(msg);
 			}
 		};
@@ -131,7 +141,7 @@ function render() {
 
 function onKeyDown(evt) {
 
-	if (STATE.keyboard.keys[evt.keyCode] === 0)
+	if (typeof STATE.keyboard.keys[evt.keyCode] !== "undefined" || STATE.keyboard.keys[evt.keyCode] === 0)
 		STATE.keyboard.keys[evt.keyCode] = 1;
 
 }
