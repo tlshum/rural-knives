@@ -2,44 +2,74 @@ import * as THREE from 'three';
 
 export default class MATERIALS {
 
+
   static load ( STATE ) {
 
-    // fill STATE.materials with all game sprites (i.e., lots of THREE.(some kind of material))
-    // maybe in the format: {
-    //     mat: THREE.(some kind of material)
-    //    name: 'some name'
-    // }
+    // texture settings
+    var textSet;
 
-  	//loader
-
+    //loader
     let loader = new THREE.TextureLoader();
-    console.log('testing testing testing');
 
-  	//load materials
-
+    //load materials
     STATE.loader.changeCount(1);
 
-  	loader.load( 'resources/player/player.png',
+    // load first texutre
+    loader.load( 'resources/player/player.png',
+    function (texture) {
+      
+	  //texture settings
+      textSet = new tileSet(texture, 8, 4, 3 );
 
-    	function (texture) {
+      STATE.materials.mats['player'] = new THREE.MeshLambertMaterial({ map: texture });
+      STATE.materials.mats['player'].transparent = true;
+     });
+   
+    //load 2nd texture
+    loader.load( 'resources/player/player.png',
+    function (texture) {
 
-    		console.log(texture);
-    		console.log('testing');
+      //texture settings
+	  textSet = new tileSet( texture, 8, 4, 0 );
 
-    		//map texture
-    		//let temporary = new THREE.MeshLambertMaterial({ map: texture });
+      //flip horizontal
+      texture.repeat.x = texture.repeat.x * -1;
+      STATE.materials.mats['runL'] = new THREE.MeshLambertMaterial({ map: texture });
+      STATE.materials.mats['runL'].transparent = true;
+	 });
+    
+	//load 3rd texture
+    loader.load( 'resources/player/player.png',
+    function (texture) {
 
-    		STATE.materials.mats['player'] = new THREE.MeshLambertMaterial({ map: texture });
+      //texture settings
+      textSet = new tileSet( texture, 8, 4, 0 );
+      
+	  STATE.materials.mats['runR'] = new THREE.MeshLambertMaterial({ map: texture });
+      STATE.materials.mats['runR'].transparent = true;
+            
+    });
 
-        STATE.loader.changeCount(-1);
+    //sets dimensions and position of tiles
+    function tileSet(texture, tilesHoriz, tilesVert, tileR) {    
+      this.tilesHorizontal = tilesHoriz;
+      this.tilesVertical = tilesVert;
+		
+      // bottom row = 0
+      this.tileRow = tileR;
 
-    	},
-    	function (xhr) { console.log( (xhr.loaded / xhr.total * 100) + '% loaded' ); },
-    	function (xhr) { console.log( 'error ' + xhr.status + ' ' + xhr.statusText); }
-    );
+      texture.wrapS = texture.wrapT = THREE.RepeatWrapping; 
+      texture.repeat.set( 1 / this.tilesHorizontal, 1 / this.tilesVertical );
+      texture.tileWidth = 1 / this.tilesHorizontal;
+      texture.offset.y = this.tileRow * (1 / this.tilesVertical);
+    }
+    
+    //end loading materials
+    STATE.loader.changeCount(-1);
 
   }
 
-  static init (STATE) { }
+  static init (STATE) { 
+  }
 
 }

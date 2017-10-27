@@ -28,8 +28,11 @@ let state = {
   },
   materials: {
   	mats: {},
+	ctime: 0,
   	get: function (name) {
 
+		//testing
+		//console.log(this.mats['run']);
   		return this.mats[name];
   	}
   },

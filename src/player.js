@@ -7,31 +7,34 @@ export default class PLAYER {
   static init ( STATE ) {
 
     // Instantiate all player properties (eg. acceleration, state, etc.)
-  	let geo = new THREE.BoxBufferGeometry( 20, 32, 1);
 
-    //let mat = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
-  	let mat = STATE.materials.get('player');
-  	//mat.transparent = true;
-    //mat.opacity = 0.5;
-
-  	let obj = new THREE.Mesh( geo, mat );
-  	obj.position.set( -150, 50, 75 );
+    let geo = new THREE.BoxBufferGeometry( 20, 32, 1);
+    let mat = STATE.materials.get('player');
+    mat.transparent = true;
+    let obj = new THREE.Mesh( geo, mat );
+    console.log(this.obj);
+    obj.position.set( -150, 50, 75 );
     obj.castShadow = true;
 
     STATE.player = {
       obj: obj
     };
-
+     
     // Add player to scene.
     STATE.scene.add( STATE.player.obj );
-
+    console.log(STATE.player.obj);
   }
 
-  static update ( STATE, deltaTime ) {
 
-    // left
+  static update ( STATE, deltaTime ) {
+    
+    STATE.player.obj.material = STATE.materials.get('player');
+    
+	// left
     if (STATE.keyboard.isPressed(37)) {
       STATE.player.obj.position.x -= 100 * deltaTime;
+
+      animator('runL');
     }
 
     // Up
@@ -42,6 +45,7 @@ export default class PLAYER {
     // Right
     if (STATE.keyboard.isPressed(39)) {
       STATE.player.obj.position.x += 100 * deltaTime;
+	  animator('runR');
     }
 
     // Down
@@ -54,8 +58,26 @@ export default class PLAYER {
       STATE.sounds.play('test');
     }
 
-    // Use the above the modify player state.
+    //animation function
+    function animator(st) {
+	
+      STATE.player.obj.material = STATE.materials.get(st); 
+      STATE.materials.ctime += 1000 * deltaTime;
+	
+      while (STATE.materials.ctime > 75) {
+        STATE.materials.ctime -= 75;
+		if (STATE.player.obj.material.map.offset.x >= 1){
+          STATE.player.obj.material.map.offset.x = STATE.player.obj.material.map.tileWidth;
+        }
+        else {
+          STATE.player.obj.material.map.offset.x += STATE.player.obj.material.map.tileWidth;
+        }
+      }
+    }
 
+
+    // Use the above the modify player state.
+    
     // Check for collisions, respond appropriately.
 
     // Adjust camera as necessary.
