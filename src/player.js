@@ -17,7 +17,13 @@ export default class PLAYER {
     obj.castShadow = true;
 
     STATE.player = {
-      obj: obj
+      obj: obj,
+      xspeed: 0,
+      acc: 3,
+      frc: 7,
+      fastfrc: 12,
+      max: 150,
+      baseheight: obj.position.y
     };
      
     // Add player to scene.
@@ -25,16 +31,21 @@ export default class PLAYER {
     console.log(STATE.player.obj);
   }
 
-
   static update ( STATE, deltaTime ) {
     
+    var keyDown = false
     STATE.player.obj.material = STATE.materials.get('player');
     
-	// left
+    // left
     if (STATE.keyboard.isPressed(37)) {
-      STATE.player.obj.position.x -= 100 * deltaTime;
-
       animator('runL');
+      //STATE.player.obj.position.x -= 100 * deltaTime;
+      if (STATE.player.xspeed > 0) {
+        STATE.player.xspeed -= STATE.player.fastfrc
+      } else if (STATE.player.xspeed > STATE.player.max * -1) {
+        STATE.player.xspeed -= STATE.player.acc
+      }
+      keyDown = true
     }
 
     // Up
@@ -44,8 +55,13 @@ export default class PLAYER {
 
     // Right
     if (STATE.keyboard.isPressed(39)) {
-      STATE.player.obj.position.x += 100 * deltaTime;
-	  animator('runR');
+      animator('runR');
+      if (STATE.player.xspeed < 0) {
+        STATE.player.xspeed += STATE.player.fastfrc
+      } else if (STATE.player.xspeed < STATE.player.max) {
+        STATE.player.xspeed += STATE.player.acc
+      }
+      keyDown = true
     }
 
     // Down
@@ -74,6 +90,26 @@ export default class PLAYER {
         }
       }
     }
+
+    if (!keyDown) {
+      if (STATE.player.xspeed < 0) {
+        if (STATE.player.xspeed < STATE.player.frc * -1) {
+          STATE.player.xspeed += STATE.player.frc
+        } else {
+          STATE.player.xspeed = 0
+        }
+      } else {
+        if (STATE.player.xspeed > STATE.player.frc) {
+          STATE.player.xspeed -= STATE.player.frc
+        } else {
+          STATE.player.xspeed = 0
+        }
+      }
+    }
+
+    STATE.player.obj.position.x += STATE.player.xspeed * deltaTime
+
+    // Use the above the modify player state.
 
 
     // Use the above the modify player state.
