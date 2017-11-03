@@ -1,0 +1,86 @@
+@import url(https://fonts.googleapis.com/css?family=Audiowide);
+
+body{
+  background-image: url("dark.jpg");
+  background-size: cover;
+}
+
+#Intro{
+  position: relative;
+  top: 10px;
+  left: 395px;
+  height: 40px;
+  width: 500px;
+  font-size: 25px;
+  font-family: Audiowide;
+  text-align: center;
+  background:transparent;
+  color: #fc0505;
+}
+
+
+#Game_Title{
+  position: relative;
+  top: 10px;
+  left: 390px;
+  height: 70px;
+  width: 500px;
+  font-size: 55px;
+  font-family: Audiowide;
+  text-align: center;
+  background:transparent;
+  color: white;
+}
+#Play{
+  position: relative;
+  text-align: center;
+  top: 20px;
+  left: 550px;
+  height: 70px;
+  width: 170px;
+  font-size: 55px;
+  font-family: Audiowide;
+  background: transparent;
+  color: #fc0505;
+}
+
+#Play:hover{
+  background: #fc0505;
+  color: #0a0000;
+}
+
+#Instructions{
+  position: relative;
+  text-align: center;
+  top: -20px;
+  left: 495px;
+  height: 70px;
+  width: 280px;
+  font-size: 55px;
+  font-family: Audiowide;
+  background: transparent;
+  color: #fc0505;
+}
+
+#Instructions:hover{
+  background: #fc0505;
+  color: #0a0000;
+}
+
+#Credits{
+  position: relative;
+  text-align: center;
+  top: -60px;
+  left: 520px;
+  height: 70px;
+  width: 240px;
+  font-size: 55px;
+  font-family: Audiowide;
+  background: transparent;
+  color: #fc0505;
+}
+
+#Credits:hover{
+  background: #fc0505;
+  color: #0a0000;
+}
