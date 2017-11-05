@@ -25,16 +25,14 @@ let state = {
         }
       }
     }
-  },
+  },    
   materials: {
-  	mats: {},
-	ctime: 0,
-  	get: function (name) {
-
-		//testing
-		//console.log(this.mats['run']);
-  		return this.mats[name];
-  	}
+    mats: {},
+    ctime: 0,
+    faceLeft: false,
+    get: function (name) {
+      return this.mats[name];
+    }
   },
   loader: {
     items: 0,

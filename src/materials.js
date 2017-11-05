@@ -17,12 +17,26 @@ export default class MATERIALS {
     // load first texutre
     loader.load( 'resources/player/player.png',
     function (texture) {
-      
-	  //texture settings
+              
+      //texture settings
       textSet = new tileSet(texture, 8, 4, 3 );
 
-      STATE.materials.mats['player'] = new THREE.MeshLambertMaterial({ map: texture });
-      STATE.materials.mats['player'].transparent = true;
+      STATE.materials.mats['playerR'] = new THREE.MeshLambertMaterial({ map: texture });
+      STATE.materials.mats['playerR'].transparent = true;
+     });
+
+    // load first texutre
+    loader.load( 'resources/player/player.png',
+    function (texture) {
+      
+      //texture settings
+      textSet = new tileSet(texture, 8, 4, 3 );
+      
+      //flip horizontal
+      texture.repeat.x = texture.repeat.x * -1;
+      texture.offset.x = 1/8;
+      STATE.materials.mats['playerL'] = new THREE.MeshLambertMaterial({ map: texture });
+      STATE.materials.mats['playerL'].transparent = true;
      });
    
     //load 2nd texture
@@ -30,22 +44,22 @@ export default class MATERIALS {
     function (texture) {
 
       //texture settings
-	  textSet = new tileSet( texture, 8, 4, 0 );
+      textSet = new tileSet( texture, 8, 4, 0 );
 
       //flip horizontal
       texture.repeat.x = texture.repeat.x * -1;
       STATE.materials.mats['runL'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['runL'].transparent = true;
-	 });
+     });
     
-	//load 3rd texture
+    //load 3rd texture
     loader.load( 'resources/player/player.png',
     function (texture) {
 
       //texture settings
       textSet = new tileSet( texture, 8, 4, 0 );
       
-	  STATE.materials.mats['runR'] = new THREE.MeshLambertMaterial({ map: texture });
+      STATE.materials.mats['runR'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['runR'].transparent = true;
             
     });
@@ -54,7 +68,7 @@ export default class MATERIALS {
     function tileSet(texture, tilesHoriz, tilesVert, tileR) {    
       this.tilesHorizontal = tilesHoriz;
       this.tilesVertical = tilesVert;
-		
+        
       // bottom row = 0
       this.tileRow = tileR;
 
