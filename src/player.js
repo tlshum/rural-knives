@@ -23,7 +23,9 @@ export default class PLAYER {
       frc: 7,
       fastfrc: 12,
       max: 150,
-      baseheight: obj.position.y
+      baseheight: obj.position.y,
+      jumpState: 0,
+      vely: 0
     };
      
     // Add player to scene.
@@ -33,7 +35,8 @@ export default class PLAYER {
 
   static update ( STATE, deltaTime ) {
     
-    var keyDown = false
+    var lrKeyDown = false
+    var upKeyDown = false
     
     //player facing last direction
     if (STATE.materials.faceLeft == true) {
@@ -53,12 +56,12 @@ export default class PLAYER {
       } else if (STATE.player.xspeed > STATE.player.max * -1) {
         STATE.player.xspeed -= STATE.player.acc
       }
-      keyDown = true
+      lrKeyDown = true
     }
 
     // Up
     if (STATE.keyboard.isPressed(38)) {
-      STATE.player.obj.position.y += 100 * deltaTime;
+      upKeyDown = true
     }
 
     // Right
@@ -70,7 +73,7 @@ export default class PLAYER {
       } else if (STATE.player.xspeed < STATE.player.max) {
         STATE.player.xspeed += STATE.player.acc
       }
-      keyDown = true
+      lrKeyDown = true
     }
 
     // Down
@@ -100,7 +103,7 @@ export default class PLAYER {
       }
     }
 
-    if (!keyDown) {
+    if (!lrKeyDown) {
       if (STATE.player.xspeed < 0) {
         if (STATE.player.xspeed < STATE.player.frc * -1) {
           STATE.player.xspeed += STATE.player.frc
@@ -116,7 +119,35 @@ export default class PLAYER {
       }
     }
 
+    if (STATE.player.jumpState == 4 && !upKeyDown) {
+      STATE.player.jumpState = 0
+    } else if (STATE.player.jumpState == 0 && upKeyDown) {
+      STATE.player.vely = 300
+      STATE.player.jumpState = 1
+    } else if (STATE.player.jumpState == 1 && !upKeyDown) {
+      STATE.player.jumpState = 2
+    }
+    
+
+    if (STATE.player.vely < 0 && (STATE.player.jumpState == 1 || STATE.player.jumpState == 2)) {
+      STATE.player.jumpState = 3
+    }
+
+    if (STATE.player.jumpState == 1) {
+      STATE.player.vely -= 700 * deltaTime //TODO fix hardcode
+    } else if (STATE.player.jumpState == 2) {
+      STATE.player.vely -= 900 * deltaTime //TODO fix hardcode
+    } else if (STATE.player.jumpState == 3) {
+      STATE.player.vely -= 900 * deltaTime
+    }
+
     STATE.player.obj.position.x += STATE.player.xspeed * deltaTime
+    STATE.player.obj.position.y += STATE.player.vely * deltaTime
+    if (STATE.player.obj.position.y < STATE.player.baseheight) {
+      STATE.player.obj.position.y = STATE.player.baseheight
+      STATE.player.jumpState = 4
+      STATE.player.vely = 0 //TODO why the hell do i need this
+    }
 
     // Use the above the modify player state.
 
