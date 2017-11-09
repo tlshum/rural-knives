@@ -1,7 +1,10 @@
 import * as THREE from 'three';
-import * as STATE from './state.js';
+import { EffectComposer, Bokeh2Pass, RenderPass } from 'postprocessing';
+import dat from 'dat.gui/build/dat.gui.js';
 import Stats from 'stats.js';
 
+
+import * as STATE from './state.js';
 import PLAYER from './player.js';
 import ENTITIES from './entities.js';
 import WORLD from './world.js';
@@ -73,6 +76,34 @@ function loaded () {
 	STATE.renderer.shadowMap.enabled = true;
 	STATE.renderer.shadowMap.type = THREE.PCFShadowMap;
 
+	STATE.composer = new EffectComposer(STATE.renderer, { depthTexture: true });
+	STATE.composer.addPass(new RenderPass(STATE.scene, STATE.camera));
+
+	let pass = new Bokeh2Pass(STATE.camera, {
+		rings: 6,
+		samples: 1,
+		showFocus: false,
+		manualDoF: false,
+		vignette: true,
+		pentagon: false,
+		shaderFocus: true,
+		noise: false
+	});
+	pass.bokehMaterial.uniforms.focalStop.value = 1;
+	pass.bokehMaterial.uniforms.focalDepth.value = 10;
+	pass.bokehMaterial.uniforms.focusCoords.value.x = 0.1;
+	pass.bokehMaterial.uniforms.focusCoords.value.y = 0.5;
+	pass.bokehMaterial.uniforms.maxBlur.value = 1.5;
+	pass.bokehMaterial.uniforms.bias.value = 0;
+	pass.bokehMaterial.uniforms.fringe.value = 0;
+	pass.bokehMaterial.uniforms.ditherStrength.value = 0;
+	pass.bokehMaterial.uniforms.luminanceThreshold.value = 0;
+	pass.bokehMaterial.uniforms.luminanceGain.value = 0;
+	pass.renderToScreen = true;
+	STATE.composer.addPass(pass);
+
+	// let gui = new dat.GUI();
+
 	STATE.stats.showPanel( 0 );
 	document.body.appendChild( STATE.stats.dom );
 
@@ -119,7 +150,7 @@ function loop() {
 
 	STATE.stats.begin();
 		update(deltaTime);
-		render();
+		render(deltaTime);
 	STATE.stats.end();
 
 	requestAnimationFrame( loop );
@@ -135,8 +166,8 @@ function update(deltaTime) {
 
 }
 
-function render() {
-	STATE.renderer.render( STATE.scene, STATE.camera );
+function render(deltaTime) {
+	STATE.composer.render(deltaTime);
 }
 
 function onKeyDown(evt) {

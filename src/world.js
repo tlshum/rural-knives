@@ -12,10 +12,13 @@ export default class WORLD {
       STATE.world = obj;
       STATE.world.scale.set(20, 20, 20);
       STATE.world.traverse ( (child) => {
-          if (child instanceof THREE.Mesh) {
-              child.castShadow = true;
-              child.receiveShadow = true;
+        if (child instanceof THREE.Mesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+          for (let i = 0; i < child.material.length; i++) {
+            child.material[i].map.magFilter = THREE.NearestFilter;
           }
+        }
       });
       STATE.scene.add( STATE.world );
       STATE.loader.changeCount(-1);
