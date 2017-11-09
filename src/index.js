@@ -16,6 +16,8 @@ import SOUNDS from './sounds.js';
 STATE.scene = new THREE.Scene();
 STATE.scene.background = new THREE.Color( 0xffffff );
 
+
+
 STATE.camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 1, 2000 );
 STATE.camera.rotation.x = -(Math.PI*0.1);
 STATE.camera.position.set( -75, 75, 300 );
@@ -67,6 +69,21 @@ function loaded () {
 	directionalLight.shadow.camera.top = 250;
 
 	STATE.scene.add( directionalLight );
+
+        //skybox
+        var geometry = new THREE.CubeGeometry( 10000, 10000, 10000 );
+        var cubeMaterials = 
+        [
+		new THREE.MeshBasicMaterial( { color: 0x00FF00 }),
+		new THREE.MeshBasicMaterial( { color: 0x00FF00 }), 
+		new THREE.MeshBasicMaterial( { color: 0x00FF00 }), 
+		new THREE.MeshBasicMaterial( { color: 0x00FF00 }), 
+		new THREE.MeshBasicMaterial( { color: 0x00FF00 }), 
+		new THREE.MeshBasicMaterial( { color: 0x00FF00 })
+        ];
+
+        var cube = new THREE.Mesh( geometry, cubeMaterials );
+        STATE.scene.add( cube );
 
 	// Renderer
 
@@ -188,6 +205,6 @@ function onWindowResize() {
 	STATE.camera.aspect = window.innerWidth / window.innerHeight;
 	STATE.camera.updateProjectionMatrix();
 
-	renderer.setSize( window.innerWidth, window.innerHeight );
+	STATE.renderer.setSize( window.innerWidth, window.innerHeight );
 
 }
