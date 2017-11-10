@@ -71,15 +71,15 @@ function loaded () {
 	STATE.scene.add( directionalLight );
 
         //skybox
-        var geometry = new THREE.CubeGeometry( 10000, 10000, 10000 );
+        var geometry = new THREE.CubeGeometry( 599, 599, 599 );
         var cubeMaterials = 
         [
-		new THREE.MeshBasicMaterial( { color: 0x00FF00 }),
-		new THREE.MeshBasicMaterial( { color: 0x00FF00 }), 
-		new THREE.MeshBasicMaterial( { color: 0x00FF00 }), 
-		new THREE.MeshBasicMaterial( { color: 0x00FF00 }), 
-		new THREE.MeshBasicMaterial( { color: 0x00FF00 }), 
-		new THREE.MeshBasicMaterial( { color: 0x00FF00 })
+		new THREE.MeshBasicMaterial( { color: 0x00FF00, side: THREE.DoubleSide }),
+		new THREE.MeshBasicMaterial( { color: 0x00FF00, side: THREE.DoubleSide }), 
+		new THREE.MeshBasicMaterial( { color: 0x00FF00, side: THREE.DoubleSide }), 
+		new THREE.MeshBasicMaterial( { color: 0x00FF00, side: THREE.DoubleSide }), 
+		new THREE.MeshBasicMaterial( { color: 0x00FF00, side: THREE.DoubleSide }), 
+		new THREE.MeshBasicMaterial( { color: 0x00FF00, side: THREE.DoubleSide })
         ];
 
         var cube = new THREE.Mesh( geometry, cubeMaterials );
