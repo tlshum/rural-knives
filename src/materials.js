@@ -71,6 +71,18 @@ export default class MATERIALS {
 
     });
 
+    // skybox background
+    loader.load( 'resources/motherboard.png',
+    function (texture) {
+
+      //texture settings
+      textSet = new tileSet(texture, 1, 1, 0 );
+      //texture.repeat.set(1,1);
+      STATE.materials.mats['skyBox'] = new THREE.MeshLambertMaterial({ map: texture, side: THREE.DoubleSide });
+
+
+     });
+
     //sets dimensions and position of tiles
     function tileSet(texture, tilesHoriz, tilesVert, tileR) {
       this.tilesHorizontal = tilesHoriz;
