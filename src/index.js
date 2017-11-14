@@ -109,8 +109,8 @@ function loaded () {
         noise: false
     });
     pass.bokehMaterial.uniforms.focalStop.value = 1;
-    pass.bokehMaterial.uniforms.focalDepth.value = 10;
-    pass.bokehMaterial.uniforms.focusCoords.value.x = 0.1;
+    pass.bokehMaterial.uniforms.focalDepth.value = 0.1;
+    pass.bokehMaterial.uniforms.focusCoords.value.x = 0.5;
     pass.bokehMaterial.uniforms.focusCoords.value.y = 0.5;
     pass.bokehMaterial.uniforms.maxBlur.value = 1.5;
     pass.bokehMaterial.uniforms.bias.value = 0;

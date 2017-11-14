@@ -13,7 +13,8 @@ export default class PLAYER {
     mat.transparent = true;
     let obj = new THREE.Mesh( geo, mat );
     console.log(this.obj);
-    obj.position.set( -150, 50, 75 );
+    obj.position.set( 0, 50, 75 );
+    //obj.position.set( -150, 50, 75 );
     obj.castShadow = true;
 
     STATE.player = {
@@ -57,11 +58,13 @@ export default class PLAYER {
         STATE.player.xspeed -= STATE.player.acc
       }
       lrKeyDown = true
+      STATE.player.obj.position.x -= 100 * deltaTime;
     }
 
     // Up
     if (STATE.keyboard.isPressed(38)) {
       upKeyDown = true
+      STATE.player.obj.position.y += 100 * deltaTime;
     }
 
     // Right
@@ -74,6 +77,7 @@ export default class PLAYER {
         STATE.player.xspeed += STATE.player.acc
       }
       lrKeyDown = true
+      STATE.player.obj.position.x += 100 * deltaTime;
     }
 
     // Down
@@ -149,8 +153,47 @@ export default class PLAYER {
       STATE.player.vely = 0 //TODO why the hell do i need this
     }
 
-    // Use the above the modify player state.
+    for (var i = 0; i < STATE.collision.map.length; ++i) {
+      if (typeof STATE.collision.map[i] !== "undefined") {
+        for (var j = 0; j < STATE.collision.map[i].length; ++j) {
+          if (STATE.collision.map[i][j]) {
+            const rect1 = {x:      STATE.player.obj.position.x,
+                           y:      STATE.player.obj.position.y,
+                           width:  23,
+                           height: 25};
+            const rect2 = {x:      ((i - STATE.collision.offset) * STATE.collision.scale) + STATE.collision.trans.x,
+                           y:      ((j - STATE.collision.offset) * STATE.collision.scale) + STATE.collision.trans.y,
+                           width:  STATE.collision.scale,
+                           height: STATE.collision.scale};
+            if (rect1.x < rect2.x + rect2.width &&
+              rect1.x + rect1.width > rect2.x &&
+              rect1.y < rect2.y + rect2.height &&
+              rect1.height + rect1.y > rect2.y) {
+              const wy = (rect1.width + rect2.width) * (rect1.y - rect2.y)
+              const hx = (rect1.height + rect2.height ) * (rect1.x - rect2.x)
 
+              if (wy > hx) {
+                if (wy > -hx) {
+                  console.log("top")
+                  STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5)
+                } else {
+                  STATE.player.obj.position.x = rect2.x - (rect2.width * 0.5) - (rect1.width * 0.5)
+                  console.log("left")
+                }
+              } else {
+                if (wy > -hx) {
+                  STATE.player.obj.position.x = rect2.x + (rect2.width * 0.5) + (rect1.width * 0.5)
+                  console.log("right")
+                } else {
+                  STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5)
+                  console.log("bottom")
+                }
+              }
+            }
+          }
+        }
+      }
+    }
 
     // Use the above the modify player state.
     
