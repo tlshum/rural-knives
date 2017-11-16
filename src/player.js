@@ -116,10 +116,10 @@ export default class PLAYER {
       if (STATE.player.jump_state != STATE.player.jump_states.KICK_GROUND && STATE.player.jump_state != STATE.player.jump_states.KICK_AIR) {
         if (STATE.player.direction == 1) {
           STATE.player.velocity_x = 300;
-          STATE.player.jump_state = 7;
+          STATE.player.jump_state = STATE.player.jump_states.KICK_GROUND;
         } else {
           STATE.player.velocity_x = -300;
-          STATE.player.jump_state = 7;
+          STATE.player.jump_state = STATE.player.jump_states.KICK_GROUND;
         }
         console.log("dash")
       }
@@ -348,7 +348,7 @@ export default class PLAYER {
                   //top
                   if (!STATE.collision.map[i][j+1]) {
                     STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5)/* - 2.4*/; //TODO fix hack
-                    STATE.player.jump_state = 0;
+                    STATE.player.jump_state = STATE.player.jump_states.NEUTRAL_STATE_JUMP;
                   }
                   break;
                 } else {
@@ -365,11 +365,11 @@ export default class PLAYER {
                     if (STATE.player.velocity_y > 0 && STATE.player.jump_state != 5 && STATE.player.jump_state != 6) {
                       STATE.player.velocity_y += STATE.player.velocity_x;
                       STATE.player.velocity_x = 0;
-                      STATE.player.jump_state = 5
+                      STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_WALL;
                     } else if (STATE.player.velocity_y < 0 && STATE.player.jump_state != 5 && STATE.player.jump_state != 6) {
                       STATE.player.velocity_y -= STATE.player.velocity_x;
                       STATE.player.velocity_x = 0;
-                      STATE.player.jump_state = 6
+                      STATE.player.jump_state = STATE.player.jump_states.FALL_STATE_WALL;
                     }
                   }
                   console.log("left");
@@ -390,11 +390,11 @@ export default class PLAYER {
                     if (STATE.player.velocity_y > 0 && STATE.player.jump_state != 5 && STATE.player.jump_state != 6) {
                       STATE.player.velocity_y -= STATE.player.velocity_x;
                       STATE.player.velocity_x = 0;
-                      STATE.player.jump_state = 5
+                      STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_WALL;
                     } else if (STATE.player.velocity_y < 0 && STATE.player.jump_state != 5 && STATE.player.jump_state != 6) {
                       STATE.player.velocity_y += STATE.player.velocity_x;
                       STATE.player.velocity_x = 0;
-                      STATE.player.jump_state = 6
+                      STATE.player.jump_state = STATE.player.jump_states.FALL_STATE_WALL;
                     }
                   }
                   console.log("right");
