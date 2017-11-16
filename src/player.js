@@ -209,10 +209,10 @@ export default class PLAYER {
       switch (STATE.player.jump_state) {
         case STATE.player.jump_states.JUMP_STATE_UP_BUTTON:
         case STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON:
-          STATE.player.jump_state = FALL_STATE;
+          STATE.player.jump_state = STATE.player.jump_states.FALL_STATE;
           break;
         case STATE.player.jump_states.JUMP_STATE_WALL:
-          STATE.player.jump_state = FALL_STATE_WALL;
+          STATE.player.jump_state = STATE.player.jump_states.FALL_STATE_WALL;
       }
     }
 
