@@ -35,19 +35,19 @@ STATE.loadingManager.onProgress = (item, loaded, total) => {
 
 STATE.loader.finishedLoading = loaded;
 
-PLAYER.load(STATE);
 WORLD.load(STATE);
 ENTITIES.load(STATE);
 MATERIALS.load(STATE);
 SOUNDS.load(STATE);
+PLAYER.load(STATE);
 
 function loaded () {
 
-    PLAYER.init(STATE);
     WORLD.init(STATE);
     ENTITIES.init(STATE);
     MATERIALS.init(STATE);
     SOUNDS.init(STATE);
+    PLAYER.init(STATE);
 
     // TEST lighting
 
