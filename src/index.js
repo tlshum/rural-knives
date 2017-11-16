@@ -166,7 +166,9 @@ function loaded () {
 function loop() {
 
     let deltaTime = STATE.clock.getDelta();
-
+    if (deltaTime > 0.02) {
+      deltaTime = 0.02;
+    }
     STATE.stats.begin();
         update(deltaTime);
         render(deltaTime);

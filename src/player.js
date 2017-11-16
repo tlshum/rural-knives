@@ -279,10 +279,11 @@ export default class PLAYER {
     //
     switch (STATE.player.jump_state) {
       case STATE.player.jump_states.INIT_STATE:
-        STATE.player.velocity_y = -100 * deltaTime;
+        STATE.player.velocity_y = -1000 * deltaTime;
         break;
       case STATE.player.jump_states.NEUTRAL_STATE_JUMP:
         STATE.player.velocity_y = -18000 * deltaTime;
+        console.log(deltaTime);
         break;
       case STATE.player.jump_states.JUMP_STATE_UP_BUTTON:
         STATE.player.velocity_y -= 700 * deltaTime; //TODO fix hardcode
@@ -294,7 +295,7 @@ export default class PLAYER {
         STATE.player.velocity_y -= 900 * deltaTime; //TODO fix hardcode
         break;
       case STATE.player.jump_states.KICK_GROUND:
-        if (STATE.player.direction == directions.RIGHT) {
+        if (STATE.player.direction == STATE.player.directions.RIGHT) {
           STATE.player.velocity_x -= STATE.player.fast_friction_x * deltaTime;
         } else {
           STATE.player.velocity_x += STATE.player.fast_friction_x * deltaTime;
@@ -313,7 +314,7 @@ export default class PLAYER {
 
     /* */
 
-
+    console.log(STATE.player.velocity_x + " " + STATE.player.velocity_y);
 
      /* Collision Code */
     //
@@ -347,74 +348,93 @@ export default class PLAYER {
                 if (wy > -hx) {
                   //top
                   if (!STATE.collision.map[i][j+1]) {
-                    STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5)/* - 2.4*/; //TODO fix hack
+                    STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5)/* - 2.4*/; //TODO re-evalue if this equation is right
                     STATE.player.jump_state = STATE.player.jump_states.NEUTRAL_STATE_JUMP;
+                    console.log("top " + i + " " + j);
                   }
                   break;
                 } else {
                   //left
-                  if (STATE.player.velocity_x < 0) {
-                    console.log("left 1")
-                    if (STATE.player.velocity_y < 0) {
-                    STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5)/* - 2.4*/; //TODO fix hack
-                    } else if (STATE.player.velocity_y > 0) {
-                    STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
-                    }
-                  } else if (!STATE.collision.map[i-1][j]) { // TODO don't check index i - 1 if i = 0
-                    STATE.player.obj.position.x = rect2.x - (rect2.width * 0.5) - (rect1.width * 0.5);
-                    if (STATE.player.velocity_y > 0 && STATE.player.jump_state != 5 && STATE.player.jump_state != 6) {
-                      STATE.player.velocity_y += STATE.player.velocity_x;
+                  if (i >= 0 && typeof STATE.collision.map[i-1] !== "undefined" && !STATE.collision.map[i-1][j]) {
+                    if (STATE.player.velocity_x < 0) {
+                      console.log("left 1")
+                      if (STATE.player.velocity_y < 0) {
+                        //top collisoin
+                        STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5)/* - 2.4*/; //TODO re-evalue if this equation is right
+                      } else if (STATE.player.velocity_y > 0) {
+                        //bottom collision
+                        STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
+                      }
+                    } else {
+                      STATE.player.obj.position.x = rect2.x - (rect2.width * 0.5) - (rect1.width * 0.5) - 1.5; //TODO re-evaluate if this equation is right
                       STATE.player.velocity_x = 0;
-                      STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_WALL;
-                    } else if (STATE.player.velocity_y < 0 && STATE.player.jump_state != 5 && STATE.player.jump_state != 6) {
-                      STATE.player.velocity_y -= STATE.player.velocity_x;
-                      STATE.player.velocity_x = 0;
-                      STATE.player.jump_state = STATE.player.jump_states.FALL_STATE_WALL;
+                      if (STATE.player.velocity_y > 0 &&
+                        STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_WALL &&
+                        STATE.player.jump_state != STATE.player.jump_states.FALL_STATE_WALL &&
+                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_JUMP &&
+                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_NO_JUMP) {
+                        STATE.player.velocity_y += STATE.player.velocity_x;
+                        STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_WALL;
+                      } else if (STATE.player.velocity_y < 0 &&
+                        STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_WALL &&
+                        STATE.player.jump_state != STATE.player.jump_states.FALL_STATE_WALL &&
+                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_JUMP &&
+                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_NO_JUMP) {
+                        STATE.player.velocity_y -= STATE.player.velocity_x;
+                        STATE.player.jump_state = STATE.player.jump_states.FALL_STATE_WALL;
+                      }
                     }
                   }
-                  console.log("left");
+                  console.log("left " + i + " " + j);
                   touching_wall = true;
                 }
                 break;
               } else {
                 if (wy > -hx) {
                   //right
-                  if (STATE.player.velocity_x > 0) {
-                    if (STATE.player.velocity_y < 0) {
-                    STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5)/* - 2.4*/; //TODO fix hack
-                    } else if (STATE.player.velocity_y > 0) {
-                    STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
-                    }
-                  } else if (!STATE.collision.map[i+1][j]) { // TODO don't check index i + 1 if i > max size
-                    STATE.player.obj.position.x = rect2.x + (rect2.width * 0.5) + (rect1.width * 0.5);
-                    if (STATE.player.velocity_y > 0 && STATE.player.jump_state != 5 && STATE.player.jump_state != 6) {
-                      STATE.player.velocity_y -= STATE.player.velocity_x;
+                  if (typeof STATE.collision.map[i+1] !== "undefined" && !STATE.collision.map[i+1][j]) { // TODO don't check value if STATE.collision.map[i] is null
+                    if (STATE.player.velocity_x > 0) {
+                      console.log("right 1");
+                      if (STATE.player.velocity_y < 0) {
+                        //top collision
+                        STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5)/* - 2.4*/; //TODO re-evaluate if this equation is right
+                      } else if (STATE.player.velocity_y > 0) {
+                        //bottom collision
+                        STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
+                      }
+                    } else {
+                      STATE.player.obj.position.x = rect2.x + (rect2.width * 0.5) + (rect1.width * 0.5);
                       STATE.player.velocity_x = 0;
-                      STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_WALL;
-                    } else if (STATE.player.velocity_y < 0 && STATE.player.jump_state != 5 && STATE.player.jump_state != 6) {
-                      STATE.player.velocity_y += STATE.player.velocity_x;
-                      STATE.player.velocity_x = 0;
-                      STATE.player.jump_state = STATE.player.jump_states.FALL_STATE_WALL;
+                      if (STATE.player.velocity_y > 0 &&
+                        STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_WALL &&
+                        STATE.player.jump_state != STATE.player.jump_states.FALL_STATE_WALL &&
+                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_JUMP &&
+                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_NO_JUMP) {
+                        STATE.player.velocity_y -= STATE.player.velocity_x;
+                        STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_WALL;
+                      } else if (STATE.player.velocity_y < 0 &&
+                        STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_WALL &&
+                        STATE.player.jump_state != STATE.player.jump_states.FALL_STATE_WALL &&
+                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_JUMP &&
+                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_NO_JUMP) {
+                        STATE.player.velocity_y += STATE.player.velocity_x;
+                        STATE.player.jump_state = STATE.player.jump_states.FALL_STATE_WALL;
+                      }
                     }
                   }
-                  console.log("right");
+                  console.log("right " + i + " " + j);
                   touching_wall = true;
                   break;
                 } else {
                   //bottom
-                  if (STATE.player.velocity_x > 0) {
-                    if (STATE.player.velocity_y < 0) {
-                    STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5)/* - 2.4*/; //TODO fix hack
-                    } else if (STATE.player.velocity_y > 0) {
-                    STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
-                    }
-                  } else if (!STATE.collision.map[i][j-1]) {
+                  if (!STATE.collision.map[i][j-1]) {
                     STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
                     if (STATE.player.velocity_y > 0) {
                       STATE.player.velocity_y = STATE.player.velocity_y * -0.5;
                       STATE.player.velocity_x = STATE.player.velocity_x * 0.75;
                     }
                   }
+                  console.log("bottom");
                   break;
                 }
               }
