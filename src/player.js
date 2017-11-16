@@ -95,14 +95,16 @@ export default class PLAYER {
     
       STATE.player.obj.material = STATE.materials.get(st); 
       STATE.materials.ctime += 1000 * deltaTime;
-    
+      
+
       while (STATE.materials.ctime > 75) {
         STATE.materials.ctime -= 75;
-        if (STATE.player.obj.material.map.offset.x >= 1){
-          STATE.player.obj.material.map.offset.x = STATE.player.obj.material.map.tileWidth;
-        }
-        else {
+        if (STATE.player.obj.material.map.tileCount > 1){
           STATE.player.obj.material.map.offset.x += STATE.player.obj.material.map.tileWidth;
+          STATE.player.obj.material.map.tileCount -= 1;
+        } else {
+          STATE.player.obj.material.map.offset.x = STATE.player.obj.material.map.col * STATE.player.obj.material.map.tileWidth;
+          STATE.player.obj.material.map.tileCount = STATE.player.obj.material.map.numTiles;
         }
       }
     }
