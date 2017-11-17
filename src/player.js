@@ -53,10 +53,8 @@ export default class PLAYER {
       directions: {
         LEFT: 0,
         RIGHT: 1,
-      }
-      /* 0 = left
-       * 1 = right
-       */
+      },
+      kick_state: false
     };
      
     // Add player to scene.
@@ -75,6 +73,7 @@ export default class PLAYER {
     var right_key_down = false;
     var up_key_down = false;
     var down_key_down = false;
+    var shift_key_down = false;
     var z_key_down = false;
 
     //player facing last direction
@@ -97,7 +96,7 @@ export default class PLAYER {
     }
 
     // Up
-    if (STATE.keyboard.isPressed(38)) {
+    if (STATE.keyboard.startPressed(38)) {
       up_key_down = true;
     }
 
@@ -114,6 +113,11 @@ export default class PLAYER {
     // Z
     if (STATE.keyboard.startPressed(90)) {
       z_key_down = true;
+    }
+
+    // Shift
+    if (STATE.keyboard.startPressed(16)) {
+      shift_key_down = true;
     }
 
     //animation function
@@ -189,7 +193,7 @@ export default class PLAYER {
         break;
       //While doing a Ground Kick, if absolute value of x velocity falls under max x velocity allowed, go back to Neutral w/ Jump
       case STATE.player.jump_states.KICK_GROUND:
-        if (STATE.player.velocity_x < STATE.player.max_velocity_x && STATE.player.velocity_x > (STATE.player.max_velocity_x * -1)) {
+        if (STATE.player.velocity_x < (STATE.player.max_velocity_x * 0.2) && STATE.player.velocity_x > (STATE.player.max_velocity_x * -0.2)) {
           STATE.player.jump_state = STATE.player.jump_states.NEUTRAL_STATE_JUMP;
         }
         break;
@@ -201,9 +205,11 @@ export default class PLAYER {
         STATE.player.jump_state != STATE.player.jump_states.KICK_AIR) {
       if (STATE.player.direction == 1) {
         STATE.player.velocity_x = 300;
+        STATE.player.velocity_y = 100;
         STATE.player.jump_state = STATE.player.jump_states.KICK_GROUND;
       } else {
         STATE.player.velocity_x = -300;
+        STATE.player.velocity_y = 100;
         STATE.player.jump_state = STATE.player.jump_states.KICK_GROUND;
       }
     }
@@ -292,18 +298,17 @@ export default class PLAYER {
       case STATE.player.jump_states.JUMP_STATE_UP_BUTTON:
         STATE.player.velocity_y -= 700 * deltaTime; //TODO fix hardcode
         break;
-      case STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON:
-      case STATE.player.jump_states.FALL_STATE:
-      case STATE.player.jump_states.JUMP_STATE_WALL:
-      case STATE.player.jump_states.FALL_STATE_WALL:
-        STATE.player.velocity_y -= 900 * deltaTime; //TODO fix hardcode
-        break;
       case STATE.player.jump_states.KICK_GROUND:
         if (STATE.player.direction == STATE.player.directions.RIGHT) {
           STATE.player.velocity_x -= STATE.player.fast_friction_x * deltaTime;
         } else {
           STATE.player.velocity_x += STATE.player.fast_friction_x * deltaTime;
         }
+      case STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON:
+      case STATE.player.jump_states.FALL_STATE:
+      case STATE.player.jump_states.JUMP_STATE_WALL:
+      case STATE.player.jump_states.FALL_STATE_WALL:
+        STATE.player.velocity_y -= 900 * deltaTime; //TODO fix hardcode
         break;
     }
 
@@ -352,7 +357,7 @@ export default class PLAYER {
                 if (wy > -hx) {
                   //top
                   if (!STATE.collision.map[i][j+1]) {
-                    STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5)/* - 2.4*/; //TODO re-evalue if this equation is right
+                    STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5) - 2.4; //TODO re-evalue if this equation is right
                     if (STATE.player.jump_state != STATE.player.jump_states.KICK_GROUND) {
                       STATE.player.jump_state = STATE.player.jump_states.NEUTRAL_STATE_JUMP;
                     }
@@ -366,7 +371,7 @@ export default class PLAYER {
                       console.log("left 1")
                       if (STATE.player.velocity_y < 0) {
                         //top collisoin
-                        STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5)/* - 2.4*/; //TODO re-evalue if this equation is right
+                        STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5) - 2.4; //TODO re-evalue if this equation is right
                       } else if (STATE.player.velocity_y > 0) {
                         //bottom collision
                         STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
@@ -403,7 +408,7 @@ export default class PLAYER {
                       console.log("right 1");
                       if (STATE.player.velocity_y < 0) {
                         //top collision
-                        STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5)/* - 2.4*/; //TODO re-evaluate if this equation is right
+                        STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5) - 2.4; //TODO re-evaluate if this equation is right
                       } else if (STATE.player.velocity_y > 0) {
                         //bottom collision
                         STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);

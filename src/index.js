@@ -193,7 +193,7 @@ function render(deltaTime) {
 
 function onKeyDown(evt) {
 
-    if (typeof STATE.keyboard.keys[evt.keyCode] !== "undefined" || STATE.keyboard.keys[evt.keyCode] === 0)
+    if (typeof STATE.keyboard.keys[evt.keyCode] === "undefined" || STATE.keyboard.keys[evt.keyCode] === 0)
         STATE.keyboard.keys[evt.keyCode] = 1;
 
 }
