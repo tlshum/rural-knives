@@ -113,16 +113,7 @@ export default class PLAYER {
 
     // Z
     if (STATE.keyboard.startPressed(90)) {
-      if (STATE.player.jump_state != STATE.player.jump_states.KICK_GROUND && STATE.player.jump_state != STATE.player.jump_states.KICK_AIR) {
-        if (STATE.player.direction == 1) {
-          STATE.player.velocity_x = 300;
-          STATE.player.jump_state = STATE.player.jump_states.KICK_GROUND;
-        } else {
-          STATE.player.velocity_x = -300;
-          STATE.player.jump_state = STATE.player.jump_states.KICK_GROUND;
-        }
-        console.log("dash")
-      }
+      z_key_down = true;
     }
 
     //animation function
@@ -202,6 +193,19 @@ export default class PLAYER {
           STATE.player.jump_state = STATE.player.jump_states.NEUTRAL_STATE_JUMP;
         }
         break;
+    }
+
+
+    if (z_key_down &&
+        STATE.player.jump_state != STATE.player.jump_states.KICK_GROUND &&
+        STATE.player.jump_state != STATE.player.jump_states.KICK_AIR) {
+      if (STATE.player.direction == 1) {
+        STATE.player.velocity_x = 300;
+        STATE.player.jump_state = STATE.player.jump_states.KICK_GROUND;
+      } else {
+        STATE.player.velocity_x = -300;
+        STATE.player.jump_state = STATE.player.jump_states.KICK_GROUND;
+      }
     }
 
     //Transitioning to falling states from jumping states
@@ -349,7 +353,9 @@ export default class PLAYER {
                   //top
                   if (!STATE.collision.map[i][j+1]) {
                     STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5)/* - 2.4*/; //TODO re-evalue if this equation is right
-                    STATE.player.jump_state = STATE.player.jump_states.NEUTRAL_STATE_JUMP;
+                    if (STATE.player.jump_state != STATE.player.jump_states.KICK_GROUND) {
+                      STATE.player.jump_state = STATE.player.jump_states.NEUTRAL_STATE_JUMP;
+                    }
                     console.log("top " + i + " " + j);
                   }
                   break;
