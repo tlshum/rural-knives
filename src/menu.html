@@ -1,14 +1,52 @@
 <!DOCTYPE html>
 <html>
-<head> <link rel="stylesheet" type="text/css" href="menu.css"></head>
-<body>
-<div id="Intro"><p>LFG Gamedevs Present</p></div>
-<div id="Game_Title"><p>GameTitle</p></div>
-<div id="Play"><p>Play</p></div>
-<div id="Instructions"><p>Controls</p></div>
-<div id="Credits"><p>Credits</p></div>
-</body>
+  <head>
+    <meta charset="UTF-8">
+    <title>LFGames</title>
+    <link rel="stylesheet" href="menu.css" type="text/css" media="screen">
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="title">
+        <h1>LFGames</h1>
+      </div>
+      <div class="middle">
+        <div class="screen" id="screen">
+          <ul>
+            <li><a href="javascript:void(0)" class="button play">Play</a></li>
+            <li><a href="javascript:void(0)" onclick="showInstructions()" class="button instructions">How to Play</a></li>
+            <li><a href="javascript:void(0)" onclick="showCredits()" class="button credits">Credits</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="popup" id="popup">
+        <div id="credits">
+          <ul>
+            <li class="props">----- CREDITS -----</li>
+            <li class="props">Jonathan Chuang - Creator, sound, level design</li>
+            <li class="props">Lukas Dekker - Animations</li>
+            <li class="props">Anubhav Murali - UI</li>
+            <li class="props">Thomas Schum - Physics</li>
+            <li class="props">Joseph - Enemies</li>
+          </ul>
+            <a href="javascript:void(0)" onclick="showCredits()" class="button back">Back</a>
+        </div>
+        <div id="instructions">
+          <ul>
+            <li class="directions">----- HOW TO PLAY -----</li>
+            <li class="directions"> Objective: SAVE HUMANITY</li>
+            <li class="directions"> Movement: ARROW KEYS</li>
+            <li class="directions"> Jump: SHIFT</LI>
+            <li class="directions"> Kick: Z</LI>
+            <li class="directions"> GOOD LUCK</LI>
+          </ul>
+          <a href="javascript:void(0)" onclick="showInstructions()" class="button back">Back</a>
+        </div>
+      </div>
+    </div>
+    <div id="game-over">
+      <a href="javascript:void(0)" class="button restart">Play again</a>
+    </div>
+    <script type="text/javascript" src="lfg.js"></script>
+  </body>
 </html>
-
-LOOK UP MODAL FOR POP UPS
-USE DISPLAY NONE TO JUST KEEP IT HIDDEN AND ON BUTTON CLICK, DISPLAY IT
