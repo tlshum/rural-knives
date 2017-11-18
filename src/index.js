@@ -35,19 +35,19 @@ STATE.loadingManager.onProgress = (item, loaded, total) => {
 
 STATE.loader.finishedLoading = loaded;
 
-PLAYER.load(STATE);
 WORLD.load(STATE);
 ENTITIES.load(STATE);
 MATERIALS.load(STATE);
 SOUNDS.load(STATE);
+PLAYER.load(STATE);
 
 function loaded () {
 
-    PLAYER.init(STATE);
     WORLD.init(STATE);
     ENTITIES.init(STATE);
     MATERIALS.init(STATE);
     SOUNDS.init(STATE);
+    PLAYER.init(STATE);
 
     // TEST lighting
 
@@ -166,7 +166,9 @@ function loaded () {
 function loop() {
 
     let deltaTime = STATE.clock.getDelta();
-
+    if (deltaTime > 0.02) {
+      deltaTime = 0.02;
+    }
     STATE.stats.begin();
         update(deltaTime);
         render(deltaTime);
@@ -191,7 +193,7 @@ function render(deltaTime) {
 
 function onKeyDown(evt) {
 
-    if (typeof STATE.keyboard.keys[evt.keyCode] !== "undefined" || STATE.keyboard.keys[evt.keyCode] === 0)
+    if (typeof STATE.keyboard.keys[evt.keyCode] === "undefined" || STATE.keyboard.keys[evt.keyCode] === 0)
         STATE.keyboard.keys[evt.keyCode] = 1;
 
 }
