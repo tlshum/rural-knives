@@ -33,11 +33,9 @@ export default class PLAYER {
         JUMP_STATE_UP_BUTTON: 1,
         JUMP_STATE_NO_UP_BUTTON: 2,
         FALL_STATE: 3,
-        NEUTRAL_STATE_NO_JUMP: 4,
-        JUMP_STATE_WALL: 5,
-        FALL_STATE_WALL: 6,
-        KICK_GROUND: 7,
-        KICK_AIR: 8
+        JUMP_STATE_WALL: 4,
+        FALL_STATE_WALL: 5,
+        DASH_STATE: 6
       },
       /* 0 = neutral state, can jump
        * 1 = in jumping state, up button held down
@@ -54,7 +52,9 @@ export default class PLAYER {
         LEFT: 0,
         RIGHT: 1,
       },
-      kick_state: false
+      kick_state: false,
+      has_kicked_in_jump: false,
+      dash_count: 0
     };
      
     // Add player to scene.
@@ -62,19 +62,46 @@ export default class PLAYER {
     console.log(STATE.player.obj);
   }
 
+  static print_state(STATE) {
+    switch (STATE.player.jump_state) {
+      case STATE.player.jump_states.INIT_STATE:
+        console.log("Init State");
+        break;
+      case STATE.player.jump_states.NEUTRAL_STATE_JUMP:
+        console.log("Neutral State, can jump");
+        break;
+      case STATE.player.jump_states.JUMP_STATE_UP_BUTTON:
+        console.log("Jump State, with up pressed");
+        break;
+      case STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON:
+        console.log("Jump State, with up not pressed");
+        break;
+      case STATE.player.jump_states.FALL_STATE:
+        console.log("Fall State");
+        break;
+      case STATE.player.jump_states.JUMP_STATE_WALL:
+        console.log("Jump State, touching wall");
+        break;
+      case STATE.player.jump_states.FALL_STATE_WALL:
+        console.log("Fall State, touching wall");
+        break;
+    }
+  }
+
   static update ( STATE, deltaTime ) {
     
     if (STATE.player.jump_state_old != STATE.player.jump_state)  {
-      console.log("Jump State = " + STATE.player.jump_state);
+      PLAYER.print_state(STATE);
     }
     STATE.player.jump_state_old = STATE.player.jump_state;
 
     var left_key_down = false;
     var right_key_down = false;
+    var up_key_begin_pressed = false;
     var up_key_down = false;
     var down_key_down = false;
-    var shift_key_down = false;
-    var z_key_down = false;
+    var shitf_key_begin_pressed = false;
+    var z_key_begin_pressed = false;
 
     //player facing last direction
     if (STATE.materials.faceLeft == true) {
@@ -97,6 +124,9 @@ export default class PLAYER {
 
     // Up
     if (STATE.keyboard.startPressed(38)) {
+      up_key_begin_pressed = true;
+    }
+    if (STATE.keyboard.isPressed(38)) {
       up_key_down = true;
     }
 
@@ -112,12 +142,12 @@ export default class PLAYER {
 
     // Z
     if (STATE.keyboard.startPressed(90)) {
-      z_key_down = true;
+      z_key_begin_pressed = true;
     }
 
     // Shift
     if (STATE.keyboard.startPressed(16)) {
-      shift_key_down = true;
+      shitf_key_begin_pressed = true;
     }
 
     //animation function
@@ -146,7 +176,7 @@ export default class PLAYER {
     //In left & right key down, don't let any left/right_key_down events trigger if currently kicking on ground.
     //Also, don't update direction or animate running.
     if (left_key_down) {
-      if (STATE.player.jump_state != STATE.player.jump_states.KICK_GROUND) {
+      if (!STATE.player.kick_state) {
         STATE.player.direction = STATE.player.directions.LEFT;
         animator('runL');
         STATE.materials.faceLeft = true;
@@ -156,7 +186,7 @@ export default class PLAYER {
     }
 
     if (right_key_down) {
-      if (STATE.player.jump_state != STATE.player.jump_states.KICK_GROUND) {
+      if (!STATE.player.kick_state) {
         STATE.player.direction = STATE.player.directions.RIGHT;
         animator('runR');
         STATE.materials.faceLeft = false;
@@ -169,18 +199,13 @@ export default class PLAYER {
 
 
 
-     /* Jump State Switching */
+     /* State Switching */
     //
     switch (STATE.player.jump_state) {
-      //As soon as up key is let go, go from Neutral w/ No Jump to Neutral w/ Jump
-      case STATE.player.jump_states.NEUTRAL_STATE_NO_JUMP:
-        if (!up_key_down) {
-          STATE.player.jump_state = STATE.player.jump_states.NEUTRAL_STATE_JUMP;
-        }
-        break;
       //While in Neutral w/ Jump, pressing UP will set velocity to 300 and go to Jump w/ UP Button
       case STATE.player.jump_states.NEUTRAL_STATE_JUMP:
-        if (up_key_down) {
+        STATE.player.dash_count = 0;
+        if (up_key_begin_pressed) {
           STATE.player.velocity_y = 300;
           STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_UP_BUTTON;
         }
@@ -191,27 +216,11 @@ export default class PLAYER {
           STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON;
         }
         break;
-      //While doing a Ground Kick, if absolute value of x velocity falls under max x velocity allowed, go back to Neutral w/ Jump
-      case STATE.player.jump_states.KICK_GROUND:
-        if (STATE.player.velocity_x < (STATE.player.max_velocity_x * 0.2) && STATE.player.velocity_x > (STATE.player.max_velocity_x * -0.2)) {
-          STATE.player.jump_state = STATE.player.jump_states.NEUTRAL_STATE_JUMP;
-        }
-        break;
     }
 
-
-    if (z_key_down &&
-        STATE.player.jump_state != STATE.player.jump_states.KICK_GROUND &&
-        STATE.player.jump_state != STATE.player.jump_states.KICK_AIR) {
-      if (STATE.player.direction == 1) {
-        STATE.player.velocity_x = 300;
-        STATE.player.velocity_y = 100;
-        STATE.player.jump_state = STATE.player.jump_states.KICK_GROUND;
-      } else {
-        STATE.player.velocity_x = -300;
-        STATE.player.velocity_y = 100;
-        STATE.player.jump_state = STATE.player.jump_states.KICK_GROUND;
-      }
+    //exit kick state after slowing down to a certain velociy
+    if (STATE.player.kick_state && STATE.player.velocity_x < (STATE.player.max_velocity_x * 0.2) && STATE.player.velocity_x > (STATE.player.max_velocity_x * -0.2)) {
+      STATE.player.kick_state = false;
     }
 
     //Transitioning to falling states from jumping states
@@ -254,11 +263,6 @@ export default class PLAYER {
       }
     }
 
-    //Conditions for Down Key Pressed
-    if (down_key_down) {
-      STATE.player.obj.position.y -= 100 * deltaTime;
-    }
-
     //X Velocity friction for when left/right keys aren't pressed
     if (!left_key_down && !right_key_down) {
       //Is player moving towards the left?
@@ -281,35 +285,69 @@ export default class PLAYER {
       }
     }
 
+    //Code for deceleration when kicking
+    if (STATE.player.kick_state) {
+      if (STATE.player.direction == STATE.player.directions.RIGHT) {
+        STATE.player.velocity_x -= STATE.player.fast_friction_x * deltaTime;
+      } else {
+        STATE.player.velocity_x += STATE.player.fast_friction_x * deltaTime;
+      }
+    }
+
+    //Code for kicking off kicking when z is pressed
+    if (z_key_begin_pressed &&
+        !STATE.player.kick_state) {
+      if (STATE.player.direction == 1) {
+        STATE.player.velocity_x = 300;
+      } else {
+        STATE.player.velocity_x = -300;
+      }
+    }
+
+
     /* */
 
 
 
      /* Y Velocity calculations */
     //
+    //Decelerate Y velocity based on what jump state we're in
     switch (STATE.player.jump_state) {
       case STATE.player.jump_states.INIT_STATE:
-        STATE.player.velocity_y = -1000 * deltaTime;
+        STATE.player.velocity_y = -4000 * deltaTime;
         break;
       case STATE.player.jump_states.NEUTRAL_STATE_JUMP:
-        STATE.player.velocity_y = -18000 * deltaTime;
-        console.log(deltaTime);
+        STATE.player.velocity_y = -900 * deltaTime;
         break;
       case STATE.player.jump_states.JUMP_STATE_UP_BUTTON:
         STATE.player.velocity_y -= 700 * deltaTime; //TODO fix hardcode
         break;
-      case STATE.player.jump_states.KICK_GROUND:
-        if (STATE.player.direction == STATE.player.directions.RIGHT) {
-          STATE.player.velocity_x -= STATE.player.fast_friction_x * deltaTime;
-        } else {
-          STATE.player.velocity_x += STATE.player.fast_friction_x * deltaTime;
-        }
       case STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON:
       case STATE.player.jump_states.FALL_STATE:
       case STATE.player.jump_states.JUMP_STATE_WALL:
       case STATE.player.jump_states.FALL_STATE_WALL:
         STATE.player.velocity_y -= 900 * deltaTime; //TODO fix hardcode
         break;
+    }
+
+    //If kicking, screw the current Y velocity; we're gonna override that with something else!
+    if (z_key_begin_pressed &&
+        !STATE.player.kick_state) {
+      STATE.player.velocity_y = 100;
+      STATE.player.kick_state = true;
+      if ((
+          STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_UP_BUTTON ||
+          STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON ||
+          STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_WALL
+          ) &&
+          STATE.player.dash_count == 0) {
+        STATE.player.dash_count = 1;
+      }
+    }
+
+    //Conditions for Down Key Pressed
+    if (down_key_down) {
+      STATE.player.obj.position.y -= 100 * deltaTime;
     }
 
     /* */
@@ -323,7 +361,9 @@ export default class PLAYER {
 
     /* */
 
+    /*
     console.log(STATE.player.velocity_x + " " + STATE.player.velocity_y);
+    */
 
      /* Collision Code */
     //
@@ -358,17 +398,19 @@ export default class PLAYER {
                   //top
                   if (!STATE.collision.map[i][j+1]) {
                     STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5) - 2.4; //TODO re-evalue if this equation is right
-                    if (STATE.player.jump_state != STATE.player.jump_states.KICK_GROUND) {
-                      STATE.player.jump_state = STATE.player.jump_states.NEUTRAL_STATE_JUMP;
-                    }
+                    STATE.player.jump_state = STATE.player.jump_states.NEUTRAL_STATE_JUMP;
+                    /*
                     console.log("top " + i + " " + j);
+                    */
                   }
                   break;
                 } else {
                   //left
                   if (i >= 0 && typeof STATE.collision.map[i-1] !== "undefined" && !STATE.collision.map[i-1][j]) {
                     if (STATE.player.velocity_x < 0) {
+                      /*
                       console.log("left 1")
+                      */
                       if (STATE.player.velocity_y < 0) {
                         //top collisoin
                         STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5) - 2.4; //TODO re-evalue if this equation is right
@@ -382,21 +424,21 @@ export default class PLAYER {
                       if (STATE.player.velocity_y > 0 &&
                         STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_WALL &&
                         STATE.player.jump_state != STATE.player.jump_states.FALL_STATE_WALL &&
-                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_JUMP &&
-                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_NO_JUMP) {
+                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_JUMP) {
                         STATE.player.velocity_y += STATE.player.velocity_x;
                         STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_WALL;
                       } else if (STATE.player.velocity_y < 0 &&
                         STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_WALL &&
                         STATE.player.jump_state != STATE.player.jump_states.FALL_STATE_WALL &&
-                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_JUMP &&
-                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_NO_JUMP) {
+                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_JUMP) {
                         STATE.player.velocity_y -= STATE.player.velocity_x;
                         STATE.player.jump_state = STATE.player.jump_states.FALL_STATE_WALL;
                       }
                     }
                   }
+                  /*
                   console.log("left " + i + " " + j);
+                  */
                   touching_wall = true;
                 }
                 break;
@@ -405,7 +447,9 @@ export default class PLAYER {
                   //right
                   if (typeof STATE.collision.map[i+1] !== "undefined" && !STATE.collision.map[i+1][j]) { // TODO don't check value if STATE.collision.map[i] is null
                     if (STATE.player.velocity_x > 0) {
+                      /*
                       console.log("right 1");
+                      */
                       if (STATE.player.velocity_y < 0) {
                         //top collision
                         STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5) - 2.4; //TODO re-evaluate if this equation is right
@@ -419,21 +463,21 @@ export default class PLAYER {
                       if (STATE.player.velocity_y > 0 &&
                         STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_WALL &&
                         STATE.player.jump_state != STATE.player.jump_states.FALL_STATE_WALL &&
-                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_JUMP &&
-                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_NO_JUMP) {
+                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_JUMP) {
                         STATE.player.velocity_y -= STATE.player.velocity_x;
                         STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_WALL;
                       } else if (STATE.player.velocity_y < 0 &&
                         STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_WALL &&
                         STATE.player.jump_state != STATE.player.jump_states.FALL_STATE_WALL &&
-                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_JUMP &&
-                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_NO_JUMP) {
+                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_JUMP) {
                         STATE.player.velocity_y += STATE.player.velocity_x;
                         STATE.player.jump_state = STATE.player.jump_states.FALL_STATE_WALL;
                       }
                     }
                   }
+                  /*
                   console.log("right " + i + " " + j);
+                  */
                   touching_wall = true;
                   break;
                 } else {
@@ -445,7 +489,9 @@ export default class PLAYER {
                       STATE.player.velocity_x = STATE.player.velocity_x * 0.75;
                     }
                   }
+                  /*
                   console.log("bottom");
+                  */
                   break;
                 }
               }
@@ -459,8 +505,8 @@ export default class PLAYER {
     //If the player isn't colliding with anything, isn't in the init jump state, or isn't doing any kicks, switch to the falling state
     if (!has_collided &&
         STATE.player.jump_state != STATE.player.jump_states.INIT_STATE &&
-        STATE.player.jump_state != STATE.player.jump_states.KICK_GROUND &&
-        STATE.player.jump_state != STATE.player.jump_states.KICK_AIR) {
+        STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_UP_BUTTON &&
+        STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON) {
       STATE.player.jump_state = STATE.player.jump_states.FALL_STATE;
     }
 
