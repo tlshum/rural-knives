@@ -60,6 +60,7 @@ export default class PLAYER {
     // Add player to scene.
     STATE.scene.add( STATE.player.obj );
     console.log(STATE.player.obj);
+    console.log(STATE.sounds.pool['steps']);
   }
 
   static print_state(STATE) {
@@ -120,6 +121,8 @@ export default class PLAYER {
     // Right
     if (STATE.keyboard.isPressed(39)) {
       right_key_down = true;
+    
+
     }
 
     // Up
