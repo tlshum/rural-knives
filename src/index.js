@@ -135,6 +135,9 @@ function loaded () {
     window.addEventListener( 'keydown', onKeyDown, false );
     window.addEventListener( 'keyup', onKeyUp, false );
 
+    // Music
+    STATE.sounds.play('music');
+
     // Test voice commands
 
     if (annyang) {

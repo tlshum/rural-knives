@@ -11,6 +11,17 @@ export default class SOUNDS {
       volume: 0.75
     });
 
+    STATE.sounds.pool['music'] = new Howl({
+      src: ['resources/audio/digital_slash.mp3'],
+	  loop: true,
+      volume: 0.75
+    });
+
+    STATE.sounds.pool['steps'] = new Howl({
+      src: ['resources/audio/steps.ogg'],
+      volume: 0.75
+    });
+
     // Speech Synthesis
 
   }
