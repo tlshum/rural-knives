@@ -367,15 +367,28 @@ export default class PLAYER {
           STATE.player.dash.remaining_x_distance = -1 * STATE.player.dash.max_distance;
         }
       }
+      STATE.player.kick_state = false;
     }
 
     if ((STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND ||
          STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR) &&
         STATE.player.dash.remaining_x_distance == 0 &&
         STATE.player.dash.remaining_y_distance == 0) {
-      STATE.player.jump_state = STATE.player.dash.old_jump_state;
-      STATE.player.velocity_x = STATE.player.dash.old_velocity_x;
-      STATE.player.velocity_y = STATE.player.dash.old_velocity_y;
+      if (STATE.player.velocity_x > 0) {
+        STATE.player.velocity_x = 0.7 * STATE.player.max_velocity_x;
+      } else if (STATE.player.velocity_x < 0) {
+        STATE.player.velocity_x = -0.7 * STATE.player.max_velocity_x;
+      }
+      if (STATE.player.velocity_y > 0) {
+        STATE.player.velocity_y = 300;
+      } else if (STATE.player.velocity_y < 0) {
+        STATE.player.velocity_y = -300;
+      }
+      if (STATE.player.velocity_y > 0) {
+        STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_UP_BUTTON;
+      } else {
+        STATE.player.jump_state = STATE.player.jump_states.FALL_STATE;
+      }
       STATE.player.dash.old_velocity_x = 0;
       STATE.player.dash.old_velocity_y = 0;
     }
@@ -438,29 +451,32 @@ export default class PLAYER {
       } else {
         STATE.player.velocity_x += STATE.player.friction_x;
       }
-      console.log("x velocity = " + STATE.player.velocity_x);
     } else if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND ||
                STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR) {
       if (STATE.player.dash.remaining_x_distance > 0) {
         STATE.player.velocity_x = 32000 * deltaTime;
         STATE.player.dash.remaining_x_distance -= STATE.player.velocity_x;
         if (STATE.player.dash.remaining_x_distance <= 0) {
+          /*
           if (STATE.player.dash.remaining_x_distance * -1 > STATE.player.velocity_x) {
             STATE.player.velocity_x = 0
           } else {
+          */
             STATE.player.velocity_x += STATE.player.dash.remaining_x_distance;
-          }
+          //}
           STATE.player.dash.remaining_x_distance = 0;
         }
       } else {
         STATE.player.velocity_x = -32000 * deltaTime;
         STATE.player.dash.remaining_x_distance -= STATE.player.velocity_x;
         if (STATE.player.dash.remaining_x_distance >= 0) {
+          /*
           if (STATE.player.dash.remaining_x_distance * -1 > STATE.player.velocity_x) {
             STATE.player.velocity_x = 0
           } else {
+          */
             STATE.player.velocity_x += STATE.player.dash.remaining_x_distance;
-          }
+          //}
           STATE.player.dash.remaining_x_distance = 0;
         }
       }
@@ -525,8 +541,6 @@ export default class PLAYER {
             STATE.player.dash.remaining_y_distance = 0;
           }
         }
-        console.log("remaining y distance = " + STATE.player.dash.remaining_y_distance);
-        console.log("y velocity = " + STATE.player.velocity_y);
       break;
     }
 
