@@ -24,7 +24,7 @@ export default class PLAYER {
       accel_x: 3,
       friction_x: 7,
       fast_friction_x: 12,
-      dash_friction_x: 20,
+      dash_friction_x: 12,
       max_velocity_x: 150,
       jump_state_old: -1,
       jump_state: -1,
@@ -351,9 +351,9 @@ export default class PLAYER {
       }
     } else if (STATE.player.kick_state) {
       if (STATE.player.direction == STATE.player.directions.RIGHT) {
-        STATE.player.velocity_x -= STATE.player.dash_friction_x * deltaTime;
+        STATE.player.velocity_x -= STATE.player.dash_friction_x;
       } else {
-        STATE.player.velocity_x += STATE.player.dash_friction_x * deltaTime;
+        STATE.player.velocity_x += STATE.player.dash_friction_x;
       }
       console.log("x velocity = " + STATE.player.velocity_x);
     } else if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND) {
@@ -390,7 +390,6 @@ export default class PLAYER {
       } else {
         STATE.player.velocity_x = -300;
       }
-      STATE.player.kick_state = true;
     }
 
 
@@ -456,6 +455,12 @@ export default class PLAYER {
     STATE.player.obj.position.y += STATE.player.velocity_y * deltaTime
 
     /* */
+
+     /* Post-movement code */
+    //
+    if (z_key_begin_pressed && !STATE.player.kick_state) {
+      STATE.player.kick_state = true;
+    }
 
     /*
     console.log(STATE.player.velocity_x + " " + STATE.player.velocity_y);
