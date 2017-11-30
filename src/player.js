@@ -24,7 +24,6 @@ export default class PLAYER {
       accel_x: 3,
       friction_x: 7,
       fast_friction_x: 12,
-      dash_friction_x: 12,
       max_velocity_x: 150,
       jump_state_old: -1,
       jump_state: -1,
@@ -197,15 +196,23 @@ export default class PLAYER {
     //In left & right key down, don't let any left/right_key_down events trigger if currently kicking on ground.
     //Also, don't update direction or animate running.
     if (left_key_down) {
-      STATE.player.direction = STATE.player.directions.LEFT;
-      animator('runL');
-      STATE.materials.faceLeft = true;
+      if (!STATE.player.kick_state) {
+        STATE.player.direction = STATE.player.directions.LEFT;
+        animator('runL');
+        STATE.materials.faceLeft = true;
+      } else {
+        left_key_down = false;
+      }
     }
 
     if (right_key_down) {
-      STATE.player.direction = STATE.player.directions.RIGHT;
-      animator('runR');
-      STATE.materials.faceLeft = false;
+      if (!STATE.player.kick_state) {
+        STATE.player.direction = STATE.player.directions.RIGHT;
+        animator('runR');
+        STATE.materials.faceLeft = false;
+      } else {
+        left_key_down = false;
+      }
     }
 
     if (z_key_begin_pressed) {
@@ -381,9 +388,9 @@ export default class PLAYER {
       }
     } else if (STATE.player.kick_state) {
       if (STATE.player.direction == STATE.player.directions.RIGHT) {
-        STATE.player.velocity_x -= STATE.player.dash_friction_x;
+        STATE.player.velocity_x -= STATE.player.friction_x;
       } else {
-        STATE.player.velocity_x += STATE.player.dash_friction_x;
+        STATE.player.velocity_x += STATE.player.friction_x;
       }
       console.log("x velocity = " + STATE.player.velocity_x);
     } else if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND ||
