@@ -6,7 +6,7 @@ export default class PLAYER {
 
   static init ( STATE ) {
 
-    // Instantiate all player properties (eg. accel_xeleration, state, etc.)
+    // Instantiate all player properties (eg. accel_ground_xeleration, state, etc.)
 
     let geo = new THREE.BoxBufferGeometry( 23, 25, 0.01);
     let mat = STATE.materials.get('playerR');
@@ -21,7 +21,8 @@ export default class PLAYER {
       obj: obj,
       velocity_x: 0, //positive value = moving right
       velocity_y: 0, //positive value = moving up
-      accel_x: 3,
+      accel_ground_x: 5,
+      accel_air_x: 10,
       friction_x: 7,
       fast_friction_x: 12,
       max_velocity_x: 150,
@@ -56,6 +57,7 @@ export default class PLAYER {
       kick_state: false,
       dash: {
         count: 0,
+        timeout: 0,
         has_kicked_in_air: false,
         max_distance: 4000,
         remaining_x_distance: 0,
@@ -105,6 +107,9 @@ export default class PLAYER {
   }
 
   static exit_dash(STATE) {
+    if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND) {
+      STATE.player.dash.timeout = 0.25;
+    }
     if (STATE.player.velocity_x > 0) {
       STATE.player.velocity_x = 0.7 * STATE.player.max_velocity_x;
     } else if (STATE.player.velocity_x < 0) {
@@ -295,6 +300,14 @@ export default class PLAYER {
           }
         }
     }
+
+    if (STATE.player.dash.timeout > 0) {
+      if (deltaTime > STATE.player.dash.timeout) {
+        STATE.player.dash.timeout = 0;
+      } else {
+        STATE.player.dash.timeout -= deltaTime;
+      }
+    }
     /* */
 
 
@@ -349,13 +362,20 @@ export default class PLAYER {
     //If person is not touching ground, disable shift from being recognized if not kicked yet
     if (
         (
-         STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_UP_BUTTON ||
-         STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON ||
-         STATE.player.jump_state == STATE.player.jump_states.FALL_STATE ||
-         STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_WALL ||
-         STATE.player.jump_state == STATE.player.jump_states.FALL_STATE_WALL
-        ) && !STATE.player.dash.has_kicked_in_air &&
-        STATE.player.dash.count > 0
+         (
+          STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_UP_BUTTON ||
+          STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON ||
+          STATE.player.jump_state == STATE.player.jump_states.FALL_STATE ||
+          STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_WALL ||
+          STATE.player.jump_state == STATE.player.jump_states.FALL_STATE_WALL
+         ) && !STATE.player.dash.has_kicked_in_air &&
+         STATE.player.dash.count > 0
+        ) ||
+        (
+         STATE.player.jump_state == STATE.player.jump_states.NEUTRAL_STATE &&
+         //!up_key_down &&
+         STATE.player.dash.timeout > 0
+        )
        ) {
       shift_key_begin_pressed = false;
     }
@@ -425,7 +445,11 @@ export default class PLAYER {
           STATE.player.velocity_x -= STATE.player.fast_friction_x
           //otherwise, speed up left movement as long as it's below the max velocity allowed
         } else if (STATE.player.velocity_x > STATE.player.max_velocity_x * -1) {
-          STATE.player.velocity_x -= STATE.player.accel_x
+          if (STATE.player.jump_state == STATE.player.jump_states.NEUTRAL_STATE) {
+            STATE.player.velocity_x -= STATE.player.accel_ground_x;
+          } else {
+            STATE.player.velocity_x -= STATE.player.accel_air_x;
+          }
         }
       }
 
@@ -436,7 +460,11 @@ export default class PLAYER {
           STATE.player.velocity_x += STATE.player.fast_friction_x
           //otherwise, speed up right movement as long as it's below the max velocity allowed
         } else if (STATE.player.velocity_x < STATE.player.max_velocity_x) {
-          STATE.player.velocity_x += STATE.player.accel_x
+          if (STATE.player.jump_state == STATE.player.jump_states.NEUTRAL_STATE) {
+            STATE.player.velocity_x += STATE.player.accel_ground_x;
+          } else {
+            STATE.player.velocity_x += STATE.player.accel_air_x;
+          }
         }
       }
 
