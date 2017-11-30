@@ -16,8 +16,6 @@ import SOUNDS from './sounds.js';
 STATE.scene = new THREE.Scene();
 STATE.scene.background = new THREE.Color( 0xffffff );
 
-
-
 STATE.camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 1, 2000 );
 STATE.camera.rotation.x = -(Math.PI*0.1);
 STATE.camera.position.set( -75, 75, 300 );
@@ -73,7 +71,7 @@ function loaded () {
     //skybox
     var geometry = new THREE.CubeGeometry( 5000, 2000, 2000 );
     let cmat = STATE.materials.get('skyCube');
-    var cubeMaterials = 
+    var cubeMaterials =
     [
       //new THREE.MeshBasicMaterial( { color: 0x00FF00, side: THREE.DoubleSide }),
       STATE.materials.get('skyBox'),
@@ -85,17 +83,20 @@ function loaded () {
     ];
 
     var cube = new THREE.Mesh( geometry, cubeMaterials );
-    STATE.scene.add( cube );
+    // STATE.scene.add( cube );
 
     // Renderer
 
-    STATE.renderer = new THREE.WebGLRenderer();
+    // const parameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat, stencilBuffer: false };
+    // let renderTarget = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, parameters );
+
+    STATE.renderer = new THREE.WebGLRenderer({ alpha: true, logarithmicDepthBuffer: true });
     STATE.renderer.setPixelRatio( window.devicePixelRatio );
     STATE.renderer.setSize( window.innerWidth, window.innerHeight );
     STATE.renderer.shadowMap.enabled = true;
     STATE.renderer.shadowMap.type = THREE.PCFShadowMap;
 
-    STATE.composer = new EffectComposer(STATE.renderer, { depthTexture: true });
+    STATE.composer = new EffectComposer(STATE.renderer, { depthBuffer: true, depthTexture: true });
     STATE.composer.addPass(new RenderPass(STATE.scene, STATE.camera));
 
     let pass = new Bokeh2Pass(STATE.camera, {
