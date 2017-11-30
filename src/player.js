@@ -65,7 +65,7 @@ export default class PLAYER {
         old_velocity_y: 0
       }
     };
-     
+
     // Add player to scene.
     STATE.scene.add( STATE.player.obj );
     console.log(STATE.player.obj);
@@ -104,7 +104,7 @@ export default class PLAYER {
   }
 
   static update ( STATE, deltaTime ) {
-    
+
     if (STATE.player.jump_state_old != STATE.player.jump_state)  {
       PLAYER.print_state(STATE);
     }
@@ -172,10 +172,10 @@ export default class PLAYER {
 
     //animation function
     function animator(st) {
-    
-      STATE.player.obj.material = STATE.materials.get(st); 
+
+      STATE.player.obj.material = STATE.materials.get(st);
       STATE.materials.ctime += 1000 * deltaTime;
-      
+
 
       while (STATE.materials.ctime > 75) {
         STATE.materials.ctime -= 75;
@@ -221,8 +221,54 @@ export default class PLAYER {
       }
     }
 
+    // Show kick sprite.
+    if (STATE.player.kick_state) {
+      if (STATE.player.direction == STATE.player.directions.RIGHT) {
+        animator('kickR');
+      } else {
+        animator('kickL');
+      }
+    } else if
+      (STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_UP_BUTTON ||
+      STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON ||
+      STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_WALL) {
+        if (STATE.player.direction == STATE.player.directions.RIGHT) {
+          animator('jumpR');
+        } else {
+          animator('jumpL');
+        }
+    } else if
+      (STATE.player.jump_state == STATE.player.jump_states.FALL_STATE ||
+      STATE.player.jump_state == STATE.player.jump_states.FALL_STATE_WALL) {
+        if (STATE.player.direction == STATE.player.directions.RIGHT) {
+          animator('downR');
+        } else {
+          animator('downL');
+        }
+    } else if
+      (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR ||
+      STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND) {
+        if (STATE.player.velocity_y > 0) {
+          if (STATE.player.direction == STATE.player.directions.RIGHT) {
+            animator('dashUpR');
+          } else {
+            animator('dashUpL');
+          }
+        } else if (STATE.player.velocity_y == 0) {
+          if (STATE.player.direction == STATE.player.directions.RIGHT) {
+            animator('dashR');
+          } else {
+            animator('dashL');
+          }
+        } else {
+          if (STATE.player.direction == STATE.player.directions.RIGHT) {
+            animator('downR');
+          } else {
+            animator('downL');
+          }
+        }
+    }
     /* */
-
 
 
      /* State Switching */
@@ -686,7 +732,7 @@ export default class PLAYER {
 
 
     // Use the above the modify player state.
-    
+
     // Check for collisions, respond appropriately.
 
     // Adjust camera as necessary.
