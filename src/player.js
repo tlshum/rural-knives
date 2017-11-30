@@ -222,8 +222,10 @@ export default class PLAYER {
     //In left & right key down, don't let any left/right_key_down events trigger if currently kicking on ground.
     //Also, don't update direction or animate running.
     if (left_key_down) {
-      STATE.sounds.play('steps');
       if (!STATE.player.kick_state) {
+        if (STATE.player.jump_state == STATE.player.jump_states.NEUTRAL_STATE) {
+          STATE.sounds.play('steps');
+        }
         STATE.player.direction = STATE.player.directions.LEFT;
         animator('runL');
         STATE.materials.faceLeft = true;
@@ -233,8 +235,10 @@ export default class PLAYER {
     }
 
     if (right_key_down) {
-      STATE.sounds.play('steps');
       if (!STATE.player.kick_state) {
+        if (STATE.player.jump_state == STATE.player.jump_states.NEUTRAL_STATE) {
+          STATE.sounds.play('steps');
+        }
         STATE.player.direction = STATE.player.directions.RIGHT;
         animator('runR');
         STATE.materials.faceLeft = false;
@@ -243,7 +247,8 @@ export default class PLAYER {
       }
     }
 
-    if (!left_key_down && !right_key_down) {
+    if ((!left_key_down && !right_key_down) ||
+         STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE) {
       STATE.sounds.stop('steps');
     }
 
@@ -321,6 +326,7 @@ export default class PLAYER {
         if (up_key_begin_pressed) {
           STATE.player.velocity_y = 300;
           STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_UP_BUTTON;
+          STATE.player.kick_state = false;
         }
         break;
       //While in Jump w/ UP button, as soon as up key is let go, swith to Jump w/ No UP Button
@@ -819,7 +825,8 @@ export default class PLAYER {
         STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_UP_BUTTON &&
         STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON &&
         STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_AIR &&
-        STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_GROUND) {
+        STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_GROUND &&
+        !STATE.player.kick_state) {
       STATE.player.jump_state = STATE.player.jump_states.FALL_STATE;
     }
 
