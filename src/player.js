@@ -191,7 +191,7 @@ export default class PLAYER {
 
 
 
-     /* Misc. Behaviors */
+     /* Pre-movement Misc. Behaviors */
     //
     //In left & right key down, don't let any left/right_key_down events trigger if currently kicking on ground.
     //Also, don't update direction or animate running.
@@ -266,7 +266,6 @@ export default class PLAYER {
     if (shift_key_begin_pressed && STATE.player.dash.count < 2 &&
         STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_GROUND) {
       STATE.player.dash.old_jump_state = STATE.player.jump_state;
-      STATE.player.jump_state = STATE.player.jump_states.DASH_STATE_GROUND;
       STATE.player.dash.old_velocity_x = STATE.player.velocity_x;
       STATE.player.dash.old_velocity_y = STATE.player.velocity_y;
       ++STATE.player.dash.count;
@@ -289,6 +288,17 @@ export default class PLAYER {
           STATE.player.dash.remaining_x_distance = -1 * STATE.player.dash.max_distance;
         }
       }
+      if ((up_key_down && STATE.player.jump_state == STATE.player.jump_states.NEUTRAL_STATE_JUMP) ||
+          (
+           STATE.player.jump_state == STATE.player.jump_state.JUMP_STATE_UP_BUTTON ||
+           STATE.player.jump_state == STATE.player.jump_state.JUMP_STATE_NO_UP_BUTTON ||
+           STATE.player.jump_state == STATE.player.jump_state.NEUTRAL_STATE_JUMP
+           )
+         ) {
+        STATE.player.jump_state = STATE.player.jump_states.DASH_STATE_AIR;
+      } else {
+        STATE.player.jump_state = STATE.player.jump_states.DASH_STATE_GROUND;
+      }
     }
 
     if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND &&
@@ -297,6 +307,8 @@ export default class PLAYER {
       STATE.player.jump_state = STATE.player.dash.old_jump_state;
       STATE.player.velocity_x = STATE.player.dash.old_velocity_x;
       STATE.player.velocity_y = STATE.player.dash.old_velocity_y;
+      STATE.player.dash.old_velocity_x = 0;
+      STATE.player.dash.old_velocity_y = 0;
     }
 
     /* */
@@ -456,7 +468,7 @@ export default class PLAYER {
 
     /* */
 
-     /* Post-movement code */
+     /* Post-movement Misc. Behaviors */
     //
     if (z_key_begin_pressed && !STATE.player.kick_state) {
       STATE.player.kick_state = true;
