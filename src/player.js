@@ -57,6 +57,7 @@ export default class PLAYER {
       kick_state: false,
       dash: {
         count: 0,
+        has_kicked: false,
         max_distance: 4000,
         remaining_x_distance: 0,
         remaining_y_distance: 0,
@@ -271,10 +272,10 @@ export default class PLAYER {
       STATE.player.dash.old_velocity_y = STATE.player.velocity_y;
       if ((up_key_down && STATE.player.jump_state == STATE.player.jump_states.NEUTRAL_STATE_JUMP) ||
           (
-           STATE.player.jump_state == STATE.player.jump_state.JUMP_STATE_UP_BUTTON ||
-           STATE.player.jump_state == STATE.player.jump_state.JUMP_STATE_NO_UP_BUTTON ||
-           STATE.player.jump_state == STATE.player.jump_state.FALL_STATE
-           )
+           STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_UP_BUTTON ||
+           STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON ||
+           STATE.player.jump_state == STATE.player.jump_states.FALL_STATE
+          )
          ) {
         STATE.player.jump_state = STATE.player.jump_states.DASH_STATE_AIR;
         ++STATE.player.dash.count;
