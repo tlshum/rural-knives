@@ -18,8 +18,9 @@ export default class SOUNDS {
     });
 
     STATE.sounds.pool['steps'] = new Howl({
-      src: ['resources/audio/steps.ogg'],
-      volume: 0.75
+      src: ['resources/audio/steps.mp3'],
+      volume: 0.45,
+      loop: true
     });
 
     // Speech Synthesis

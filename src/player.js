@@ -117,12 +117,10 @@ export default class PLAYER {
     if (STATE.keyboard.isPressed(37)) {
       left_key_down = true;
     }
-
+    
     // Right
     if (STATE.keyboard.isPressed(39)) {
       right_key_down = true;
-    
-
     }
 
     // Up
@@ -179,6 +177,7 @@ export default class PLAYER {
     //In left & right key down, don't let any left/right_key_down events trigger if currently kicking on ground.
     //Also, don't update direction or animate running.
     if (left_key_down) {
+      STATE.sounds.play('steps');
       if (!STATE.player.kick_state) {
         STATE.player.direction = STATE.player.directions.LEFT;
         animator('runL');
@@ -189,6 +188,7 @@ export default class PLAYER {
     }
 
     if (right_key_down) {
+      STATE.sounds.play('steps');
       if (!STATE.player.kick_state) {
         STATE.player.direction = STATE.player.directions.RIGHT;
         animator('runR');
@@ -196,6 +196,10 @@ export default class PLAYER {
       } else {
         right_key_down = false;
       }
+    }
+
+    if (!left_key_down && !right_key_down) {
+      STATE.sounds.stop('steps');
     }
 
     /* */

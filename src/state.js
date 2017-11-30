@@ -47,7 +47,14 @@ let state = {
   sounds: {
     pool: {},
     play: function (name) {
-      this.pool[name].play();
+      if (this.pool[name].playing !== 1) {
+        this.pool[name].play();
+        this.pool[name].playing = 1;
+      }
+    },
+    stop: function (name) {
+      this.pool[name].stop();
+      this.pool[name].playing = 0;
     }
   }
 };
