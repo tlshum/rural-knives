@@ -30,7 +30,7 @@ export default class PLAYER {
       jump_state: -1,
       jump_states: {
         INIT_STATE: -1,
-        NEUTRAL_STATE_JUMP: 0,
+        NEUTRAL_STATE: 0,
         JUMP_STATE_UP_BUTTON: 1,
         JUMP_STATE_NO_UP_BUTTON: 2,
         FALL_STATE: 3,
@@ -57,7 +57,7 @@ export default class PLAYER {
       kick_state: false,
       dash: {
         count: 0,
-        has_kicked: false,
+        has_kicked_in_air: false,
         max_distance: 4000,
         remaining_x_distance: 0,
         remaining_y_distance: 0,
@@ -77,7 +77,7 @@ export default class PLAYER {
       case STATE.player.jump_states.INIT_STATE:
         console.log("Init State");
         break;
-      case STATE.player.jump_states.NEUTRAL_STATE_JUMP:
+      case STATE.player.jump_states.NEUTRAL_STATE:
         console.log("Neutral State, can jump");
         break;
       case STATE.player.jump_states.JUMP_STATE_UP_BUTTON:
@@ -111,10 +111,10 @@ export default class PLAYER {
     }
     STATE.player.jump_state_old = STATE.player.jump_state;
 
-    if (STATE.player.kick_state_old != STATE.player.kick_state) {
-      console.log("Kick state is " + STATE.player.kick_state);
+    if (STATE.player.dash.count_old != STATE.player.dash.count) {
+      console.log("Dash count is " + STATE.player.dash.count);
     }
-    STATE.player.kick_state_old = STATE.player.kick_state;
+    STATE.player.dash.count_old = STATE.player.dash.count;
 
     var left_key_down = false;
     var right_key_down = false;
@@ -222,8 +222,9 @@ export default class PLAYER {
     //
     switch (STATE.player.jump_state) {
       //While in Neutral w/ Jump, pressing UP will set velocity to 300 and go to Jump w/ UP Button
-      case STATE.player.jump_states.NEUTRAL_STATE_JUMP:
+      case STATE.player.jump_states.NEUTRAL_STATE:
         STATE.player.dash.count = 0;
+        STATE.player.dash.has_kicked_in_air = false;
         if (up_key_begin_pressed) {
           STATE.player.velocity_y = 300;
           STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_UP_BUTTON;
@@ -264,13 +265,25 @@ export default class PLAYER {
       STATE.player.dash.count = 1;
     }
 
+    if (
+        (
+         STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_UP_BUTTON ||
+         STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON ||
+         STATE.player.jump_state == STATE.player.jump_states.FALL_STATE ||
+         STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_WALL ||
+         STATE.player.jump_state == STATE.player.jump_states.FALL_STATE_WALL
+        ) && !STATE.player.dash.has_kicked_in_air &&
+        STATE.player.dash.count > 0
+       ) {
+      shift_key_begin_pressed = false;
+    }
     if (shift_key_begin_pressed && STATE.player.dash.count < 2 &&
-        STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_GROUND &&
-        STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_AIR) {
+      STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_GROUND &&
+      STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_AIR) {
       STATE.player.dash.old_jump_state = STATE.player.jump_state;
       STATE.player.dash.old_velocity_x = STATE.player.velocity_x;
       STATE.player.dash.old_velocity_y = STATE.player.velocity_y;
-      if ((up_key_down && STATE.player.jump_state == STATE.player.jump_states.NEUTRAL_STATE_JUMP) ||
+      if ((up_key_down && STATE.player.jump_state == STATE.player.jump_states.NEUTRAL_STATE) ||
           (
            STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_UP_BUTTON ||
            STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON ||
@@ -422,7 +435,7 @@ export default class PLAYER {
       case STATE.player.jump_states.INIT_STATE:
         STATE.player.velocity_y = -4000 * deltaTime;
         break;
-      case STATE.player.jump_states.NEUTRAL_STATE_JUMP:
+      case STATE.player.jump_states.NEUTRAL_STATE:
         STATE.player.velocity_y = -900 * deltaTime;
         break;
       case STATE.player.jump_states.JUMP_STATE_UP_BUTTON:
@@ -489,6 +502,14 @@ export default class PLAYER {
     //
     if (z_key_begin_pressed && !STATE.player.kick_state) {
       STATE.player.kick_state = true;
+      switch (STATE.player.jump_state) {
+        case STATE.player.jump_states.JUMP_STATE_WALL:
+        case STATE.player.jump_states.FALL_STATE_WALL:
+        case STATE.player.jump_states.JUMP_STATE_UP_BUTTON:
+        case STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON:
+        case STATE.player.jump_states.FALL_STATE:
+          STATE.player.dash.has_kicked_in_air = true;
+      }
     }
 
     /*
@@ -529,7 +550,7 @@ export default class PLAYER {
                   if (!STATE.collision.map[i][j+1]) {
                     STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5) - 2.4; //TODO re-evalue if this equation is right
                     if (STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_GROUND) {
-                      STATE.player.jump_state = STATE.player.jump_states.NEUTRAL_STATE_JUMP;
+                      STATE.player.jump_state = STATE.player.jump_states.NEUTRAL_STATE;
                     }
                     /*
                     console.log("top " + i + " " + j);
@@ -556,13 +577,13 @@ export default class PLAYER {
                       if (STATE.player.velocity_y > 0 &&
                         STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_WALL &&
                         STATE.player.jump_state != STATE.player.jump_states.FALL_STATE_WALL &&
-                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_JUMP) {
+                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE) {
                         STATE.player.velocity_y += STATE.player.velocity_x;
                         STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_WALL;
                       } else if (STATE.player.velocity_y < 0 &&
                         STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_WALL &&
                         STATE.player.jump_state != STATE.player.jump_states.FALL_STATE_WALL &&
-                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_JUMP) {
+                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE) {
                         STATE.player.velocity_y -= STATE.player.velocity_x;
                         STATE.player.jump_state = STATE.player.jump_states.FALL_STATE_WALL;
                       }
@@ -595,13 +616,13 @@ export default class PLAYER {
                       if (STATE.player.velocity_y > 0 &&
                         STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_WALL &&
                         STATE.player.jump_state != STATE.player.jump_states.FALL_STATE_WALL &&
-                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_JUMP) {
+                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE) {
                         STATE.player.velocity_y -= STATE.player.velocity_x;
                         STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_WALL;
                       } else if (STATE.player.velocity_y < 0 &&
                         STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_WALL &&
                         STATE.player.jump_state != STATE.player.jump_states.FALL_STATE_WALL &&
-                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE_JUMP) {
+                        STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE) {
                         STATE.player.velocity_y += STATE.player.velocity_x;
                         STATE.player.jump_state = STATE.player.jump_states.FALL_STATE_WALL;
                       }
