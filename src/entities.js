@@ -134,7 +134,7 @@ export default class ENTITIES {
         {
           STATE.projectiles[i].mesh.position.x = STATE.turrets[i].mesh.position.x;
           STATE.projectiles[i].mesh.position.y = STATE.turrets[i].mesh.position.y;
-          STATE.projectiles[i].mesh.position.z = STATE.turrets[i].mesh.position.z + 1;
+          STATE.projectiles[i].mesh.position.z = STATE.turrets[i].mesh.position.z - 1;
         }
 
       }
@@ -144,7 +144,7 @@ export default class ENTITIES {
         STATE.turrets[i].timer = 0;
         STATE.projectiles[i].mesh.position.x = STATE.turrets[i].mesh.position.x;
         STATE.projectiles[i].mesh.position.y = STATE.turrets[i].mesh.position.y;
-        STATE.projectiles[i].mesh.position.z = STATE.turrets[i].mesh.position.z + 1;
+        STATE.projectiles[i].mesh.position.z = STATE.turrets[i].mesh.position.z - 1;
       }
 
     }
