@@ -2,200 +2,193 @@ import * as THREE from 'three';
 
 export default class MATERIALS {
 
-
   static load ( STATE ) {
 
-    // texture settings
-    var textSet;
-
-    //loader
+    // loader
     let loader = new THREE.TextureLoader();
 
-    //load materials
-    STATE.loader.changeCount(1);
+    // Sets dimensions and position of tiles
+    function tileSet(texture, tilesHoriz, tilesVert, tileR, tileC, nTiles) {
+      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.set( 1 / tilesHoriz, 1 / tilesVert );
+      texture.tileWidth = 1 / tilesHoriz;
+      texture.offset.y = tileR * (1 / tilesVert);
+      texture.offset.x = tileC * (1 / tilesHoriz);
+      texture.numTiles = nTiles;
+      texture.tileCount = nTiles;
+      texture.col = tileC;
+    }
 
-    // load first texutre
+    // playerR
+    STATE.loader.changeCount(1);
     loader.load( 'resources/player/player.png',
     function (texture) {
-
-      //texture settings
-      textSet = new tileSet(texture, 8, 4, 3, 0, 1);
-
+      tileSet(texture, 8, 4, 3, 0, 1);
       STATE.materials.mats['playerR'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['playerR'].transparent = true;
       STATE.materials.mats['playerR'].magFilter = THREE.NearestFilter;
+      STATE.loader.changeCount(-1);
+    });
 
-     });
-
-    // load first texutre
+    // playerL
+    STATE.loader.changeCount(1);
     loader.load( 'resources/player/player.png',
     function (texture) {
-
-      //texture settings
-      textSet = new tileSet(texture, 8, 4, 3, -7, 1 );
-
-      //flip horizontal
-      texture.repeat.x = texture.repeat.x * -1;
-      
+      tileSet(texture, 8, 4, 3, 1, 1 );
+      texture.repeat.x = texture.repeat.x * -1; // flip horizontal
       STATE.materials.mats['playerL'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['playerL'].transparent = true;
       STATE.materials.mats['playerL'].magFilter = THREE.NearestFilter;
+      STATE.loader.changeCount(-1);
+    });
 
-     });
-
-
-    // load first texutre
+    // runR
+    STATE.loader.changeCount(1);
     loader.load( 'resources/player/player.png',
     function (texture) {
-
-      //texture settings
-      textSet = new tileSet(texture, 8, 4, 3, 6, 1);
-
-      STATE.materials.mats['jumpUpR'] = new THREE.MeshLambertMaterial({ map: texture });
-      STATE.materials.mats['jumpUpR'].transparent = true;
-      STATE.materials.mats['jumpUpR'].magFilter = THREE.NearestFilter;
-
-     });
-
-    // load first texutre
-    loader.load( 'resources/player/player.png',
-    function (texture) {
-
-      //texture settings
-      textSet = new tileSet(texture, 8, 4, 3, -1, 1 );
-
-      //flip horizontal
-      texture.repeat.x = texture.repeat.x * -1;
-      
-      STATE.materials.mats['jumpUpL'] = new THREE.MeshLambertMaterial({ map: texture });
-      STATE.materials.mats['jumpUpL'].transparent = true;
-      STATE.materials.mats['jumpUpL'].magFilter = THREE.NearestFilter;
-
-     });
-
-    // load first texutre
-    loader.load( 'resources/player/player.png',
-    function (texture) {
-
-      //texture settings
-      textSet = new tileSet(texture, 8, 4, 3, 7, 1);
-
-      STATE.materials.mats['jumpDownR'] = new THREE.MeshLambertMaterial({ map: texture });
-      STATE.materials.mats['jumpDownR'].transparent = true;
-      STATE.materials.mats['jumpDownR'].magFilter = THREE.NearestFilter;
-
-     });
-
-    // load first texutre
-    loader.load( 'resources/player/player.png',
-    function (texture) {
-
-      //texture settings
-      textSet = new tileSet(texture, 8, 4, 3, 0, 1 );
-
-      //flip horizontal
-      texture.repeat.x = texture.repeat.x * -1;
-      
-      STATE.materials.mats['jumpDownL'] = new THREE.MeshLambertMaterial({ map: texture });
-      STATE.materials.mats['jumpDownL'].transparent = true;
-      STATE.materials.mats['jumpDownL'].magFilter = THREE.NearestFilter;
-
-     });
-
-    // load first texutre
-    loader.load( 'resources/player/player.png',
-    function (texture) {
-
-      //texture settings
-      textSet = new tileSet(texture, 8, 4, 3, 1, 1);
-
-      STATE.materials.mats['crouchR'] = new THREE.MeshLambertMaterial({ map: texture });
-      STATE.materials.mats['crouchR'].transparent = true;
-      STATE.materials.mats['crouchR'].magFilter = THREE.NearestFilter;
-
-     });
-
-    // load first texutre
-    loader.load( 'resources/player/player.png',
-    function (texture) {
-
-      //texture settings
-      textSet = new tileSet(texture, 8, 4, 3, -6, 1 );
-
-      //flip horizontal
-      texture.repeat.x = texture.repeat.x * -1;
-      
-      STATE.materials.mats['crouchL'] = new THREE.MeshLambertMaterial({ map: texture });
-      STATE.materials.mats['crouchL'].transparent = true;
-      STATE.materials.mats['crouchL'].magFilter = THREE.NearestFilter;
-
-     });
-
-    //load 2nd texture
-    loader.load( 'resources/player/player.png',
-    function (texture) {
-
-      //texture settings
-      textSet = new tileSet( texture, 8, 4, 0, 0, 8 );
-
-      //flip horizontal
-      texture.repeat.x = texture.repeat.x * -1;
-
-      STATE.materials.mats['runL'] = new THREE.MeshLambertMaterial({ map: texture });
-      STATE.materials.mats['runL'].transparent = true;
-      STATE.materials.mats['runL'].magFilter = THREE.NearestFilter;
-
-     });
-
-    //load 3rd texture
-    loader.load( 'resources/player/player.png',
-    function (texture) {
-
-      //texture settings
-      textSet = new tileSet( texture, 8, 4, 0, 1, 8 );
-
+      tileSet(texture, 8, 4, 0, 0, 8);
       STATE.materials.mats['runR'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['runR'].transparent = true;
       STATE.materials.mats['runR'].magFilter = THREE.NearestFilter;
-
+      STATE.loader.changeCount(-1);
     });
 
-    // skybox background
-    loader.load( 'resources/motherboard.png',
+    // runL
+    STATE.loader.changeCount(1);
+    loader.load( 'resources/player/player.png',
     function (texture) {
+      tileSet(texture, 8, 4, 0, 0, 8 );
+      texture.repeat.x = texture.repeat.x * -1; // flip horizontal
+      STATE.materials.mats['runL'] = new THREE.MeshLambertMaterial({ map: texture });
+      STATE.materials.mats['runL'].transparent = true;
+      STATE.materials.mats['runL'].magFilter = THREE.NearestFilter;
+      STATE.loader.changeCount(-1);
+    });
 
-      //texture settings
-      textSet = new tileSet(texture, 1, 1, 0, 1, 1 );
-      //texture.repeat.set(1,1);
-      STATE.materials.mats['skyBox'] = new THREE.MeshLambertMaterial({ map: texture, side: THREE.DoubleSide });
-
-
+    // kickR
+    STATE.loader.changeCount(1);
+    loader.load( 'resources/player/player.png',
+    function (texture) {
+      tileSet(texture, 8, 4, 1, 1, 1);
+      STATE.materials.mats['kickR'] = new THREE.MeshLambertMaterial({ map: texture });
+      STATE.materials.mats['kickR'].transparent = true;
+      STATE.materials.mats['kickR'].magFilter = THREE.NearestFilter;
+      STATE.loader.changeCount(-1);
      });
 
-    //sets dimensions and position of tiles
-    function tileSet(texture, tilesHoriz, tilesVert, tileR, tileC, nTiles) {
-      this.tilesHorizontal = tilesHoriz;
-      this.tilesVertical = tilesVert;
-      this.numOfTiles = nTiles;
+    // kickL
+    STATE.loader.changeCount(1);
+    loader.load( 'resources/player/player.png',
+    function (texture) {
+      tileSet(texture, 8, 4, 1, 2, 1 );
+      texture.repeat.x = texture.repeat.x * -1; // flip horizontal
+      STATE.materials.mats['kickL'] = new THREE.MeshLambertMaterial({ map: texture });
+      STATE.materials.mats['kickL'].transparent = true;
+      STATE.materials.mats['kickL'].magFilter = THREE.NearestFilter;
+      STATE.loader.changeCount(-1);
+     });
 
-      // bottom row = 0
-      this.tileRow = tileR;
-      
-      // first col = 0
-      this.tileCol = tileC;
+    // dashUpR
+    STATE.loader.changeCount(1);
+    loader.load( 'resources/player/player.png',
+    function (texture) {
+      tileSet(texture, 8, 4, 2, 2, 1);
+      STATE.materials.mats['dashUpR'] = new THREE.MeshLambertMaterial({ map: texture });
+      STATE.materials.mats['dashUpR'].transparent = true;
+      STATE.materials.mats['dashUpR'].magFilter = THREE.NearestFilter;
+      STATE.loader.changeCount(-1);
+     });
 
-      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-      texture.repeat.set( 1 / this.tilesHorizontal, 1 / this.tilesVertical );
-      texture.tileWidth = 1 / this.tilesHorizontal;
-      texture.offset.y = this.tileRow * (1 / this.tilesVertical);
-      texture.offset.x = this.tileCol * (1 / this.tilesHorizontal);
-      texture.numTiles = this.numOfTiles;
-      texture.tileCount = this.numOfTiles;
-      texture.col = this.tileCol;
-    }
+    // dashUpL
+    STATE.loader.changeCount(1);
+    loader.load( 'resources/player/player.png',
+    function (texture) {
+      tileSet(texture, 8, 4, 2, 3, 1 );
+      texture.repeat.x = texture.repeat.x * -1; // flip horizontal
+      STATE.materials.mats['dashUpL'] = new THREE.MeshLambertMaterial({ map: texture });
+      STATE.materials.mats['dashUpL'].transparent = true;
+      STATE.materials.mats['dashUpL'].magFilter = THREE.NearestFilter;
+      STATE.loader.changeCount(-1);
+     });
 
-    //end loading materials
-    STATE.loader.changeCount(-1);
+    // downR
+    STATE.loader.changeCount(1);
+    loader.load( 'resources/player/player.png',
+    function (texture) {
+      tileSet(texture, 8, 4, 3, 7, 1);
+      STATE.materials.mats['downR'] = new THREE.MeshLambertMaterial({ map: texture });
+      STATE.materials.mats['downR'].transparent = true;
+      STATE.materials.mats['downR'].magFilter = THREE.NearestFilter;
+      STATE.loader.changeCount(-1);
+     });
+
+    // downL
+    STATE.loader.changeCount(1);
+    loader.load( 'resources/player/player.png',
+    function (texture) {
+      tileSet(texture, 8, 4, 3, 0, 1 );
+      texture.repeat.x = texture.repeat.x * -1; // flip horizontal
+      STATE.materials.mats['downL'] = new THREE.MeshLambertMaterial({ map: texture });
+      STATE.materials.mats['downL'].transparent = true;
+      STATE.materials.mats['downL'].magFilter = THREE.NearestFilter;
+      STATE.loader.changeCount(-1);
+     });
+
+    // jumpR
+    STATE.loader.changeCount(1);
+    loader.load( 'resources/player/player.png',
+    function (texture) {
+      tileSet( texture, 8, 4, 2, 5, 1 );
+      STATE.materials.mats['jumpR'] = new THREE.MeshLambertMaterial({ map: texture });
+      STATE.materials.mats['jumpR'].transparent = true;
+      STATE.materials.mats['jumpR'].magFilter = THREE.NearestFilter;
+      STATE.loader.changeCount(-1);
+     });
+
+    // jumpL
+    STATE.loader.changeCount(1);
+    loader.load( 'resources/player/player.png',
+    function (texture) {
+      tileSet( texture, 8, 4, 2, 6, 1 );
+      texture.repeat.x = texture.repeat.x * -1; // flip horizontal
+      STATE.materials.mats['jumpL'] = new THREE.MeshLambertMaterial({ map: texture });
+      STATE.materials.mats['jumpL'].transparent = true;
+      STATE.materials.mats['jumpL'].magFilter = THREE.NearestFilter;
+      STATE.loader.changeCount(-1);
+    });
+
+    // dashR
+    STATE.loader.changeCount(1);
+    loader.load( 'resources/player/player.png',
+    function (texture) {
+      tileSet( texture, 8, 4, 3, 6, 1 );
+      STATE.materials.mats['dashR'] = new THREE.MeshLambertMaterial({ map: texture });
+      STATE.materials.mats['dashR'].transparent = true;
+      STATE.materials.mats['dashR'].magFilter = THREE.NearestFilter;
+      STATE.loader.changeCount(-1);
+     });
+
+    // dashL
+    STATE.loader.changeCount(1);
+    loader.load( 'resources/player/player.png',
+    function (texture) {
+      tileSet( texture, 8, 4, 3, 7, 1 );
+      texture.repeat.x = texture.repeat.x * -1; // flip horizontal
+      STATE.materials.mats['dashL'] = new THREE.MeshLambertMaterial({ map: texture });
+      STATE.materials.mats['dashL'].transparent = true;
+      STATE.materials.mats['dashL'].magFilter = THREE.NearestFilter;
+      STATE.loader.changeCount(-1);
+    });
+
+    // Skybox Background
+    STATE.loader.changeCount(1);
+    loader.load( 'resources/motherboard.png',
+    function (texture) {
+      tileSet(texture, 1, 1, 0, 1, 1 );
+      // texture.repeat.set(1,1);
+      STATE.materials.mats['skyBox'] = new THREE.MeshLambertMaterial({ map: texture, side: THREE.DoubleSide });
+      STATE.loader.changeCount(-1);
+     });
 
   }
 
