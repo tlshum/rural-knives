@@ -264,11 +264,23 @@ export default class PLAYER {
     }
 
     if (shift_key_begin_pressed && STATE.player.dash.count < 2 &&
-        STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_GROUND) {
+        STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_GROUND &&
+        STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_AIR) {
       STATE.player.dash.old_jump_state = STATE.player.jump_state;
       STATE.player.dash.old_velocity_x = STATE.player.velocity_x;
       STATE.player.dash.old_velocity_y = STATE.player.velocity_y;
-      ++STATE.player.dash.count;
+      if ((up_key_down && STATE.player.jump_state == STATE.player.jump_states.NEUTRAL_STATE_JUMP) ||
+          (
+           STATE.player.jump_state == STATE.player.jump_state.JUMP_STATE_UP_BUTTON ||
+           STATE.player.jump_state == STATE.player.jump_state.JUMP_STATE_NO_UP_BUTTON ||
+           STATE.player.jump_state == STATE.player.jump_state.FALL_STATE
+           )
+         ) {
+        STATE.player.jump_state = STATE.player.jump_states.DASH_STATE_AIR;
+        ++STATE.player.dash.count;
+      } else {
+        STATE.player.jump_state = STATE.player.jump_states.DASH_STATE_GROUND;
+      }
       if (right_key_down) {
         STATE.player.dash.remaining_x_distance = STATE.player.dash.max_distance;
       }
@@ -278,7 +290,7 @@ export default class PLAYER {
       if (up_key_down) {
         STATE.player.dash.remaining_y_distance = STATE.player.dash.max_distance;
       }
-      if (down_key_down) {
+      if (down_key_down && STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR) {
         STATE.player.dash.remaining_y_distance = -1 * STATE.player.dash.max_distance;
       }
       if (!(left_key_down || right_key_down || up_key_down || down_key_down)) {
@@ -288,20 +300,10 @@ export default class PLAYER {
           STATE.player.dash.remaining_x_distance = -1 * STATE.player.dash.max_distance;
         }
       }
-      if ((up_key_down && STATE.player.jump_state == STATE.player.jump_states.NEUTRAL_STATE_JUMP) ||
-          (
-           STATE.player.jump_state == STATE.player.jump_state.JUMP_STATE_UP_BUTTON ||
-           STATE.player.jump_state == STATE.player.jump_state.JUMP_STATE_NO_UP_BUTTON ||
-           STATE.player.jump_state == STATE.player.jump_state.NEUTRAL_STATE_JUMP
-           )
-         ) {
-        STATE.player.jump_state = STATE.player.jump_states.DASH_STATE_AIR;
-      } else {
-        STATE.player.jump_state = STATE.player.jump_states.DASH_STATE_GROUND;
-      }
     }
 
-    if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND &&
+    if ((STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND ||
+         STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR) &&
         STATE.player.dash.remaining_x_distance == 0 &&
         STATE.player.dash.remaining_y_distance == 0) {
       STATE.player.jump_state = STATE.player.dash.old_jump_state;
@@ -317,7 +319,9 @@ export default class PLAYER {
 
     /* X Velocity calculations */
     //
-    if (!STATE.player.kick_state && STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_GROUND) {
+    if (!STATE.player.kick_state &&
+        STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_GROUND &&
+        STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_AIR) {
       //Conditions for Left Key Pressed
       if (left_key_down) {
         //If player has some velocity towards the right, slow down faster to reach 0 speed quickly
@@ -368,7 +372,8 @@ export default class PLAYER {
         STATE.player.velocity_x += STATE.player.dash_friction_x;
       }
       console.log("x velocity = " + STATE.player.velocity_x);
-    } else if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND) {
+    } else if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND ||
+               STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR) {
       if (STATE.player.dash.remaining_x_distance > 0) {
         STATE.player.velocity_x = 32000 * deltaTime;
         STATE.player.dash.remaining_x_distance -= STATE.player.velocity_x;
@@ -430,11 +435,22 @@ export default class PLAYER {
         break;
       case STATE.player.jump_states.DASH_STATE_GROUND:
       case STATE.player.jump_states.DASH_STATE_AIR:
-        if (STATE.player.dash.remaining_y_distance > 0) {
+        if (STATE.player.dash.remaining_y_distance > 0 || STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND) {
           STATE.player.velocity_y = 64000 * deltaTime;
           STATE.player.dash.remaining_y_distance -= STATE.player.velocity_y;
           if (STATE.player.dash.remaining_y_distance <= 0) {
             if (STATE.player.dash.remaining_y_distance * -1 > STATE.player.velocity_y) {
+              STATE.player.velocity_y = 0
+            } else {
+              STATE.player.velocity_y += STATE.player.dash.remaining_y_distance;
+            }
+            STATE.player.dash.remaining_y_distance = 0;
+          }
+        } else {
+          STATE.player.velocity_y = -64000 * deltaTime;
+          STATE.player.dash.remaining_y_distance -= STATE.player.velocity_y;
+          if (STATE.player.dash.remaining_y_distance >= 0) {
+            if (STATE.player.dash.remaining_y_distance * -1 < STATE.player.velocity_y) {
               STATE.player.velocity_y = 0
             } else {
               STATE.player.velocity_y += STATE.player.dash.remaining_y_distance;
