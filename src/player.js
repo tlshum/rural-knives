@@ -103,6 +103,26 @@ export default class PLAYER {
     }
   }
 
+  static exit_dash(STATE) {
+    if (STATE.player.velocity_x > 0) {
+      STATE.player.velocity_x = 0.7 * STATE.player.max_velocity_x;
+    } else if (STATE.player.velocity_x < 0) {
+      STATE.player.velocity_x = -0.7 * STATE.player.max_velocity_x;
+    }
+    if (STATE.player.velocity_y > 0) {
+      STATE.player.velocity_y = 300;
+    } else if (STATE.player.velocity_y < 0) {
+      STATE.player.velocity_y = -300;
+    }
+    if (STATE.player.velocity_y > 0) {
+      STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_UP_BUTTON;
+    } else {
+      STATE.player.jump_state = STATE.player.jump_states.FALL_STATE;
+    }
+    STATE.player.dash.old_velocity_x = 0;
+    STATE.player.dash.old_velocity_y = 0;
+  }
+
   static update ( STATE, deltaTime ) {
 
     if (STATE.player.jump_state_old != STATE.player.jump_state)  {
@@ -308,6 +328,7 @@ export default class PLAYER {
       }
     }
 
+    //If kicking while in the air, force assumption that a dash had been made before
     if ((
          STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_UP_BUTTON ||
          STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON ||
@@ -318,6 +339,7 @@ export default class PLAYER {
       STATE.player.dash.count = 1;
     }
 
+    //If person is not touching ground, disable shift from being recognized if not kicked yet
     if (
         (
          STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_UP_BUTTON ||
@@ -330,6 +352,8 @@ export default class PLAYER {
        ) {
       shift_key_begin_pressed = false;
     }
+
+    //Switch to DASH state if conditions met
     if (shift_key_begin_pressed && STATE.player.dash.count < 2 &&
       STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_GROUND &&
       STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_AIR) {
@@ -370,27 +394,12 @@ export default class PLAYER {
       STATE.player.kick_state = false;
     }
 
+    //Exit code for if no longer DASHING
     if ((STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND ||
          STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR) &&
         STATE.player.dash.remaining_x_distance == 0 &&
         STATE.player.dash.remaining_y_distance == 0) {
-      if (STATE.player.velocity_x > 0) {
-        STATE.player.velocity_x = 0.7 * STATE.player.max_velocity_x;
-      } else if (STATE.player.velocity_x < 0) {
-        STATE.player.velocity_x = -0.7 * STATE.player.max_velocity_x;
-      }
-      if (STATE.player.velocity_y > 0) {
-        STATE.player.velocity_y = 300;
-      } else if (STATE.player.velocity_y < 0) {
-        STATE.player.velocity_y = -300;
-      }
-      if (STATE.player.velocity_y > 0) {
-        STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_UP_BUTTON;
-      } else {
-        STATE.player.jump_state = STATE.player.jump_states.FALL_STATE;
-      }
-      STATE.player.dash.old_velocity_x = 0;
-      STATE.player.dash.old_velocity_y = 0;
+      PLAYER.exit_dash(STATE);
     }
 
     /* */
@@ -541,7 +550,7 @@ export default class PLAYER {
             STATE.player.dash.remaining_y_distance = 0;
           }
         }
-      break;
+        break;
     }
 
     //If kicking, screw the current Y velocity; we're gonna override that with something else!
@@ -560,8 +569,12 @@ export default class PLAYER {
 
      /* Apply velocity calculations to positions */
     //
-    STATE.player.obj.position.x += STATE.player.velocity_x * deltaTime
-    STATE.player.obj.position.y += STATE.player.velocity_y * deltaTime
+    STATE.player.obj.position.x += STATE.player.velocity_x * deltaTime;
+    if (STATE.player.velocity_y > -500) {
+      STATE.player.obj.position.y += STATE.player.velocity_y * deltaTime;
+    } else {
+      STATE.player.obj.position.y -= 500 * deltaTime;
+    }
 
     /* */
 
@@ -617,6 +630,9 @@ export default class PLAYER {
                   if (!STATE.collision.map[i][j+1]) {
                     STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5) - 2.4; //TODO re-evalue if this equation is right
                     if (STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_GROUND) {
+                      if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR) {
+                        PLAYER.exit_dash(STATE);
+                      }
                       STATE.player.jump_state = STATE.player.jump_states.NEUTRAL_STATE;
                     }
                     /*
@@ -640,20 +656,40 @@ export default class PLAYER {
                       }
                     } else {
                       STATE.player.obj.position.x = rect2.x - (rect2.width * 0.5) - (rect1.width * 0.5) - 1.5; //TODO re-evaluate if this equation is right
-                      STATE.player.velocity_x = 0;
                       if (STATE.player.velocity_y > 0 &&
                         STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_WALL &&
                         STATE.player.jump_state != STATE.player.jump_states.FALL_STATE_WALL &&
                         STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE) {
-                        STATE.player.velocity_y += STATE.player.velocity_x;
+                        if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR ||
+                            STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND) {
+                          PLAYER.exit_dash(STATE);
+                        }
+                        if (STATE.player.velocity_x < STATE.player.max_velocity_x) {
+                          STATE.player.velocity_y += STATE.player.velocity_x;
+                          console.log("conversion not capped");
+                        } else {
+                          STATE.player.velocity_y += STATE.player.max_velocity_x;
+                          console.log("conversion capped");
+                        }
                         STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_WALL;
                       } else if (STATE.player.velocity_y < 0 &&
                         STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_WALL &&
                         STATE.player.jump_state != STATE.player.jump_states.FALL_STATE_WALL &&
                         STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE) {
-                        STATE.player.velocity_y -= STATE.player.velocity_x;
+                        if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR ||
+                            STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND) {
+                          PLAYER.exit_dash(STATE);
+                        }
+                        if (STATE.player.velocity_x < STATE.player.max_velocity_x) {
+                          STATE.player.velocity_y -= STATE.player.velocity_x;
+                          console.log("conversion not capped");
+                        } else {
+                          STATE.player.velocity_y -= STATE.player.max_velocity_x;
+                          console.log("conversion capped");
+                        }
                         STATE.player.jump_state = STATE.player.jump_states.FALL_STATE_WALL;
                       }
+                      STATE.player.velocity_x = 0;
                     }
                   }
                   /*
@@ -679,20 +715,40 @@ export default class PLAYER {
                       }
                     } else {
                       STATE.player.obj.position.x = rect2.x + (rect2.width * 0.5) + (rect1.width * 0.5);
-                      STATE.player.velocity_x = 0;
                       if (STATE.player.velocity_y > 0 &&
                         STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_WALL &&
                         STATE.player.jump_state != STATE.player.jump_states.FALL_STATE_WALL &&
                         STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE) {
-                        STATE.player.velocity_y -= STATE.player.velocity_x;
+                        if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR ||
+                            STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND) {
+                          PLAYER.exit_dash(STATE);
+                        }
+                        if (STATE.player.velocity_x > STATE.player.max_velocity_x) {
+                          STATE.player.velocity_y -= STATE.player.velocity_x;
+                          console.log("conversion not capped");
+                        } else {
+                          STATE.player.velocity_y -= STATE.player.max_velocity_x;
+                          console.log("conversion capped");
+                        }
                         STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_WALL;
                       } else if (STATE.player.velocity_y < 0 &&
                         STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_WALL &&
                         STATE.player.jump_state != STATE.player.jump_states.FALL_STATE_WALL &&
                         STATE.player.jump_state != STATE.player.jump_states.NEUTRAL_STATE) {
-                        STATE.player.velocity_y += STATE.player.velocity_x;
+                        if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR ||
+                            STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND) {
+                          PLAYER.exit_dash(STATE);
+                        }
+                        if (STATE.player.velocity_x > STATE.player.max_velocity_x) {
+                          STATE.player.velocity_y += STATE.player.velocity_x;
+                          console.log("conversion not capped");
+                        } else {
+                          STATE.player.velocity_y += STATE.player.max_velocity_x;
+                          console.log("conversion capped");
+                        }
                         STATE.player.jump_state = STATE.player.jump_states.FALL_STATE_WALL;
                       }
+                      STATE.player.velocity_x = 0;
                     }
                   }
                   /*
