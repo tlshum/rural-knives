@@ -13,8 +13,8 @@ export default class PLAYER {
     mat.transparent = true;
     let obj = new THREE.Mesh( geo, mat );
     console.log(this.obj);
-    obj.position.set( 0, 50, 75 );
-    //obj.position.set( -150, 50, 75 );
+    obj.position.set( 0, 50, -10 );
+    //obj.position.set( 0, 50, 75 );
     obj.castShadow = true;
 
     STATE.player = {
@@ -633,9 +633,6 @@ export default class PLAYER {
       }
     }
 
-    /*
-    console.log(STATE.player.velocity_x + " " + STATE.player.velocity_y);
-    */
 
      /* Collision Code */
     //
@@ -676,18 +673,12 @@ export default class PLAYER {
                       }
                       STATE.player.jump_state = STATE.player.jump_states.NEUTRAL_STATE;
                     }
-                    /*
-                    console.log("top " + i + " " + j);
-                    */
                   }
                   break;
                 } else {
                   //left
                   if (i >= 0 && typeof STATE.collision.map[i-1] !== "undefined" && !STATE.collision.map[i-1][j]) {
                     if (STATE.player.velocity_x < 0) {
-                      /*
-                      console.log("left 1")
-                      */
                       if (STATE.player.velocity_y < 0) {
                         //top collisoin
                         STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5) - 2.4; //TODO re-evalue if this equation is right
@@ -707,10 +698,8 @@ export default class PLAYER {
                         }
                         if (STATE.player.velocity_x < STATE.player.max_velocity_x) {
                           STATE.player.velocity_y += STATE.player.velocity_x;
-                          console.log("conversion not capped");
                         } else {
                           STATE.player.velocity_y += STATE.player.max_velocity_x;
-                          console.log("conversion capped");
                         }
                         STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_WALL;
                       } else if (STATE.player.velocity_y < 0 &&
@@ -723,30 +712,25 @@ export default class PLAYER {
                         }
                         if (STATE.player.velocity_x < STATE.player.max_velocity_x) {
                           STATE.player.velocity_y -= STATE.player.velocity_x;
-                          console.log("conversion not capped");
                         } else {
                           STATE.player.velocity_y -= STATE.player.max_velocity_x;
-                          console.log("conversion capped");
                         }
                         STATE.player.jump_state = STATE.player.jump_states.FALL_STATE_WALL;
                       }
                       STATE.player.velocity_x = 0;
                     }
                   }
-                  /*
-                  console.log("left " + i + " " + j);
-                  */
                   touching_wall = true;
                 }
                 break;
               } else {
                 if (wy > -hx) {
                   //right
+                  console.log("1collide har har" + i + " " + j);
+                  console.log((typeof STATE.collision.map[i+1] !== "undefined") + " " + (!STATE.collision.map[i+1][j]));
                   if (typeof STATE.collision.map[i+1] !== "undefined" && !STATE.collision.map[i+1][j]) { // TODO don't check value if STATE.collision.map[i] is null
+                    console.log("2collide har har" + i + " " + j);
                     if (STATE.player.velocity_x > 0) {
-                      /*
-                      console.log("right 1");
-                      */
                       if (STATE.player.velocity_y < 0) {
                         //top collision
                         STATE.player.obj.position.y = rect2.y + (rect2.height * 0.5) + (rect1.height * 0.5) - 2.4; //TODO re-evaluate if this equation is right
@@ -766,10 +750,8 @@ export default class PLAYER {
                         }
                         if (STATE.player.velocity_x > STATE.player.max_velocity_x) {
                           STATE.player.velocity_y -= STATE.player.velocity_x;
-                          console.log("conversion not capped");
                         } else {
                           STATE.player.velocity_y -= STATE.player.max_velocity_x;
-                          console.log("conversion capped");
                         }
                         STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_WALL;
                       } else if (STATE.player.velocity_y < 0 &&
@@ -782,19 +764,14 @@ export default class PLAYER {
                         }
                         if (STATE.player.velocity_x > STATE.player.max_velocity_x) {
                           STATE.player.velocity_y += STATE.player.velocity_x;
-                          console.log("conversion not capped");
                         } else {
                           STATE.player.velocity_y += STATE.player.max_velocity_x;
-                          console.log("conversion capped");
                         }
                         STATE.player.jump_state = STATE.player.jump_states.FALL_STATE_WALL;
                       }
                       STATE.player.velocity_x = 0;
                     }
                   }
-                  /*
-                  console.log("right " + i + " " + j);
-                  */
                   touching_wall = true;
                   break;
                 } else {
@@ -806,9 +783,6 @@ export default class PLAYER {
                       STATE.player.velocity_x = STATE.player.velocity_x * 0.75;
                     }
                   }
-                  /*
-                  console.log("bottom");
-                  */
                   break;
                 }
               }
@@ -851,7 +825,7 @@ export default class PLAYER {
     STATE.camera.position.set(
       STATE.player.obj.position.x,
       STATE.player.obj.position.y + 75,
-      300
+      STATE.player.obj.position.z + 225
     );
 
   }
