@@ -120,11 +120,12 @@ function loaded () {
     STATE.passes[0].bokehMaterial.uniforms.ditherStrength.value = 0;
     STATE.passes[0].bokehMaterial.uniforms.luminanceThreshold.value = 0;
     STATE.passes[0].bokehMaterial.uniforms.luminanceGain.value = 0;
+    STATE.passes[0].renderToScreen = true;
     STATE.composer.addPass(STATE.passes[0]);
 
     STATE.passes[1] = new GlitchPass();
     STATE.passes[1].mode = GlitchMode.CONSTANT_MILD;
-    STATE.passes[1].renderToScreen = true;
+    STATE.passes[1].renderToScreen = false;
     STATE.composer.addPass(STATE.passes[1]);
 
     // let gui = new dat.GUI();
