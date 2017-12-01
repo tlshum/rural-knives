@@ -52,21 +52,27 @@ function loaded () {
     let light = new THREE.AmbientLight( 0x555555 );
     STATE.scene.add( light );
 
-    let directionalLight = new THREE.DirectionalLight( 0xddeedd, 1.75 );
-    directionalLight.position.set( -500, 200, 300 );
-    directionalLight.castShadow = true;
+    STATE.directionalLight = new THREE.DirectionalLight( 0xddeedd, 1.75 );
+    //STATE.directionalLight.position.set( -500, 200, 300 );
+    STATE.directionalLight.position.set(
+      STATE.player.obj.position.x - 500,
+      STATE.player.obj.position.y + 250,
+      STATE.player.obj.position.z + 225
+    )
+    STATE.directionalLight.target = STATE.player.obj;
+    STATE.directionalLight.castShadow = true;
 
-    directionalLight.shadow.mapSize.width = 512;
-    directionalLight.shadow.mapSize.height = 512;
+    STATE.directionalLight.shadow.mapSize.width = 512;
+    STATE.directionalLight.shadow.mapSize.height = 512;
 
-    directionalLight.shadow.camera.near = 0.5;
-    directionalLight.shadow.camera.far = 1500;
-    directionalLight.shadow.camera.left = -250;
-    directionalLight.shadow.camera.bottom = -250;
-    directionalLight.shadow.camera.right = 250;
-    directionalLight.shadow.camera.top = 250;
+    STATE.directionalLight.shadow.camera.near = 0.5;
+    STATE.directionalLight.shadow.camera.far = 1500;
+    STATE.directionalLight.shadow.camera.left = -250;
+    STATE.directionalLight.shadow.camera.bottom = -250;
+    STATE.directionalLight.shadow.camera.right = 250;
+    STATE.directionalLight.shadow.camera.top = 250;
 
-    STATE.scene.add( directionalLight );
+    STATE.scene.add( STATE.directionalLight );
 
     //skybox
     var geometry = new THREE.CubeGeometry( 5000, 2000, 2000 );
@@ -94,7 +100,7 @@ function loaded () {
     STATE.renderer.setPixelRatio( window.devicePixelRatio );
     STATE.renderer.setSize( window.innerWidth, window.innerHeight );
     STATE.renderer.shadowMap.enabled = true;
-    STATE.renderer.shadowMap.type = THREE.PCFShadowMap;
+    STATE.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     STATE.composer = new EffectComposer(STATE.renderer, { depthBuffer: true, depthTexture: true });
     STATE.composer.addPass(new RenderPass(STATE.scene, STATE.camera));
