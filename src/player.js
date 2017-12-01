@@ -740,7 +740,7 @@ export default class PLAYER {
                         STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
                       }
                     } else {
-                      STATE.player.obj.position.x = rect2.x + (rect2.width * 0.5) + (rect1.width * 0.5);
+                      STATE.player.obj.position.x = rect2.x + (rect2.width * 0.5) + (rect1.width * 0.5) - 1.5;
                       if (STATE.player.velocity_y > 0 &&
                         STATE.player.jump_state != STATE.player.jump_states.JUMP_STATE_WALL &&
                         STATE.player.jump_state != STATE.player.jump_states.FALL_STATE_WALL &&
