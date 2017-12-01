@@ -680,7 +680,6 @@ export default class PLAYER {
                       }
                     }
                   }
-                  break;
                 } else {
                   //left
                   if (i >= 0 && typeof STATE.collision.map[i-1] !== "undefined" && !STATE.collision.map[i-1][j]) {
@@ -728,14 +727,10 @@ export default class PLAYER {
                   }
                   touching_wall = true;
                 }
-                break;
               } else {
                 if (wy > -hx) {
                   //right
-                  console.log("1collide har har" + i + " " + j);
-                  console.log((typeof STATE.collision.map[i+1] !== "undefined") + " " + (!STATE.collision.map[i+1][j]));
                   if (typeof STATE.collision.map[i+1] !== "undefined" && !STATE.collision.map[i+1][j]) { // TODO don't check value if STATE.collision.map[i] is null
-                    console.log("2collide har har" + i + " " + j);
                     if (STATE.player.velocity_x > 0) {
                       if (STATE.player.velocity_y < 0) {
                         //top collision
@@ -754,7 +749,7 @@ export default class PLAYER {
                             STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND) {
                           PLAYER.exit_dash(STATE);
                         }
-                        if (STATE.player.velocity_x > STATE.player.max_velocity_x) {
+                        if (STATE.player.velocity_x < STATE.player.max_velocity_x) {
                           STATE.player.velocity_y -= STATE.player.velocity_x;
                         } else {
                           STATE.player.velocity_y -= STATE.player.max_velocity_x;
@@ -768,7 +763,7 @@ export default class PLAYER {
                             STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND) {
                           PLAYER.exit_dash(STATE);
                         }
-                        if (STATE.player.velocity_x > STATE.player.max_velocity_x) {
+                        if (STATE.player.velocity_x < STATE.player.max_velocity_x) {
                           STATE.player.velocity_y += STATE.player.velocity_x;
                         } else {
                           STATE.player.velocity_y += STATE.player.max_velocity_x;
@@ -779,7 +774,6 @@ export default class PLAYER {
                     }
                   }
                   touching_wall = true;
-                  break;
                 } else {
                   //bottom
                   if (!STATE.collision.map[i][j-1]) {
@@ -789,7 +783,6 @@ export default class PLAYER {
                       STATE.player.velocity_x = STATE.player.velocity_x * 0.75;
                     }
                   }
-                  break;
                 }
               }
             }
