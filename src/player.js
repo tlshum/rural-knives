@@ -13,7 +13,7 @@ export default class PLAYER {
     mat.transparent = true;
     let obj = new THREE.Mesh( geo, mat );
     console.log(this.obj);
-    obj.position.set( 0, 50, -10 );
+    obj.position.set( -2880, -495, -10 );
     //obj.position.set( 0, 50, 75 );
     obj.castShadow = true;
 

@@ -54,11 +54,6 @@ function loaded () {
 
     STATE.directionalLight = new THREE.DirectionalLight( 0xddeedd, 1.75 );
     //STATE.directionalLight.position.set( -500, 200, 300 );
-    STATE.directionalLight.position.set(
-      STATE.player.obj.position.x - 500,
-      STATE.player.obj.position.y + 250,
-      STATE.player.obj.position.z + 225
-    )
     STATE.directionalLight.target = STATE.player.obj;
     STATE.directionalLight.castShadow = true;
 
