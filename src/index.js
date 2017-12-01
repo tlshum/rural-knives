@@ -1,8 +1,7 @@
 import * as THREE from 'three';
-import { EffectComposer, Bokeh2Pass, RenderPass } from 'postprocessing';
+import { EffectComposer, Bokeh2Pass, GlitchPass, GlitchMode, RenderPass } from 'postprocessing';
 import dat from 'dat.gui/build/dat.gui.js';
 import Stats from 'stats.js';
-
 
 import * as STATE from './state.js';
 import PLAYER from './player.js';
@@ -100,7 +99,8 @@ function loaded () {
     STATE.composer = new EffectComposer(STATE.renderer, { depthBuffer: true, depthTexture: true });
     STATE.composer.addPass(new RenderPass(STATE.scene, STATE.camera));
 
-    let pass = new Bokeh2Pass(STATE.camera, {
+    STATE.passes = [];
+    STATE.passes[0] = new Bokeh2Pass(STATE.camera, {
         rings: 6,
         samples: 1,
         showFocus: false,
@@ -110,18 +110,22 @@ function loaded () {
         shaderFocus: true,
         noise: false
     });
-    pass.bokehMaterial.uniforms.focalStop.value = 1;
-    pass.bokehMaterial.uniforms.focalDepth.value = 0.1;
-    pass.bokehMaterial.uniforms.focusCoords.value.x = 0.5;
-    pass.bokehMaterial.uniforms.focusCoords.value.y = 0.5;
-    pass.bokehMaterial.uniforms.maxBlur.value = 1.5;
-    pass.bokehMaterial.uniforms.bias.value = 0;
-    pass.bokehMaterial.uniforms.fringe.value = 0;
-    pass.bokehMaterial.uniforms.ditherStrength.value = 0;
-    pass.bokehMaterial.uniforms.luminanceThreshold.value = 0;
-    pass.bokehMaterial.uniforms.luminanceGain.value = 0;
-    pass.renderToScreen = true;
-    STATE.composer.addPass(pass);
+    STATE.passes[0].bokehMaterial.uniforms.focalStop.value = 1;
+    STATE.passes[0].bokehMaterial.uniforms.focalDepth.value = 0.1;
+    STATE.passes[0].bokehMaterial.uniforms.focusCoords.value.x = 0.5;
+    STATE.passes[0].bokehMaterial.uniforms.focusCoords.value.y = 0.5;
+    STATE.passes[0].bokehMaterial.uniforms.maxBlur.value = 1.5;
+    STATE.passes[0].bokehMaterial.uniforms.bias.value = 0;
+    STATE.passes[0].bokehMaterial.uniforms.fringe.value = 0;
+    STATE.passes[0].bokehMaterial.uniforms.ditherStrength.value = 0;
+    STATE.passes[0].bokehMaterial.uniforms.luminanceThreshold.value = 0;
+    STATE.passes[0].bokehMaterial.uniforms.luminanceGain.value = 0;
+    STATE.composer.addPass(STATE.passes[0]);
+
+    STATE.passes[1] = new GlitchPass();
+    STATE.passes[1].mode = GlitchMode.CONSTANT_MILD;
+    STATE.passes[1].renderToScreen = true;
+    STATE.composer.addPass(STATE.passes[1]);
 
     // let gui = new dat.GUI();
 
