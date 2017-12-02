@@ -28,7 +28,7 @@ export default class WORLD {
           }
         }
         //STATE.collision.trans = {x: -140, y: -135}; //test_city
-        STATE.collision.trans = {x: -51, y: -135};
+        STATE.collision.trans = {x: -139, y: -135};
         STATE.collision.scale = 20;
         console.log(STATE.collision.map);
       });

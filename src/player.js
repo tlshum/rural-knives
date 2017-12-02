@@ -13,7 +13,7 @@ export default class PLAYER {
     let obj = new THREE.Mesh( geo, mat );
     obj.customDepthMaterial = STATE.materials.dget('playerR');
     //obj.position.set( -2880, -495, -10 );
-    obj.position.set( -6752, -495, -10 );
+    obj.position.set( -6840, -495, -10 );
     obj.castShadow = true;
 
     STATE.player = {
