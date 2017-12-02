@@ -101,7 +101,7 @@ a {
 }
 
 .popup2{
-  display: block;
+  display: none;
   text-align: center;
   position: absolute;
   margin: 0 auto;
