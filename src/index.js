@@ -90,7 +90,7 @@ function loaded () {
     // const parameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat, stencilBuffer: false };
     // let renderTarget = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, parameters );
 
-    STATE.renderer = new THREE.WebGLRenderer({ alpha: true, logarithmicDepthBuffer: true });
+    STATE.renderer = new THREE.WebGLRenderer({ alpha: true});
     STATE.renderer.setPixelRatio( window.devicePixelRatio );
     STATE.renderer.setSize( window.innerWidth, window.innerHeight );
     STATE.renderer.shadowMap.enabled = true;

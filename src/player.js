@@ -665,7 +665,6 @@ export default class PLAYER {
                 rect1.x + rect1.width > rect2.x &&
                 rect1.y < rect2.y + rect2.height &&
                 rect1.height + rect1.y > rect2.y) {
-              has_collided = true;
               // Minkowski Sum for detecting collision
               const wy = (rect1.width + rect2.width) * (rect1.y - rect2.y);
               const hx = (rect1.height + rect2.height) * (rect1.x - rect2.x);
@@ -681,8 +680,8 @@ export default class PLAYER {
                       }
                       STATE.player.jump_state = STATE.player.jump_states.NEUTRAL_STATE;
                     }
+                    has_collided = true;
                   }
-                  console.log(i + " " + j);
                 } else {
                   //left
                   if (typeof STATE.collision.map[i-1] !== "undefined" && !STATE.collision.map[i-1][j]) {
@@ -694,6 +693,11 @@ export default class PLAYER {
                         //bottom collision
                         STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
                       }
+                      /*
+                    } else if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR &&
+                      STATE.player.dash.remaining_y_distance > 0) {
+                      STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
+                      */
                     } else {
                       STATE.player.obj.position.x = rect2.x - (rect2.width * 0.5) - (rect1.width * 0.5) - 1.5; //TODO re-evaluate if this equation is right
                       if (STATE.player.velocity_y > 0 &&
@@ -727,11 +731,8 @@ export default class PLAYER {
                       }
                       STATE.player.velocity_x = 0;
                     }
+                    has_collided = true;
                   } else {
-                    if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR &&
-                      STATE.player.dash.remaining_y_distance > 0) {
-                      STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
-                    }
                   }
                   touching_wall = true;
                 }
@@ -747,6 +748,11 @@ export default class PLAYER {
                         //bottom collision
                         STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
                       }
+                      /*
+                    } else if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR &&
+                      STATE.player.dash.remaining_y_distance > 0) {
+                      STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
+                      */
                     } else {
                       STATE.player.obj.position.x = rect2.x + (rect2.width * 0.5) + (rect1.width * 0.5) - 1.5;
                       if (STATE.player.velocity_y > 0 &&
@@ -780,13 +786,11 @@ export default class PLAYER {
                       }
                       STATE.player.velocity_x = 0;
                     }
+                    has_collided = true;
                   } else {
-                    if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR &&
-                      STATE.player.dash.remaining_y_distance > 0) {
-                      STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
-                    }
                   }
                   touching_wall = true;
+                  has_collided = true;
                 } else {
                   //bottom
                   if (!STATE.collision.map[i][j-1]) {
@@ -795,6 +799,7 @@ export default class PLAYER {
                       STATE.player.velocity_y = STATE.player.velocity_y * -0.5;
                       STATE.player.velocity_x = STATE.player.velocity_x * 0.75;
                     }
+                    has_collided = true;
                   }
                 }
               }
