@@ -69,9 +69,9 @@ function loaded () {
     STATE.scene.add( STATE.directionalLight );
 
     //skybox
-    var geometry = new THREE.CubeGeometry( 5000, 2000, 2000 );
+    let geometry = new THREE.CubeGeometry( 8000, 2000, 2000 );
     let cmat = STATE.materials.get('skyCube');
-    var cubeMaterials =
+    let cubeMaterials =
     [
       //new THREE.MeshBasicMaterial( { color: 0x00FF00, side: THREE.DoubleSide }),
       STATE.materials.get('skyBox'),
@@ -82,13 +82,11 @@ function loaded () {
       STATE.materials.get('skyBox')
     ];
 
-    var cube = new THREE.Mesh( geometry, cubeMaterials );
-    // STATE.scene.add( cube );
+    let cube = new THREE.Mesh( geometry, cubeMaterials );
+    cube.position.x = -3200;
+    STATE.scene.add( cube );
 
     // Renderer
-
-    // const parameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat, stencilBuffer: false };
-    // let renderTarget = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, parameters );
 
     STATE.renderer = new THREE.WebGLRenderer({ alpha: true});
     STATE.renderer.setPixelRatio( window.devicePixelRatio );
@@ -97,10 +95,13 @@ function loaded () {
     STATE.renderer.shadowMap.type = THREE.PCFShadowMap;
 
     STATE.composer = new EffectComposer(STATE.renderer, { depthBuffer: true, depthTexture: true });
-    STATE.composer.addPass(new RenderPass(STATE.scene, STATE.camera));
-
     STATE.passes = [];
-    STATE.passes[0] = new Bokeh2Pass(STATE.camera, {
+
+    STATE.passes[0] = new RenderPass(STATE.scene, STATE.camera);
+    STATE.passes[0].renderToScreen = true;
+    STATE.composer.addPass(STATE.passes[0]);
+
+    STATE.passes[1] = new Bokeh2Pass(STATE.camera, {
         rings: 6,
         samples: 1,
         showFocus: false,
@@ -110,23 +111,23 @@ function loaded () {
         shaderFocus: true,
         noise: false
     });
-    STATE.passes[0].bokehMaterial.uniforms.focalStop.value = 1;
-    STATE.passes[0].bokehMaterial.uniforms.focalDepth.value = 0.1;
-    STATE.passes[0].bokehMaterial.uniforms.focusCoords.value.x = 0.5;
-    STATE.passes[0].bokehMaterial.uniforms.focusCoords.value.y = 0.5;
-    STATE.passes[0].bokehMaterial.uniforms.maxBlur.value = 1.5;
-    STATE.passes[0].bokehMaterial.uniforms.bias.value = 0;
-    STATE.passes[0].bokehMaterial.uniforms.fringe.value = 0;
-    STATE.passes[0].bokehMaterial.uniforms.ditherStrength.value = 0;
-    STATE.passes[0].bokehMaterial.uniforms.luminanceThreshold.value = 0;
-    STATE.passes[0].bokehMaterial.uniforms.luminanceGain.value = 0;
-    STATE.passes[0].renderToScreen = true;
-    STATE.composer.addPass(STATE.passes[0]);
-
-    STATE.passes[1] = new GlitchPass();
-    STATE.passes[1].mode = GlitchMode.CONSTANT_MILD;
+    STATE.passes[1].bokehMaterial.uniforms.focalStop.value = 1;
+    STATE.passes[1].bokehMaterial.uniforms.focalDepth.value = 0.1;
+    STATE.passes[1].bokehMaterial.uniforms.focusCoords.value.x = 0.5;
+    STATE.passes[1].bokehMaterial.uniforms.focusCoords.value.y = 0.5;
+    STATE.passes[1].bokehMaterial.uniforms.maxBlur.value = 1.5;
+    STATE.passes[1].bokehMaterial.uniforms.bias.value = 0;
+    STATE.passes[1].bokehMaterial.uniforms.fringe.value = 0;
+    STATE.passes[1].bokehMaterial.uniforms.ditherStrength.value = 0;
+    STATE.passes[1].bokehMaterial.uniforms.luminanceThreshold.value = 0;
+    STATE.passes[1].bokehMaterial.uniforms.luminanceGain.value = 0;
     STATE.passes[1].renderToScreen = false;
-    STATE.composer.addPass(STATE.passes[1]);
+    // STATE.composer.addPass(STATE.passes[0]);
+
+    STATE.passes[2] = new GlitchPass();
+    STATE.passes[2].mode = GlitchMode.CONSTANT_MILD;
+    STATE.passes[2].renderToScreen = false;
+    STATE.composer.addPass(STATE.passes[2]);
 
     // let gui = new dat.GUI();
 
