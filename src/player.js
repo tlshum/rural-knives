@@ -555,7 +555,7 @@ export default class PLAYER {
         STATE.player.velocity_y = -4000 * deltaTime;
         break;
       case STATE.player.jump_states.NEUTRAL_STATE:
-        STATE.player.velocity_y = -900 * deltaTime;
+        STATE.player.velocity_y = -9000 * deltaTime;
         break;
       case STATE.player.jump_states.JUMP_STATE_UP_BUTTON:
         STATE.player.velocity_y -= 700 * deltaTime; //TODO fix hardcode
@@ -623,6 +623,7 @@ export default class PLAYER {
     //
     if (z_key_begin_pressed && !STATE.player.kick_state) {
       STATE.player.kick_state = true;
+      /*
       switch (STATE.player.jump_state) {
         case STATE.player.jump_states.JUMP_STATE_WALL:
         case STATE.player.jump_states.FALL_STATE_WALL:
@@ -630,6 +631,12 @@ export default class PLAYER {
         case STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON:
         case STATE.player.jump_states.FALL_STATE:
           STATE.player.dash.has_kicked_in_air = true;
+      }
+      */
+      STATE.player.dash.has_kicked_in_air = true;
+      if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_GROUND ||
+          STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR) {
+        STATE.player.jump_state = STATE.player.jump_states.FALL_STATE;
       }
     }
 
@@ -676,7 +683,7 @@ export default class PLAYER {
                   }
                 } else {
                   //left
-                  if (i >= 0 && typeof STATE.collision.map[i-1] !== "undefined" && !STATE.collision.map[i-1][j]) {
+                  if (typeof STATE.collision.map[i-1] !== "undefined" && !STATE.collision.map[i-1][j]) {
                     if (STATE.player.velocity_x < 0) {
                       if (STATE.player.velocity_y < 0) {
                         //top collisoin
@@ -717,6 +724,11 @@ export default class PLAYER {
                         STATE.player.jump_state = STATE.player.jump_states.FALL_STATE_WALL;
                       }
                       STATE.player.velocity_x = 0;
+                    }
+                  } else {
+                    if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR &&
+                      STATE.player.dash.remaining_y_distance > 0) {
+                      STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
                     }
                   }
                   touching_wall = true;
@@ -765,6 +777,11 @@ export default class PLAYER {
                         STATE.player.jump_state = STATE.player.jump_states.FALL_STATE_WALL;
                       }
                       STATE.player.velocity_x = 0;
+                    }
+                  } else {
+                    if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR &&
+                      STATE.player.dash.remaining_y_distance > 0) {
+                      STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
                     }
                   }
                   touching_wall = true;
