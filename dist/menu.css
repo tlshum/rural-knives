@@ -136,11 +136,13 @@ a {
 progress[value]{
   -webkit-appearance: progress-bar;
   display: inline-block;
+  position: fixed;
   box-sizing: border-box;
   background-color: black;
   color: #fc0505;
-  width: auto;
-  bottom: 0px;
+  width: 100%;
+  bottom: 0;
+  left: 0;
 }
 
 progress[value]::-webkit-progress-value {
@@ -156,6 +158,11 @@ progress[value]::-webkit-progress-value {
   margin-top: 10px;
 }
 
+.end{
+  margin-top: 10px;
+  color: #fc0505;
+}
+
 .back{
   margin-top: 10px;
   background-color: #191919;
@@ -165,16 +172,4 @@ progress[value]::-webkit-progress-value {
 .back:hover {
   background-color: #fc0505;
   color: #191919;
-}
-
-#game-over {
-  display: none;
-  background-color: black;
-  color: #fc0505;
-  text-align: center;
-  padding-top: 92px;
-  z-index: 1;
-  width: 600px;
-  height: 360px;
-  position: absolute;
 }

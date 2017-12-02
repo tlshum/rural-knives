@@ -32,24 +32,35 @@
               <ul>
                 <li class="props">----- CREDITS -----</li>
                 <li class="props">Jonathan Chuang - Creator, sound, level design</li>
-                <li class="props">Lucas Dekker - Animations</li>
+                <li class="props">Lucas Dekker - Animations, sound</li>
                 <li class="props">Anubhav Murali - UI</li>
                 <li class="props">Thomas Shum - Physics</li>
-                <li class="props">Joseph - Enemies</li>
+                <li class="props">Joseph Robinson- Enemies/turrets</li>
               </ul>
                 <a href="javascript:void(0)" onclick="toggleCredits()" class="button back">Back</a>
             </div>
             <div id="instructions">
-                <li class="directions"> GOOD LUCK</LI>
+              <ul>
+                <li class="directions">----- HOW TO PLAY -----</li>
+                <li class="directions">OBJECTIVE: Save Humanity</li>
+                <li class="directions">MOVEMENT: Arrow keys</li>
+                <li class="directions">DASH: Shift</li>
+                <li class="directions">KICK: Z</li>
+                <li class="directions">GOOD LUCK</LI>
               </ul>
               <a href="javascript:void(0)" onclick="toggleInstructions()" class="button back">Back</a>
             </div>
           </div>
         </div>
       </div>
-      <div id="game-over">
-        <a href="javascript:void(0)" onClick ="replay() "class="button restart">Play again?</a>
-      </div>
+      <div class="popup" id ="popup">
+        <div id="game-over">
+          <ul>
+            <li class="end">MISSION FAILED</li>
+          </ul>
+          <a href="javascript:void(0)" onClick ="replay() "class="button restart">Play again?</a>
+        </div>
+    </div>
       <progress id="health" value="100" max="100">100</progress>
     </div>
     <script src="menu.js"></script>
