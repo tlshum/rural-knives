@@ -112,6 +112,18 @@ a {
   background-color: #191919;
 }
 
+.popup3{
+  display: none;
+  text-align: center;
+  position: absolute;
+  margin: 0 auto;
+  top: 30%;
+  left: 25%;
+  width: 50%;
+  height: 25%;
+  background-color: #191919;
+}
+
 
   .button {
     display: inline-block;

@@ -31,7 +31,8 @@ function toggleWrapper(){
 
 //2 game win screens. One for normal, one for special
 function normalWin(){
-
+  toggle(document.getElementById('popup3'));
+  toggle(document.getElementById('game-won'));
 }
 
 function specialWin(){
@@ -57,7 +58,7 @@ function hideHealth() {
 
 // toggle game over
 function gameOver(){
-    toggle(document.getElementById('popup2'));
+  toggle(document.getElementById('popup2'));
   toggle(document.getElementById('game-over'));
 }
 
