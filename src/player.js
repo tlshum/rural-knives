@@ -13,8 +13,8 @@ export default class PLAYER {
     mat.transparent = true;
     let obj = new THREE.Mesh( geo, mat );
     console.log(this.obj);
-    obj.position.set( -2880, -495, -10 );
-    //obj.position.set( 0, 50, 75 );
+    //obj.position.set( -2880, -495, -10 );
+    obj.position.set( -6752, -495, -10 );
     obj.castShadow = true;
 
     STATE.player = {
@@ -617,6 +617,7 @@ export default class PLAYER {
       STATE.player.obj.position.y -= 500 * deltaTime;
     }
 
+
     /* */
 
      /* Post-movement Misc. Behaviors */
@@ -681,6 +682,7 @@ export default class PLAYER {
                       STATE.player.jump_state = STATE.player.jump_states.NEUTRAL_STATE;
                     }
                   }
+                  console.log(i + " " + j);
                 } else {
                   //left
                   if (typeof STATE.collision.map[i-1] !== "undefined" && !STATE.collision.map[i-1][j]) {
