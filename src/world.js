@@ -14,7 +14,7 @@ export default class WORLD {
         STATE.collision.map = []
         const data = response.data.split("\n")
         //STATE.collision.offset = 100 //test_city
-        STATE.collision.offset = 200
+        STATE.collision.offset = 400
         for (var i = 0; i < data.length; ++i) {
           if (data[i].charAt(0) == '#') {
             continue;
@@ -28,7 +28,7 @@ export default class WORLD {
           }
         }
         //STATE.collision.trans = {x: -140, y: -135}; //test_city
-        STATE.collision.trans = {x: -140, y: -135};
+        STATE.collision.trans = {x: -51, y: -135};
         STATE.collision.scale = 20;
         console.log(STATE.collision.map);
       });
