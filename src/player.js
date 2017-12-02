@@ -846,7 +846,7 @@ export default class PLAYER {
     );
 
     STATE.directionalLight.position.set(
-      STATE.player.obj.position.x - 500,
+      STATE.player.obj.position.x - 300,
       STATE.player.obj.position.y + 250,
       STATE.player.obj.position.z + 225
     )

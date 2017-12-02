@@ -56,15 +56,15 @@ function loaded () {
     STATE.directionalLight.target = STATE.player.obj;
     STATE.directionalLight.castShadow = true;
 
-    STATE.directionalLight.shadow.mapSize.width = 512;
-    STATE.directionalLight.shadow.mapSize.height = 512;
+    STATE.directionalLight.shadow.mapSize.width = 1024;
+    STATE.directionalLight.shadow.mapSize.height = 1024;
 
     STATE.directionalLight.shadow.camera.near = 0.5;
     STATE.directionalLight.shadow.camera.far = 1500;
-    STATE.directionalLight.shadow.camera.left = -250;
-    STATE.directionalLight.shadow.camera.bottom = -250;
-    STATE.directionalLight.shadow.camera.right = 250;
-    STATE.directionalLight.shadow.camera.top = 250;
+    STATE.directionalLight.shadow.camera.left = -350;
+    STATE.directionalLight.shadow.camera.bottom = -350;
+    STATE.directionalLight.shadow.camera.right = 350;
+    STATE.directionalLight.shadow.camera.top = 350;
 
     STATE.scene.add( STATE.directionalLight );
 
@@ -94,7 +94,7 @@ function loaded () {
     STATE.renderer.setPixelRatio( window.devicePixelRatio );
     STATE.renderer.setSize( window.innerWidth, window.innerHeight );
     STATE.renderer.shadowMap.enabled = true;
-    STATE.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    STATE.renderer.shadowMap.type = THREE.PCFShadowMap;
 
     STATE.composer = new EffectComposer(STATE.renderer, { depthBuffer: true, depthTexture: true });
     STATE.composer.addPass(new RenderPass(STATE.scene, STATE.camera));
