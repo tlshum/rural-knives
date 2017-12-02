@@ -327,6 +327,7 @@ export default class PLAYER {
           STATE.player.velocity_y = 300;
           STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_UP_BUTTON;
           STATE.sounds.play('jump');
+          STATE.player.check_landing = 1;
           STATE.player.kick_state = false;
         }
         break;
@@ -676,6 +677,10 @@ export default class PLAYER {
                         PLAYER.exit_dash(STATE);
                       }
                       STATE.player.jump_state = STATE.player.jump_states.NEUTRAL_STATE;
+                      if (STATE.player.check_landing == 1 && !left_key_down && !right_key_down) {
+                        STATE.sounds.play('landing');
+                        STATE.player.check_landing = 0;
+                      }
                     }
                     /*
                     console.log("top " + i + " " + j);

@@ -14,7 +14,7 @@ export default class SOUNDS {
     STATE.sounds.pool['music'] = new Howl({
       src: ['resources/audio/digital_slash.mp3'],
 	  loop: true,
-      volume: 0.75
+      volume: 0.25
     });
 
     STATE.sounds.pool['steps'] = new Howl({
