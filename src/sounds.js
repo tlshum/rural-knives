@@ -23,6 +23,18 @@ export default class SOUNDS {
       loop: true
     });
 
+    STATE.sounds.pool['landing'] = new Howl({ 
+       src: ['resources/audio/landing.mp3'],
+       volume: 0.45,
+       onend: function() { STATE.sounds.pool['landing'].playing = 0; }
+    });
+
+    STATE.sounds.pool['jump'] = new Howl({
+      src: ['resources/audio/jump.mp3'],
+      volume: 0.45,
+      onend: function() { STATE.sounds.pool['jump'].playing = 0; }
+    });
+    //
     // Speech Synthesis
 
   }

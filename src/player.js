@@ -326,6 +326,7 @@ export default class PLAYER {
         if (up_key_begin_pressed) {
           STATE.player.velocity_y = 300;
           STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_UP_BUTTON;
+          STATE.sounds.play('jump');
           STATE.player.kick_state = false;
         }
         break;
