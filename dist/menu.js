@@ -25,12 +25,8 @@ function showInstructions() {
 }
 
 // functions to toggle wrappers
-function showWrapper(){
-  toggleFlex(document.getElementById('play'));
-}
-
-function hideWrapper(){
-  toggleFlex(document.getElementById('play'));
+function toggleWrapper(){
+  toggleFlex(document.getElementById('wrapper'));
 }
 
 //2 game win screens. One for normal, one for special
@@ -41,7 +37,6 @@ function normalWin(){
 function specialWin(){
 
 }
-
 
 //set healthbar
 function updateHealth(minusHealth) {
