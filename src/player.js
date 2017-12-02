@@ -804,12 +804,13 @@ export default class PLAYER {
                   //bottom
                   if (!STATE.collision.map[i][j-1]) {
                     STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
+                    if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR) {
+                      PLAYER.exit_dash(STATE);
+                      STATE.player.velocity_y = 100;
+                    }
                     if (STATE.player.velocity_y > 0) {
                       STATE.player.velocity_y = STATE.player.velocity_y * -0.5;
                       STATE.player.velocity_x = STATE.player.velocity_x * 0.75;
-                    }
-                    if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR) {
-                      STATE.player.dash.remaining_y_distance = -1 * STATE.player.dash.remaining_y_distance;
                     }
                     has_collided = true;
                   }
