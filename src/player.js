@@ -10,9 +10,8 @@ export default class PLAYER {
 
     let geo = new THREE.BoxBufferGeometry( 23, 25, 0.01);
     let mat = STATE.materials.get('playerR');
-    mat.transparent = true;
     let obj = new THREE.Mesh( geo, mat );
-    console.log(this.obj);
+    obj.customDepthMaterial = STATE.materials.dget('playerR');
     //obj.position.set( -2880, -495, -10 );
     obj.position.set( -6752, -495, -10 );
     obj.castShadow = true;
@@ -162,7 +161,7 @@ export default class PLAYER {
     if (STATE.keyboard.isPressed(37)) {
       left_key_down = true;
     }
-    
+
     // Right
     if (STATE.keyboard.isPressed(39)) {
       right_key_down = true;
@@ -200,8 +199,8 @@ export default class PLAYER {
     function animator(st) {
 
       STATE.player.obj.material = STATE.materials.get(st);
+      STATE.player.obj.customDepthMaterial = STATE.materials.dget(st);
       STATE.materials.ctime += 1000 * deltaTime;
-
 
       while (STATE.materials.ctime > 75) {
         STATE.materials.ctime -= 75;
@@ -631,6 +630,8 @@ export default class PLAYER {
     //
     if (z_key_begin_pressed && !STATE.player.kick_state) {
       STATE.player.kick_state = true;
+      STATE.sounds.stop('kick');
+      STATE.sounds.play('kick');
       /*
       switch (STATE.player.jump_state) {
         case STATE.player.jump_states.JUMP_STATE_WALL:
@@ -743,6 +744,15 @@ export default class PLAYER {
                   } else if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR &&
                              STATE.player.dash.remaining_y_distance > 0) {
                     STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
+                    if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR) {
+                      PLAYER.exit_dash(STATE);
+                      STATE.player.velocity_y = 100;
+                    }
+                    if (STATE.player.velocity_y > 0) {
+                      STATE.player.velocity_y = STATE.player.velocity_y * -0.5;
+                      STATE.player.velocity_x = STATE.player.velocity_x * 0.75;
+                    }
+                    has_collided = true;
                   }
                   touching_wall = true;
                 }
@@ -795,19 +805,28 @@ export default class PLAYER {
                   } else if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR &&
                              STATE.player.dash.remaining_y_distance > 0) {
                     STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
-                  }
-                  touching_wall = true;
-                  has_collided = true;
-                } else {
-                  //bottom
-                  if (!STATE.collision.map[i][j-1]) {
-                    STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
+                    if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR) {
+                      PLAYER.exit_dash(STATE);
+                      STATE.player.velocity_y = 100;
+                    }
                     if (STATE.player.velocity_y > 0) {
                       STATE.player.velocity_y = STATE.player.velocity_y * -0.5;
                       STATE.player.velocity_x = STATE.player.velocity_x * 0.75;
                     }
+                    has_collided = true;
+                  }
+                  touching_wall = true;
+                } else {
+                  //bottom
+                  if (!STATE.collision.map[i][j-1]) {
+                    STATE.player.obj.position.y = rect2.y - (rect2.height * 0.5) - (rect1.height * 0.5);
                     if (STATE.player.jump_state == STATE.player.jump_states.DASH_STATE_AIR) {
-                      STATE.player.dash.remaining_y_distance = -1 * STATE.player.dash.remaining_y_distance;
+                      PLAYER.exit_dash(STATE);
+                      STATE.player.velocity_y = 100;
+                    }
+                    if (STATE.player.velocity_y > 0) {
+                      STATE.player.velocity_y = STATE.player.velocity_y * -0.5;
+                      STATE.player.velocity_x = STATE.player.velocity_x * 0.75;
                     }
                     has_collided = true;
                   }

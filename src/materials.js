@@ -24,9 +24,14 @@ export default class MATERIALS {
     loader.load( 'resources/player/player.png',
     function (texture) {
       tileSet(texture, 8, 4, 3, 0, 1);
+      texture.magFilter = THREE.NearestFilter;
       STATE.materials.mats['playerR'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['playerR'].transparent = true;
-      STATE.materials.mats['playerR'].magFilter = THREE.NearestFilter;
+      STATE.materials.dmats['playerR'] = new THREE.MeshDepthMaterial( {
+        depthPacking: THREE.RGBADepthPacking,
+        map: texture,
+        alphaTest: 0.5
+      });
       STATE.loader.changeCount(-1);
     });
 
@@ -36,9 +41,14 @@ export default class MATERIALS {
     function (texture) {
       tileSet(texture, 8, 4, 3, 1, 1 );
       texture.repeat.x = texture.repeat.x * -1; // flip horizontal
+      texture.magFilter = THREE.NearestFilter;
       STATE.materials.mats['playerL'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['playerL'].transparent = true;
-      STATE.materials.mats['playerL'].magFilter = THREE.NearestFilter;
+      STATE.materials.dmats['playerL'] = new THREE.MeshDepthMaterial( {
+        depthPacking: THREE.RGBADepthPacking,
+        map: texture,
+        alphaTest: 0.5
+      });
       STATE.loader.changeCount(-1);
     });
 
@@ -47,9 +57,14 @@ export default class MATERIALS {
     loader.load( 'resources/player/player.png',
     function (texture) {
       tileSet(texture, 8, 4, 0, 0, 8);
+      texture.magFilter = THREE.NearestFilter;
       STATE.materials.mats['runR'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['runR'].transparent = true;
-      STATE.materials.mats['runR'].magFilter = THREE.NearestFilter;
+      STATE.materials.dmats['runR'] = new THREE.MeshDepthMaterial( {
+        depthPacking: THREE.RGBADepthPacking,
+        map: texture,
+        alphaTest: 0.5
+      });
       STATE.loader.changeCount(-1);
     });
 
@@ -59,9 +74,14 @@ export default class MATERIALS {
     function (texture) {
       tileSet(texture, 8, 4, 0, 0, 8 );
       texture.repeat.x = texture.repeat.x * -1; // flip horizontal
+      texture.magFilter = THREE.NearestFilter;
       STATE.materials.mats['runL'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['runL'].transparent = true;
-      STATE.materials.mats['runL'].magFilter = THREE.NearestFilter;
+      STATE.materials.dmats['runL'] = new THREE.MeshDepthMaterial( {
+        depthPacking: THREE.RGBADepthPacking,
+        map: texture,
+        alphaTest: 0.5
+      });
       STATE.loader.changeCount(-1);
     });
 
@@ -70,9 +90,14 @@ export default class MATERIALS {
     loader.load( 'resources/player/player.png',
     function (texture) {
       tileSet(texture, 8, 4, 1, 1, 1);
+      texture.magFilter = THREE.NearestFilter;
       STATE.materials.mats['kickR'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['kickR'].transparent = true;
-      STATE.materials.mats['kickR'].magFilter = THREE.NearestFilter;
+      STATE.materials.dmats['kickR'] = new THREE.MeshDepthMaterial( {
+        depthPacking: THREE.RGBADepthPacking,
+        map: texture,
+        alphaTest: 0.5
+      });
       STATE.loader.changeCount(-1);
      });
 
@@ -82,9 +107,14 @@ export default class MATERIALS {
     function (texture) {
       tileSet(texture, 8, 4, 1, 2, 1 );
       texture.repeat.x = texture.repeat.x * -1; // flip horizontal
+      texture.magFilter = THREE.NearestFilter;
       STATE.materials.mats['kickL'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['kickL'].transparent = true;
-      STATE.materials.mats['kickL'].magFilter = THREE.NearestFilter;
+      STATE.materials.dmats['kickL'] = new THREE.MeshDepthMaterial( {
+        depthPacking: THREE.RGBADepthPacking,
+        map: texture,
+        alphaTest: 0.5
+      });
       STATE.loader.changeCount(-1);
      });
 
@@ -93,9 +123,14 @@ export default class MATERIALS {
     loader.load( 'resources/player/player.png',
     function (texture) {
       tileSet(texture, 8, 4, 2, 2, 1);
+      texture.magFilter = THREE.NearestFilter;
       STATE.materials.mats['dashUpR'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['dashUpR'].transparent = true;
-      STATE.materials.mats['dashUpR'].magFilter = THREE.NearestFilter;
+      STATE.materials.dmats['dashUpR'] = new THREE.MeshDepthMaterial( {
+        depthPacking: THREE.RGBADepthPacking,
+        map: texture,
+        alphaTest: 0.5
+      });
       STATE.loader.changeCount(-1);
      });
 
@@ -105,9 +140,14 @@ export default class MATERIALS {
     function (texture) {
       tileSet(texture, 8, 4, 2, 3, 1 );
       texture.repeat.x = texture.repeat.x * -1; // flip horizontal
+      texture.magFilter = THREE.NearestFilter;
       STATE.materials.mats['dashUpL'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['dashUpL'].transparent = true;
-      STATE.materials.mats['dashUpL'].magFilter = THREE.NearestFilter;
+      STATE.materials.dmats['dashUpL'] = new THREE.MeshDepthMaterial( {
+        depthPacking: THREE.RGBADepthPacking,
+        map: texture,
+        alphaTest: 0.5
+      });
       STATE.loader.changeCount(-1);
      });
 
@@ -116,9 +156,14 @@ export default class MATERIALS {
     loader.load( 'resources/player/player.png',
     function (texture) {
       tileSet(texture, 8, 4, 3, 7, 1);
+      texture.magFilter = THREE.NearestFilter;
       STATE.materials.mats['downR'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['downR'].transparent = true;
-      STATE.materials.mats['downR'].magFilter = THREE.NearestFilter;
+      STATE.materials.dmats['downR'] = new THREE.MeshDepthMaterial( {
+        depthPacking: THREE.RGBADepthPacking,
+        map: texture,
+        alphaTest: 0.5
+      });
       STATE.loader.changeCount(-1);
      });
 
@@ -128,9 +173,14 @@ export default class MATERIALS {
     function (texture) {
       tileSet(texture, 8, 4, 3, 0, 1 );
       texture.repeat.x = texture.repeat.x * -1; // flip horizontal
+      texture.magFilter = THREE.NearestFilter;
       STATE.materials.mats['downL'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['downL'].transparent = true;
-      STATE.materials.mats['downL'].magFilter = THREE.NearestFilter;
+      STATE.materials.dmats['downL'] = new THREE.MeshDepthMaterial( {
+        depthPacking: THREE.RGBADepthPacking,
+        map: texture,
+        alphaTest: 0.5
+      });
       STATE.loader.changeCount(-1);
      });
 
@@ -139,9 +189,14 @@ export default class MATERIALS {
     loader.load( 'resources/player/player.png',
     function (texture) {
       tileSet( texture, 8, 4, 2, 5, 1 );
+      texture.magFilter = THREE.NearestFilter;
       STATE.materials.mats['jumpR'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['jumpR'].transparent = true;
-      STATE.materials.mats['jumpR'].magFilter = THREE.NearestFilter;
+      STATE.materials.dmats['jumpR'] = new THREE.MeshDepthMaterial( {
+        depthPacking: THREE.RGBADepthPacking,
+        map: texture,
+        alphaTest: 0.5
+      });
       STATE.loader.changeCount(-1);
      });
 
@@ -151,9 +206,14 @@ export default class MATERIALS {
     function (texture) {
       tileSet( texture, 8, 4, 2, 6, 1 );
       texture.repeat.x = texture.repeat.x * -1; // flip horizontal
+      texture.magFilter = THREE.NearestFilter;
       STATE.materials.mats['jumpL'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['jumpL'].transparent = true;
-      STATE.materials.mats['jumpL'].magFilter = THREE.NearestFilter;
+      STATE.materials.dmats['jumpL'] = new THREE.MeshDepthMaterial( {
+        depthPacking: THREE.RGBADepthPacking,
+        map: texture,
+        alphaTest: 0.5
+      });
       STATE.loader.changeCount(-1);
     });
 
@@ -162,9 +222,14 @@ export default class MATERIALS {
     loader.load( 'resources/player/player.png',
     function (texture) {
       tileSet( texture, 8, 4, 3, 6, 1 );
+      texture.magFilter = THREE.NearestFilter;
       STATE.materials.mats['dashR'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['dashR'].transparent = true;
-      STATE.materials.mats['dashR'].magFilter = THREE.NearestFilter;
+      STATE.materials.dmats['dashR'] = new THREE.MeshDepthMaterial( {
+        depthPacking: THREE.RGBADepthPacking,
+        map: texture,
+        alphaTest: 0.5
+      });
       STATE.loader.changeCount(-1);
      });
 
@@ -174,9 +239,14 @@ export default class MATERIALS {
     function (texture) {
       tileSet( texture, 8, 4, 3, 7, 1 );
       texture.repeat.x = texture.repeat.x * -1; // flip horizontal
+      texture.magFilter = THREE.NearestFilter;
       STATE.materials.mats['dashL'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['dashL'].transparent = true;
-      STATE.materials.mats['dashL'].magFilter = THREE.NearestFilter;
+      STATE.materials.dmats['dashL'] = new THREE.MeshDepthMaterial( {
+        depthPacking: THREE.RGBADepthPacking,
+        map: texture,
+        alphaTest: 0.5
+      });
       STATE.loader.changeCount(-1);
     });
 
@@ -185,6 +255,7 @@ export default class MATERIALS {
     loader.load( 'resources/motherboard.png',
     function (texture) {
       tileSet(texture, 1, 1, 0, 1, 1 );
+      texture.magFilter = THREE.NearestFilter;
       // texture.repeat.set(1,1);
       STATE.materials.mats['skyBox'] = new THREE.MeshLambertMaterial({ map: texture, side: THREE.DoubleSide });
       STATE.loader.changeCount(-1);

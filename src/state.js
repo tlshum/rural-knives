@@ -25,13 +25,17 @@ let state = {
         }
       }
     }
-  },    
+  },
   materials: {
     mats: {},
+    dmats: {},
     ctime: 0,
     faceLeft: false,
     get: function (name) {
       return this.mats[name];
+    },
+    dget: function (name) {
+      return this.dmats[name];
     }
   },
   loader: {
