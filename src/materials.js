@@ -255,6 +255,7 @@ export default class MATERIALS {
     loader.load( 'resources/motherboard.png',
     function (texture) {
       tileSet(texture, 1, 1, 0, 1, 1 );
+      texture.magFilter = THREE.NearestFilter;
       // texture.repeat.set(1,1);
       STATE.materials.mats['skyBox'] = new THREE.MeshLambertMaterial({ map: texture, side: THREE.DoubleSide });
       STATE.loader.changeCount(-1);
