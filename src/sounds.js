@@ -34,6 +34,18 @@ export default class SOUNDS {
       volume: 0.45,
       onend: function() { STATE.sounds.pool['jump'].playing = 0; }
     });
+
+    STATE.sounds.pool['dash'] = new Howl({
+      src: ['resources/audio/dash.mp3'],
+      volume: 0.45,
+      onend: function() { STATE.sounds.pool['dash'].playing = 0; }
+    });
+
+    STATE.sounds.pool['kick'] = new Howl({
+      src: ['resources/audio/kick.mp3'],
+      volume: 0.45,
+      onend: function() { STATE.sounds.pool['kick'].playing = 0; }
+    });
     //
     // Speech Synthesis
 

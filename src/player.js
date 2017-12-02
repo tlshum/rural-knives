@@ -397,6 +397,7 @@ export default class PLAYER {
       STATE.player.dash.old_jump_state = STATE.player.jump_state;
       STATE.player.dash.old_velocity_x = STATE.player.velocity_x;
       STATE.player.dash.old_velocity_y = STATE.player.velocity_y;
+      STATE.sounds.play('dash');
       if ((up_key_down && STATE.player.jump_state == STATE.player.jump_states.NEUTRAL_STATE) ||
           (
            STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_UP_BUTTON ||
@@ -685,7 +686,7 @@ export default class PLAYER {
                         PLAYER.exit_dash(STATE);
                       }
                       STATE.player.jump_state = STATE.player.jump_states.NEUTRAL_STATE;
-                      if (STATE.player.check_landing == 1 && !left_key_down && !right_key_down) {
+                      if (STATE.player.check_landing == 1) {
                         STATE.sounds.play('landing');
                         STATE.player.check_landing = 0;
                       }
