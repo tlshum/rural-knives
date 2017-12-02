@@ -88,7 +88,7 @@ function loaded () {
 
     // Renderer
 
-    STATE.renderer = new THREE.WebGLRenderer({ alpha: true});
+    STATE.renderer = new THREE.WebGLRenderer({ alpha: true });
     STATE.renderer.setPixelRatio( window.devicePixelRatio );
     STATE.renderer.setSize( window.innerWidth, window.innerHeight );
     STATE.renderer.shadowMap.enabled = true;
@@ -122,7 +122,7 @@ function loaded () {
     STATE.passes[1].bokehMaterial.uniforms.luminanceThreshold.value = 0;
     STATE.passes[1].bokehMaterial.uniforms.luminanceGain.value = 0;
     STATE.passes[1].renderToScreen = false;
-    // STATE.composer.addPass(STATE.passes[0]);
+    // STATE.composer.addPass(STATE.passes[1]);
 
     STATE.passes[2] = new GlitchPass();
     STATE.passes[2].mode = GlitchMode.CONSTANT_MILD;

@@ -10,9 +10,8 @@ export default class PLAYER {
 
     let geo = new THREE.BoxBufferGeometry( 23, 25, 0.01);
     let mat = STATE.materials.get('playerR');
-    mat.transparent = true;
     let obj = new THREE.Mesh( geo, mat );
-    console.log(this.obj);
+    obj.customDepthMaterial = STATE.materials.dget('playerR');
     //obj.position.set( -2880, -495, -10 );
     obj.position.set( -6752, -495, -10 );
     obj.castShadow = true;
@@ -162,7 +161,7 @@ export default class PLAYER {
     if (STATE.keyboard.isPressed(37)) {
       left_key_down = true;
     }
-    
+
     // Right
     if (STATE.keyboard.isPressed(39)) {
       right_key_down = true;
@@ -200,8 +199,8 @@ export default class PLAYER {
     function animator(st) {
 
       STATE.player.obj.material = STATE.materials.get(st);
+      STATE.player.obj.customDepthMaterial = STATE.materials.dget(st);
       STATE.materials.ctime += 1000 * deltaTime;
-
 
       while (STATE.materials.ctime > 75) {
         STATE.materials.ctime -= 75;
