@@ -124,6 +124,20 @@ a {
   padding: 15px 0;
 }
 
+progress[value]{
+  -webkit-appearance: progress-bar;
+  display: inline-block;
+  box-sizing: border-box;
+  background-color: black;
+  color: #fc0505;
+  width: auto;
+  bottom: 0px;
+}
+
+progress[value]::-webkit-progress-value {
+    background-color: #fc0505;
+}
+
 .props {
   color: #fc0505;
 }

@@ -118,6 +118,24 @@ a {
   padding: 15px 0;
 }
 
+//styling the health bar
+progress{
+  color: black;
+  line-height: 2em;
+  width: 100%;
+  height: 2em;
+  background: black;
+  bottom: 0px;
+}
+
+progress::-webkit-progress-bar{
+  background:#fc0505;
+}
+
+progress::-webkit-progress-value{
+  background: #fc0505;
+}
+
 .props {
   color: #fc0505;
 }

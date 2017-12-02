@@ -5,6 +5,15 @@ function toggle(el) {
     el.style.display = 'none';
 }
 
+//flex toggle for flex elements
+function toggleFlex(el){
+  if(el.style.display !== 'flex')
+    el.style.display = 'flex';
+  else {
+    el.style.display = 'none';
+  }
+}
+
 function showCredits() {
   toggle(document.getElementById('popup'));
   toggle(document.getElementById('credits'));
@@ -15,13 +24,48 @@ function showInstructions() {
   toggle(document.getElementById('instructions'));
 }
 
-// toggle wrapper
+// functions to toggle wrappers
+function showWrapper(){
+  toggleFlex(document.getElementById('play'));
+}
+
+function hideWrapper(){
+  toggleFlex(document.getElementById('play'));
+}
+
+//2 game win screens. One for normal, one for special
+function normalWin(){
+
+}
+
+function specialWin(){
+
+}
 
 
-// toggle game over
-
-
-// set healthbar
-
+//set healthbar
+function updateHealth(minusHealth) {
+  let health = document.getElementById('health');
+  health.value -= minusHealth;
+}
 
 // toggle healthbar
+function showHealth() {
+  //called when game starts, will show the health bar along the bottom
+  toggle(document.getElementById('health'));
+}
+
+function hideHealth() {
+  //for when game is paused/done
+  toggle(document.getElementById('health'));
+}
+
+// toggle game over
+function gameOver(){
+  toggle(document.getElementById('game-over'));
+}
+
+//funciton to replay
+function replay(){
+  location.reload();
+}
