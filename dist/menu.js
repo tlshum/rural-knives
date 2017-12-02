@@ -7,7 +7,7 @@ function toggle(el) {
 
 //flex toggle for flex elements
 function toggleFlex(el){
-  if(el.style.display !== 'flex')
+  if (el.style.display !== 'flex' && el.style.display !== '')
     el.style.display = 'flex';
   else {
     el.style.display = 'none';
