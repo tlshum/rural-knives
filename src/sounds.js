@@ -43,7 +43,7 @@ export default class SOUNDS {
 
     STATE.sounds.pool['kick'] = new Howl({
       src: ['resources/audio/kick.mp3'],
-      volume: 0.45,
+      volume: 0.25,
       onend: function() { STATE.sounds.pool['kick'].playing = 0; }
     });
     //

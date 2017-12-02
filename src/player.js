@@ -631,6 +631,8 @@ export default class PLAYER {
     //
     if (z_key_begin_pressed && !STATE.player.kick_state) {
       STATE.player.kick_state = true;
+      STATE.sounds.stop('kick');
+      STATE.sounds.play('kick');
       /*
       switch (STATE.player.jump_state) {
         case STATE.player.jump_states.JUMP_STATE_WALL:
