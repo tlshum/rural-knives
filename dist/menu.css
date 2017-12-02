@@ -40,10 +40,20 @@ a {
   position: absolute;
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.menuwrapper {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
   background: url("dark.jpg") no-repeat center center fixed;
   background-size: cover;
   display: flex;
   flex-direction: column;
+  flex: 1;
 }
 
 .wrapper {

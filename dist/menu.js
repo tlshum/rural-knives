@@ -14,23 +14,19 @@ function toggleFlex(el){
   }
 }
 
-function showCredits() {
+function toggleCredits() {
   toggle(document.getElementById('popup'));
   toggle(document.getElementById('credits'));
 }
 
-function showInstructions() {
+function toggleInstructions() {
   toggle(document.getElementById('popup'));
   toggle(document.getElementById('instructions'));
 }
 
 // functions to toggle wrappers
-function showWrapper(){
-  toggleFlex(document.getElementById('play'));
-}
-
-function hideWrapper(){
-  toggleFlex(document.getElementById('play'));
+function toggleWrapper(){
+  toggleFlex(document.getElementById('menuwrapper'));
 }
 
 //2 game win screens. One for normal, one for special
@@ -41,7 +37,6 @@ function normalWin(){
 function specialWin(){
 
 }
-
 
 //set healthbar
 function updateHealth(minusHealth) {

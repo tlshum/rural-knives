@@ -13,35 +13,37 @@
   <body>
     <div id="app"></div>
     <div class="bigwrapper">
-      <div class="wrapper">
-        <div class="title">
-          <h1>LFGames</h1>
-        </div>
-        <div class="middle">
-          <div class="screen" id="screen">
-            <ul>
-              <li><a href="javascript:void(0)" onclick="toggleWrapper()" class="button play">Play</a></li>
-              <li><a href="javascript:void(0)" onclick="showInstructions()" class="button instructions">How to Play</a></li>
-              <li><a href="javascript:void(0)" onclick="showCredits()" class="button credits">Credits</a></li>
-            </ul>
+      <div class="menuwrapper" id="menuwrapper">
+        <div class="wrapper">
+          <div class="title">
+            <h1>LFGames</h1>
           </div>
-        </div>
-        <div class="popup" id="popup">
-          <div id="credits">
-            <ul>
-              <li class="props">----- CREDITS -----</li>
-              <li class="props">Jonathan Chuang - Creator, sound, level design</li>
-              <li class="props">Lucas Dekker - Animations</li>
-              <li class="props">Anubhav Murali - UI</li>
-              <li class="props">Thomas Shum - Physics</li>
-              <li class="props">Joseph - Enemies</li>
-            </ul>
-              <a href="javascript:void(0)" onclick="showCredits()" class="button back">Back</a>
+          <div class="middle">
+            <div class="screen" id="screen">
+              <ul>
+                <li><a href="javascript:void(0)" onclick="toggleWrapper()" class="button play">Play</a></li>
+                <li><a href="javascript:void(0)" onclick="toggleInstructions()" class="button instructions">How to Play</a></li>
+                <li><a href="javascript:void(0)" onclick="toggleCredits()" class="button credits">Credits</a></li>
+              </ul>
+            </div>
           </div>
-          <div id="instructions">
-              <li class="directions"> GOOD LUCK</LI>
-            </ul>
-            <a href="javascript:void(0)" onclick="showInstructions()" class="button back">Back</a>
+          <div class="popup" id="popup">
+            <div id="credits">
+              <ul>
+                <li class="props">----- CREDITS -----</li>
+                <li class="props">Jonathan Chuang - Creator, sound, level design</li>
+                <li class="props">Lucas Dekker - Animations</li>
+                <li class="props">Anubhav Murali - UI</li>
+                <li class="props">Thomas Shum - Physics</li>
+                <li class="props">Joseph - Enemies</li>
+              </ul>
+                <a href="javascript:void(0)" onclick="showCredits()" class="button back">Back</a>
+            </div>
+            <div id="instructions">
+                <li class="directions"> GOOD LUCK</LI>
+              </ul>
+              <a href="javascript:void(0)" onclick="showInstructions()" class="button back">Back</a>
+            </div>
           </div>
         </div>
       </div>
