@@ -30,7 +30,7 @@ function toggleWrapper(){
 }
 
 //2 game win screens. One for normal, one for special
-function normalWin(){
+function gameWin(){
   toggle(document.getElementById('popup3'));
   toggle(document.getElementById('game-won'));
 }
