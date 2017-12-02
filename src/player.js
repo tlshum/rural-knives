@@ -340,7 +340,9 @@ export default class PLAYER {
     }
 
     //exit kick state after slowing down to a certain velociy
-    if (STATE.player.kick_state && STATE.player.velocity_x < (STATE.player.max_velocity_x * 0.2) && STATE.player.velocity_x > (STATE.player.max_velocity_x * -0.2)) {
+    if (STATE.player.kick_state &&
+        STATE.player.velocity_x < (STATE.player.max_velocity_x * 0.2) &&
+        STATE.player.velocity_x > (STATE.player.max_velocity_x * -0.2)) {
       STATE.player.kick_state = false;
     }
 
@@ -399,7 +401,9 @@ export default class PLAYER {
           (
            STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_UP_BUTTON ||
            STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON ||
-           STATE.player.jump_state == STATE.player.jump_states.FALL_STATE
+           STATE.player.jump_state == STATE.player.jump_states.FALL_STATE ||
+           STATE.player.jump_state == STATE.player.jump_states.JUMP_STATE_WALL ||
+           STATE.player.jump_state == STATE.player.jump_states.FALL_STATE_WALL
           )
          ) {
         STATE.player.jump_state = STATE.player.jump_states.DASH_STATE_AIR;
