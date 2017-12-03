@@ -46,6 +46,12 @@ export default class SOUNDS {
       volume: 0.25,
       onend: function() { STATE.sounds.pool['kick'].playing = 0; }
     });
+
+    STATE.sounds.pool['projectile'] = new Howl({
+      src: ['resources/audio/projectile.mp3'],
+      volume: 0.25,
+      onend: function() { STATE.sounds.pool['projectile'].playing = 0; }
+    });
     //
     // Speech Synthesis
 
