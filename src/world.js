@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 import axios from 'axios';
 
+import GLTFLoader from 'three-gltf2-loader';
+GLTFLoader(THREE);
+
 export default class WORLD {
 
   static load ( STATE ) {
@@ -33,10 +36,13 @@ export default class WORLD {
         console.log(STATE.collision.map);
       });
 
+      console.log(THREE);
 
-    let loader = new THREE.ObjectLoader();
+    let loader = new THREE.GLTFLoader();
     //loader.load( 'resources/test_city/level.json', ( obj ) => {
-    loader.load( 'resources/level/level.json', ( obj ) => {
+    loader.load( 'resources/level/level.gltf', ( gltf ) => {
+
+      let obj = gltf.scene.children[0];
 
       STATE.world = obj;
       STATE.world.scale.set(20, 20, 20);
@@ -46,13 +52,12 @@ export default class WORLD {
           child.receiveShadow = true;
           if (Array.isArray(child.material)) {
             for (let i = 0; i < child.material.length; i++) {
-              child.material[i].color = 0x000000;
-              child.material[i].map.magFilter = THREE.NearestFilter;
+              if (typeof child.material[i].magFilter !== "undefined")
+                child.material[i].magFilter = THREE.NearestFilter;
             }
           } else {
-            if (typeof child.material.map !== "undefined" &&
-                typeof child.material.map.magFilter !== "undefined") {
-              child.material.map.magFilter = THREE.NearestFilter;
+            if (typeof child.material.magFilter !== "undefined") {
+              child.material.magFilter = THREE.NearestFilter;
             }
           }
           console.log(child.material);
