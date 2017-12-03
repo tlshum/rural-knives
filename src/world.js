@@ -44,10 +44,18 @@ export default class WORLD {
         if (child instanceof THREE.Mesh) {
           child.castShadow = true;
           child.receiveShadow = true;
-          if (typeof child.material.map !== "undefined" &&
-              typeof child.material.map.magFilter !== "undefined") {
-            child.material.map.magFilter = THREE.NearestFilter;
+          if (Array.isArray(child.material)) {
+            for (let i = 0; i < child.material.length; i++) {
+              child.material[i].color = 0x000000;
+              child.material[i].map.magFilter = THREE.NearestFilter;
+            }
+          } else {
+            if (typeof child.material.map !== "undefined" &&
+                typeof child.material.map.magFilter !== "undefined") {
+              child.material.map.magFilter = THREE.NearestFilter;
+            }
           }
+          console.log(child.material);
         }
       });
       STATE.scene.add( STATE.world );
