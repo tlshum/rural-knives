@@ -13,7 +13,7 @@ import SOUNDS from './sounds.js';
 // Set up scene.
 
 STATE.scene = new THREE.Scene();
-STATE.scene.background = new THREE.Color( 0xffffff );
+STATE.scene.background = new THREE.Color( 0x000000 );
 
 STATE.camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 1, 2000 );
 STATE.camera.rotation.x = -(Math.PI*0.1);

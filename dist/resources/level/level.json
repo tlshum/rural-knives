@@ -1,6 +1,6 @@
 {
     "geometries":[{
-        "uuid":"77FD2B5E-F756-4B9C-8CE5-1039EC36824A",
+        "uuid":"735B00C8-0A71-4C33-8A98-1C8AA18D4D77",
         "data":{
             "groups":[{
                 "materialIndex":0,
@@ -38,44 +38,44 @@
                 }
             }
         },
-        "name":"level.001Geometry.13",
+        "name":"level.001Geometry.15",
         "type":"BufferGeometry"
     }],
     "object":{
-        "uuid":"266F12FC-5614-4B79-857A-BC89B66E0061",
+        "uuid":"519D91A6-7C81-4FAD-884F-2F6548187699",
         "children":[{
             "name":"level.001",
-            "uuid":"7945E0BA-028B-4488-A538-095B4E289426",
+            "uuid":"820A9BB6-E6DB-46D3-95DC-1702F52DF946",
             "matrix":[-1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1],
             "visible":true,
             "type":"Mesh",
-            "material":["52F36DEC-B781-41EA-8446-2FCA3FD83D2C","AE65A2C2-6BA1-41E7-B1B5-45B9C7F54270","5368375C-A901-4148-9DEF-E6F514922631"],
+            "material":["71B7717D-D094-4BA8-8992-230D2FD5E48A","721B05CA-82B9-40C3-AFC8-C1DA7EE6E750","246A376C-159C-49DA-A9E1-D4DB26C960D9"],
             "castShadow":true,
             "receiveShadow":true,
-            "geometry":"77FD2B5E-F756-4B9C-8CE5-1039EC36824A"
+            "geometry":"735B00C8-0A71-4C33-8A98-1C8AA18D4D77"
         }],
         "matrix":[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
         "type":"Scene"
     },
     "images":[{
         "url":"hyptosis_tile-art-batch-1.png",
-        "uuid":"31E733DF-875A-477D-8434-59F9DEF55DFF",
+        "uuid":"A853482A-2CE1-46C9-9874-5C652979B3AD",
         "name":"hyptosis_tile-art-batch-1.png"
     },{
         "url":"hyptosis_tile-art-batch-2.png",
-        "uuid":"BFA781F0-CA88-4B14-A20B-0B33EDA15219",
+        "uuid":"D9E4B391-65E0-4965-8E80-014ACC229A97",
         "name":"hyptosis_tile-art-batch-2.png"
     },{
         "url":"hyptosis_tile-art-batch-3.png",
-        "uuid":"0B4038AC-7EB7-4E04-B5AA-BD56EBA14A28",
+        "uuid":"F5371BB2-2CE2-4C7C-BF27-2C2EA73C4CCB",
         "name":"hyptosis_tile-art-batch-3.png"
     }],
     "textures":[{
         "repeat":[1,1],
         "anisotropy":0.1,
         "name":"hyptosis_tile-art-batch-1.png",
-        "image":"31E733DF-875A-477D-8434-59F9DEF55DFF",
-        "uuid":"9EDB655F-D130-43C3-939B-04ACEFC38D22",
+        "image":"A853482A-2CE1-46C9-9874-5C652979B3AD",
+        "uuid":"76DDA972-1302-4571-863A-0F3718507E6E",
         "mapping":300,
         "wrap":[1000,1000],
         "minFilter":1003,
@@ -84,8 +84,8 @@
         "repeat":[1,1],
         "anisotropy":0.1,
         "name":"hyptosis_tile-art-batch-2.png",
-        "image":"BFA781F0-CA88-4B14-A20B-0B33EDA15219",
-        "uuid":"AAC13B84-BCFB-44DE-BB83-7F6DCF080C16",
+        "image":"D9E4B391-65E0-4965-8E80-014ACC229A97",
+        "uuid":"307A0C46-0AF4-42EE-8724-5650161AD900",
         "mapping":300,
         "wrap":[1000,1000],
         "minFilter":1003,
@@ -94,8 +94,8 @@
         "repeat":[1,1],
         "anisotropy":0.1,
         "name":"hyptosis_tile-art-batch-3.png",
-        "image":"0B4038AC-7EB7-4E04-B5AA-BD56EBA14A28",
-        "uuid":"83DE964C-778F-4571-81A3-41BEB852819B",
+        "image":"F5371BB2-2CE2-4C7C-BF27-2C2EA73C4CCB",
+        "uuid":"78A4DFFF-9C7F-47A3-B001-5886D703AE4A",
         "mapping":300,
         "wrap":[1000,1000],
         "minFilter":1003,
@@ -114,7 +114,7 @@
     }],
     "materials":[{
         "shininess":50,
-        "uuid":"52F36DEC-B781-41EA-8446-2FCA3FD83D2C",
+        "uuid":"71B7717D-D094-4BA8-8992-230D2FD5E48A",
         "depthWrite":true,
         "vertexColors":0,
         "type":"MeshPhongMaterial",
@@ -124,10 +124,10 @@
         "name":"hyptosis_tile-art-batch-1",
         "depthTest":true,
         "specular":8355711,
-        "map":"9EDB655F-D130-43C3-939B-04ACEFC38D22"
+        "map":"76DDA972-1302-4571-863A-0F3718507E6E"
     },{
         "shininess":50,
-        "uuid":"AE65A2C2-6BA1-41E7-B1B5-45B9C7F54270",
+        "uuid":"721B05CA-82B9-40C3-AFC8-C1DA7EE6E750",
         "depthWrite":true,
         "vertexColors":0,
         "type":"MeshPhongMaterial",
@@ -137,10 +137,10 @@
         "name":"hyptosis_tile-art-batch-2",
         "depthTest":true,
         "specular":8355711,
-        "map":"AAC13B84-BCFB-44DE-BB83-7F6DCF080C16"
+        "map":"307A0C46-0AF4-42EE-8724-5650161AD900"
     },{
         "shininess":50,
-        "uuid":"5368375C-A901-4148-9DEF-E6F514922631",
+        "uuid":"246A376C-159C-49DA-A9E1-D4DB26C960D9",
         "depthWrite":true,
         "vertexColors":0,
         "type":"MeshPhongMaterial",
@@ -150,6 +150,6 @@
         "name":"hyptosis_tile-art-batch-3",
         "depthTest":true,
         "specular":8355711,
-        "map":"83DE964C-778F-4571-81A3-41BEB852819B"
+        "map":"78A4DFFF-9C7F-47A3-B001-5886D703AE4A"
     }]
 }
