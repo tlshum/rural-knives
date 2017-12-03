@@ -46,7 +46,7 @@ export default class ENTITIES {
     let turretMesh2 = new THREE.Mesh(turretGeo, turretMat);
     let turretMesh3 = new THREE.Mesh(turretGeo, turretMat);
     let turretMesh4 = new THREE.Mesh(turretGeo, turretMat);
-    turretMesh.position.set(70, 50, 80);
+    turretMesh.position.set(-6534, -695, -10);
     turretMesh2.position.set(120, 50, 80);
     turretMesh3.position.set(170, 60, 80);
     turretMesh4.position.set(320, 80, 80);
@@ -62,7 +62,7 @@ export default class ENTITIES {
     let projectileMesh2 = new THREE.Mesh(projectileGeo, projectileMat);
     let projectileMesh3 = new THREE.Mesh(projectileGeo, projectileMat);
     let projectileMesh4 = new THREE.Mesh(projectileGeo, projectileMat);
-    projectileMesh.position.set(70, 50, 79);
+    projectileMesh.position.set(-6534, -695, -10);
     projectileMesh2.position.set(120, 50, 79);
     projectileMesh3.position.set(170, 60, 79);
     projectileMesh4.position.set(320, 80, 79);
