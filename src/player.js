@@ -67,7 +67,8 @@ export default class PLAYER {
       },
       hurt: {
         state: false,
-        time: 0
+        invuln: false,
+        invuln_time: 0
       }
     };
 
@@ -132,9 +133,9 @@ export default class PLAYER {
     STATE.player.dash.old_velocity_y = 0;
   }
 
-  static exit_hurt(STATE) {
-    STATE.player.hurt.time = 0;
-    STATE.player.hurt.state = false;
+  static exit_invuln(STATE) {
+    STATE.player.hurt.invuln_time = 0;
+    STATE.player.hurt.invuln = false;
     STATE.passes[0].renderToScreen = true;
     STATE.passes[2].renderToScreen = false;
   }
@@ -328,7 +329,17 @@ export default class PLAYER {
 
     if (STATE.player.hurt.state) {
       if (STATE.player.jump_state == STATE.player.jump_states.NEUTRAL_STATE) {
-        PLAYER.exit_hurt(STATE);
+        STATE.player.hurt.state = false;
+      }
+    }
+
+    if (STATE.player.hurt.invuln) {
+      STATE.player.hurt.invuln_time -= deltaTime;
+      if (STATE.player.hurt.invuln_time <= 0) {
+        STATE.player.hurt.invuln = false;
+        STATE.player.hurt.invuln_time = 0;
+        STATE.passes[0].renderToScreen = true;
+        STATE.passes[2].renderToScreen = false;
       }
     }
     /* */
@@ -450,7 +461,7 @@ export default class PLAYER {
         }
       }
       STATE.player.kick_state = false;
-      PLAYER.exit_hurt(STATE);
+      STATE.player.hurt.state = false;
     }
 
     //Exit code for if no longer DASHING
@@ -650,7 +661,7 @@ export default class PLAYER {
     //
     if (z_key_begin_pressed && !STATE.player.kick_state) {
       STATE.player.kick_state = true;
-      PLAYER.exit_hurt(STATE);
+      STATE.player.hurt.state = false;
       STATE.sounds.stop('kick');
       STATE.sounds.play('kick');
       /*
@@ -882,44 +893,48 @@ export default class PLAYER {
 
     /* */
 
-     /* Projectile collision code */
+    /* Projectile collision code */
     //
-    for (var i = 0; i < STATE.projectiles.length; ++i) {
-      var projectile = {
-        x: STATE.projectiles[i].mesh.position.x,
-        y: STATE.projectiles[i].mesh.position.y,
-        height: STATE.projectiles[i].mesh.geometry.parameters.height,
-        width: STATE.projectiles[i].mesh.geometry.parameters.width
-      }
-      var player = {
-        x: STATE.player.obj.position.x,
-        y: STATE.player.obj.position.y,
-        height: STATE.player.obj.geometry.parameters.height,
-        width: STATE.player.obj.geometry.parameters.width
-      }
-      if (player.x < projectile.x + projectile.width &&
+    if (!STATE.player.hurt.invuln) {
+      for (var i = 0; i < STATE.projectiles.length; ++i) {
+        var projectile = {
+          x: STATE.projectiles[i].mesh.position.x,
+          y: STATE.projectiles[i].mesh.position.y,
+          height: STATE.projectiles[i].mesh.geometry.parameters.height,
+          width: STATE.projectiles[i].mesh.geometry.parameters.width
+        }
+        var player = {
+          x: STATE.player.obj.position.x,
+          y: STATE.player.obj.position.y,
+          height: STATE.player.obj.geometry.parameters.height,
+          width: STATE.player.obj.geometry.parameters.width
+        }
+        if (player.x < projectile.x + projectile.width &&
           player.x + player.width > projectile.x &&
           player.y < projectile.y + projectile.height &&
           player.height + player.y > projectile.y) {
-        if (player.x < projectile.x) {
-          //hit right
-          STATE.player.velocity_x = -200;
-        } else {
-          //hit left
-          STATE.player.velocity_x = 200;
+          if (player.x < projectile.x) {
+            //hit right
+            STATE.player.velocity_x = -200;
+          } else {
+            //hit left
+            STATE.player.velocity_x = 200;
+          }
+          PLAYER.exit_dash(STATE);
+          STATE.player.kick_state = false;
+          STATE.player.velocity_y = 200;
+          STATE.player.obj.position.y += 20
+          STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON;
+          STATE.player.hurt.state = true;
+          STATE.player.hurt.invuln = true;
+          STATE.player.hurt.invuln_time = 0.25;
+          STATE.passes[0].renderToScreen = false;
+          STATE.passes[2].renderToScreen = true;
+          STATE.projectiles[i].mesh.position.x = STATE.turrets[i].mesh.position.x;
+          STATE.projectiles[i].mesh.position.y = STATE.turrets[i].mesh.position.y;
+          STATE.projectiles[i].mesh.position.z = STATE.turrets[i].mesh.position.z - 1;
+          STATE.turrets[i].timer = 0;
         }
-        PLAYER.exit_dash(STATE);
-        STATE.player.kick_state = false;
-        STATE.player.velocity_y = 200;
-        STATE.player.obj.position.y += 20
-        STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON;
-        STATE.player.hurt.state = true;
-        STATE.passes[0].renderToScreen = false;
-        STATE.passes[2].renderToScreen = true;
-        STATE.projectiles[i].mesh.position.x = STATE.turrets[i].mesh.position.x;
-        STATE.projectiles[i].mesh.position.y = STATE.turrets[i].mesh.position.y;
-        STATE.projectiles[i].mesh.position.z = STATE.turrets[i].mesh.position.z - 1;
-        STATE.turrets[i].timer = 0;
       }
     }
 
