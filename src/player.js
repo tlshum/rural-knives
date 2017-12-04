@@ -69,7 +69,8 @@ export default class PLAYER {
         state: false,
         invuln: false,
         invuln_time: 0
-      }
+      },
+      health: 100
     };
 
     // Add player to scene.
@@ -930,17 +931,18 @@ export default class PLAYER {
           STATE.player.hurt.invuln_time = 0.25;
           STATE.passes[0].renderToScreen = false;
           STATE.passes[2].renderToScreen = true;
+          STATE.player.health -= 10;
           STATE.projectiles[i].mesh.position.x = STATE.turrets[i].mesh.position.x;
           STATE.projectiles[i].mesh.position.y = STATE.turrets[i].mesh.position.y;
           STATE.projectiles[i].mesh.position.z = STATE.turrets[i].mesh.position.z - 1;
           STATE.turrets[i].timer = 0;
+          console.log("Health = " + STATE.player.health);
         }
       }
     }
 
     /* */
 
-    console.log(STATE.player.obj.position.x + " " + STATE.player.obj.position.y);
 
     // Use the above the modify player state.
 
