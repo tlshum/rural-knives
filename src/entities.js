@@ -57,14 +57,14 @@ export default class ENTITIES {
     turretMesh.position.set(-5460, 105, -10);
     turretMesh2.position.set(-4915, 125, -10);
     turretMesh3.position.set(-4350, 305, -10);
-    turretMesh4.position.set(-3775, 445, -10);
+    turretMesh4.position.set(-3800, 465, -10);
     turretMesh5.position.set(-1560, 305, -10);
     turretMesh6.position.set(-1560, 665, -10);
     turretMesh7.position.set(-755, 130, -10);
     turretMesh8.position.set(-385, 170, -10);
     turretMesh9.position.set(-175, 225, -10);
     turretMesh10.position.set(-1560, 695, -10);
-    turretMesh11.position.set(-2665, 205, -10);
+    turretMesh11.position.set(-2800, 127, -10);
     turretMesh12.position.set(-2660, 485, -10);
     turretMesh.castShadow = true;
     turretMesh2.castShadow = true;
@@ -135,7 +135,7 @@ export default class ENTITIES {
   static update ( STATE, deltaTime ) {
 
     // Detection distance for turrets to begin firing
-    const turretDist = 300;
+    const turretDist = 500;
 
 
     // Update

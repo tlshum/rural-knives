@@ -925,8 +925,8 @@ export default class PLAYER {
           var player = {
             x: STATE.player.obj.position.x,
             y: STATE.player.obj.position.y,
-            height: STATE.player.obj.geometry.parameters.height,
-            width: STATE.player.obj.geometry.parameters.width
+            height: STATE.player.obj.geometry.parameters.height - 1.5,
+            width: STATE.player.obj.geometry.parameters.width - 10
           }
           if (player.x < projectile.x + projectile.width &&
             player.x + player.width > projectile.x &&
