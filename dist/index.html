@@ -21,7 +21,7 @@
           <div class="middle">
             <div class="screen" id="screen">
               <ul>
-                <li><a href="javascript:void(0)" onclick="toggleWrapper()" class="button play">Play</a></li>
+                <li><a href="javascript:void(0)" onclick="toggleWrapper(); showHealth()" class="button play">Play</a></li>
                 <li><a href="javascript:void(0)" onclick="toggleInstructions()" class="button instructions">How to Play</a></li>
                 <li><a href="javascript:void(0)" onclick="toggleCredits()" class="button credits">Credits</a></li>
               </ul>
@@ -84,7 +84,7 @@
       <a href="javascript:void(0)" onClick ="replay() "class="button restart">Play Again</a>
     </div>
 </div>
-      <progress id="health" value="100" max="100">100</progress>
+      <progress id="health" value="100" max="100" style="display: none;">100</progress>
     </div>
     <script src="menu.js"></script>
     <script src="annyang.min.js"></script>
