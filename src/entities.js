@@ -52,6 +52,8 @@ export default class ENTITIES {
     let turretMesh8 = new THREE.Mesh(turretGeo, turretMat);
     let turretMesh9 = new THREE.Mesh(turretGeo, turretMat);
     let turretMesh10 = new THREE.Mesh(turretGeo, turretMat);
+    let turretMesh11 = new THREE.Mesh(turretGeo, turretMat);
+    let turretMesh12 = new THREE.Mesh(turretGeo, turretMat);
     turretMesh.position.set(-5460, 105, -10);
     turretMesh2.position.set(-4915, 125, -10);
     turretMesh3.position.set(-4350, 305, -10);
@@ -62,6 +64,8 @@ export default class ENTITIES {
     turretMesh8.position.set(-385, 170, -10);
     turretMesh9.position.set(-175, 225, -10);
     turretMesh10.position.set(-1560, 695, -10);
+    turretMesh11.position.set(-2665, 205, -10);
+    turretMesh12.position.set(-2660, 485, -10);
     turretMesh.castShadow = true;
     turretMesh2.castShadow = true;
     turretMesh3.castShadow = true;
@@ -72,11 +76,13 @@ export default class ENTITIES {
     turretMesh8.castShadow = true;
     turretMesh9.castShadow = true;
     turretMesh10.castShadow = true;
+    turretMesh11.castShadow = true;
+    turretMesh12.castShadow = true;
 
 
 
     // Initialize projectiles
-    let projectileGeo = new THREE.BoxBufferGeometry(5, 10, 0.001);
+    let projectileGeo = new THREE.BoxBufferGeometry(8, 8, 0.001);
     let projectileMat = STATE.materials.get('projectile');
 
 
@@ -88,12 +94,14 @@ export default class ENTITIES {
       timer: 0, rotate: false,}, { mesh: turretMesh2, timer: 0, rotate: false,},
       { mesh: turretMesh3, timer: 0, rotate: false,},
       { mesh: turretMesh4, timer: 0, rotate: false,},
-       { mesh: turretMesh5, timer: 0, rotate: false,},
+      { mesh: turretMesh5, timer: 0, rotate: false,},
       { mesh: turretMesh6, timer: 0, rotate: false,},
-    { mesh: turretMesh7, timer: 0, rotate: false,},
-    { mesh: turretMesh8, timer: 0, rotate: false,},
-    { mesh: turretMesh9, timer: 0, rotate: false,},
-  { mesh: turretMesh10, timer: 0, rotate: false,}];
+      { mesh: turretMesh7, timer: 0, rotate: false,},
+      { mesh: turretMesh8, timer: 0, rotate: false,},
+      { mesh: turretMesh9, timer: 0, rotate: false,},
+      { mesh: turretMesh10, timer: 0, rotate: false,},
+      { mesh: turretMesh11, timer: 0, rotate: false,},
+      { mesh: turretMesh12, timer: 0, rotate: false,}];
 
 
 
@@ -107,7 +115,7 @@ export default class ENTITIES {
     for (let i = 0; i < STATE.turrets.length; i++)
       STATE.scene.add(STATE.turrets[i].mesh);
 
-    console.log(STATE.turrets);
+    //console.log(STATE.turrets);
 
     for (let i = 0; i < 5; i++) {
       let projectileMesh = new THREE.Mesh(projectileGeo, projectileMat);
@@ -121,7 +129,7 @@ export default class ENTITIES {
       STATE.scene.add(STATE.projectiles[i].mesh);
     }
 
-    console.log(STATE.projectiles)
+    //console.log(STATE.projectiles)
   }
 
   static update ( STATE, deltaTime ) {
