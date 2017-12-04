@@ -35,10 +35,11 @@ function gameWin(){
   toggle(document.getElementById('game-won'));
 }
 
+//special win
 function specialWin(){
-
+  toggle(document.getElementById('popup4'));
+  toggle(document.getElementById('game-won2'));
 }
-
 //set healthbar
 function updateHealth(minusHealth) {
   let health = document.getElementById('health');
