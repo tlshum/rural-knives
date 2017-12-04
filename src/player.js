@@ -77,8 +77,8 @@ export default class PLAYER {
 
     // Add player to scene.
     STATE.scene.add( STATE.player.obj );
-    console.log(STATE.player.obj);
-    console.log(STATE.sounds.pool['steps']);
+    //console.log(STATE.player.obj);
+    //console.log(STATE.sounds.pool['steps']);
   }
 
   static print_state(STATE) {
@@ -158,12 +158,12 @@ export default class PLAYER {
 
     if (STATE.player.jump_state != STATE.player.jump_states.FREEZE) {
       if (STATE.player.jump_state_old != STATE.player.jump_state)  {
-        PLAYER.print_state(STATE);
+        //PLAYER.print_state(STATE);
       }
       STATE.player.jump_state_old = STATE.player.jump_state;
 
       if (STATE.player.dash.count_old != STATE.player.dash.count) {
-        console.log("Dash count is " + STATE.player.dash.count);
+        //console.log("Dash count is " + STATE.player.dash.count);
       }
       STATE.player.dash.count_old = STATE.player.dash.count;
 
@@ -956,7 +956,7 @@ export default class PLAYER {
             STATE.projectiles[i].mesh.position.y = STATE.turrets[i].mesh.position.y;
             STATE.projectiles[i].mesh.position.z = STATE.turrets[i].mesh.position.z - 1;
             STATE.turrets[i].timer = 0;
-            console.log("Health = " + STATE.player.health);
+            //console.log("Health = " + STATE.player.health);
           }
         }
       }
@@ -975,7 +975,7 @@ export default class PLAYER {
         PLAYER.freeze_game(STATE);
       }
 
-      console.log(STATE.player.obj.position.x + " " + STATE.player.obj.position.y);
+      //console.log(STATE.player.obj.position.x + " " + STATE.player.obj.position.y);
       /* */
 
 
