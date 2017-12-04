@@ -171,8 +171,14 @@ export default class ENTITIES {
     for (let i = 0; i < STATE.projectiles.length; i++) {
       // Fire every activated projectile in fixed direction
       if (STATE.projectiles[i].active) {
+        //play projectile sound
+        if (STATE.player.obj.position.x - STATE.turrets[i].mesh.position.x < turretDist) {
+          STATE.sounds.play('projectile');
+        } else {
+          STATE.sounds.stop('projectile');
+        }
+
         STATE.projectiles[i].mesh.position.x -= STATE.projectiles[i].velocity_x * deltaTime;
-        STATE.sounds.play('projectile');
         // If projectile travels too far past player, reset projectile position
         //if ((STATE.player.obj.position.x - STATE.projectiles[i].mesh.position.x > turretDist) && STATE.projectiles[i].turret != null) {
         //  STATE.projectiles[i].active = false;
