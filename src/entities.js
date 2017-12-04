@@ -60,7 +60,7 @@ export default class ENTITIES {
 
 
     // Initialize projectiles
-    let projectileGeo = new THREE.BoxBufferGeometry(10, 10, 0.001);
+    let projectileGeo = new THREE.BoxBufferGeometry(20, 20, 0.001);
     let projectileMat = STATE.materials.get('plasmaball');
 
 
