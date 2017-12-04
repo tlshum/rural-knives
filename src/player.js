@@ -719,6 +719,20 @@ export default class PLAYER {
                              y:      ((j - STATE.collision.offset) * STATE.collision.scale) + STATE.collision.trans.y,
                              width:  STATE.collision.scale,
                              height: STATE.collision.scale};
+              for (var k = 0; k < STATE.projectiles.length; ++k) {
+                var projectile = {
+                  x: STATE.projectiles[k].mesh.position.x,
+                  y: STATE.projectiles[k].mesh.position.y,
+                  height: STATE.projectiles[k].mesh.geometry.parameters.height,
+                  width: STATE.projectiles[k].mesh.geometry.parameters.width
+                }
+                if (projectile.x < rect2.x + rect2.width &&
+                    projectile.x + projectile.width > rect2.x &&
+                    projectile.y < rect2.y + rect2.height &&
+                    projectile.height + projectile.y > rect2.y) {
+                  STATE.projectiles[k].mesh.position.y = 10000;
+                }
+              }
               // AABB collision
               if (rect1.x < rect2.x + rect2.width &&
                   rect1.x + rect1.width > rect2.x &&
