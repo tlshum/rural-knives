@@ -40,7 +40,7 @@ export default class ENTITIES {
   static init ( STATE ) {
 
     // Initialize turrets
-    let turretGeo = new THREE.BoxBufferGeometry(20,30,.001);
+    let turretGeo = new THREE.BoxBufferGeometry(20,20,.001);
     let turretMat = STATE.materials.get('turret');
     let turretMesh = new THREE.Mesh(turretGeo, turretMat);
     let turretMesh2 = new THREE.Mesh(turretGeo, turretMat);
@@ -60,8 +60,8 @@ export default class ENTITIES {
 
 
     // Initialize projectiles
-    let projectileGeo = new THREE.BoxBufferGeometry(5, 10, 0.001);
-    let projectileMat = STATE.materials.get('projectile');
+    let projectileGeo = new THREE.BoxBufferGeometry(10 10, 0.001);
+    let projectileMat = STATE.materials.get('plasmaball');
 
 
 
