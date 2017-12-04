@@ -46,30 +46,23 @@ export default class ENTITIES {
     let turretMesh2 = new THREE.Mesh(turretGeo, turretMat);
     let turretMesh3 = new THREE.Mesh(turretGeo, turretMat);
     let turretMesh4 = new THREE.Mesh(turretGeo, turretMat);
-    turretMesh.position.set(70, 50, 80);
-    turretMesh2.position.set(120, 50, 80);
-    turretMesh3.position.set(170, 60, 80);
-    turretMesh4.position.set(320, 80, 80);
+    let turretMesh5 = new THREE.Mesh(turretGeo, turretMat);
+    turretMesh.position.set(-5450, 105, -10);
+    turretMesh2.position.set(-4915, 125, -10);
+    turretMesh3.position.set(-4350, 305, -10);
+    turretMesh4.position.set(-3775, 445, -10);
+    turretMesh5.position.set(-1560, 305, -10);
     turretMesh.castShadow = true;
     turretMesh2.castShadow = true;
     turretMesh3.castShadow = true;
     turretMesh4.castShadow = true;
+    turretMesh5.castShadow = true;
+
 
     // Initialize projectiles
-    let projectileGeo = new THREE.BoxBufferGeometry(10, 15, 0.001);
+    let projectileGeo = new THREE.BoxBufferGeometry(5, 10, 0.001);
     let projectileMat = STATE.materials.get('projectile');
-    let projectileMesh = new THREE.Mesh(projectileGeo, projectileMat);
-    let projectileMesh2 = new THREE.Mesh(projectileGeo, projectileMat);
-    let projectileMesh3 = new THREE.Mesh(projectileGeo, projectileMat);
-    let projectileMesh4 = new THREE.Mesh(projectileGeo, projectileMat);
-    projectileMesh.position.set(70, 50, 79);
-    projectileMesh2.position.set(120, 50, 79);
-    projectileMesh3.position.set(170, 60, 79);
-    projectileMesh4.position.set(320, 80, 79);
-    projectileMesh.castShadow = true;
-    projectileMesh2.castShadow = true;
-    projectileMesh3.castShadow = true;
-    projectileMesh4.castShadow = true;
+
 
 
     // Instantiate entities.
@@ -78,83 +71,84 @@ export default class ENTITIES {
       mesh: turretMesh,
       timer: 0, rotate: false,}, { mesh: turretMesh2, timer: 0, rotate: false,},
       { mesh: turretMesh3, timer: 0, rotate: false,},
-      { mesh: turretMesh4, timer: 0, rotate: false,}];
+      { mesh: turretMesh4, timer: 0, rotate: false,},
+       { mesh: turretMesh5, timer: 0, rotate: false,}];
 
 
 
-    STATE.projectiles = [{mesh: projectileMesh, velocity_x: 200, velocity_y: 10,},
-      {mesh: projectileMesh2, velocity_x: 200, velocity_y: 10,},
-      {mesh: projectileMesh3, velocity_x: 200, velocity_y: 10,},
-      {mesh: projectileMesh4, velocity_x: 200, velocity_y: 10,}];
 
+    STATE.projectiles = [];
+
+    STATE.lastUsed = 0;
 
     // Add to scene.
 
-    for (let i = 0; i < STATE.turrets.length; i++) {
-      STATE.scene.add( STATE.turrets[i].mesh);
-      console.log(STATE.turrets[i].mesh);
+    for (let i = 0; i < STATE.turrets.length; i++)
+      STATE.scene.add(STATE.turrets[i].mesh);
+
+    console.log(STATE.turrets);
+
+    for (let i = 0; i < 5; i++) {
+      let projectileMesh = new THREE.Mesh(projectileGeo, projectileMat);
+      projectileMesh.castShadow = true;
+      STATE.projectiles[i] = {
+        mesh: projectileMesh,
+        velocity_x: 200,
+        velocity_y: 40,
+        active: false,
+        turret: null,
+      }
+      STATE.scene.add(STATE.projectiles[i].mesh);
     }
 
-    for (let i = 0; i < STATE.projectiles.length; i++) {
-      STATE.scene.add( STATE.projectiles[i].mesh);
-      console.log(STATE.projectiles[i].mesh);
-    }
-
+    console.log(STATE.projectiles)
   }
 
   static update ( STATE, deltaTime ) {
 
     // Detection distance for turrets to begin firing
-    const turretDist = 150;
+    const turretDist = 300;
+
 
     // Update
+
+
     for (let i = 0; i < STATE.turrets.length; i++) {
+        const dx = STATE.turrets[i].mesh.position.x - STATE.player.obj.position.x;
+        const dy = STATE.turrets[i].mesh.position.y - STATE.player.obj.position.y;
 
-      const dx = STATE.turrets[i].mesh.position.x - STATE.player.obj.position.x;
-      const dy = STATE.turrets[i].mesh.position.y - STATE.player.obj.position.y;
-
-      // Rotate turret when player goes by
-    //  if (dx < 0 && !STATE.turrets[i].rotate) {
-    //    STATE.turrets[i].mesh.flipX = true;
-    //    STATE.turrets[i].rotate = true;
-    //  }
-
-      // While player is in range, fire projectile
+      // While player is in range, select projectiles and activate
       if (dx*dx + dy*dy < turretDist*turretDist) {
         STATE.turrets[i].timer += deltaTime;
+        if (STATE.turrets[i].timer >= .75) {
+          STATE.turrets[i].timer = 0;
+          STATE.projectiles[STATE.lastUsed].active = true;
+          STATE.projectiles[STATE.lastUsed].turret = STATE.turrets[i];
+          STATE.projectiles[STATE.lastUsed].mesh.position.x = STATE.turrets[i].mesh.position.x;
+          STATE.projectiles[STATE.lastUsed].mesh.position.y = STATE.turrets[i].mesh.position.y;
+          STATE.projectiles[STATE.lastUsed].mesh.position.z = STATE.turrets[i].mesh.position.z;
+          STATE.lastUsed++;
 
-        if (STATE.turrets[i].timer >= 1) {
-          // FIRE meshes from projectiles array
-          STATE.projectiles[i].mesh.position.x -= STATE.projectiles[i].velocity_x * deltaTime;
-          STATE.projectiles[i].mesh.position.y -= STATE.projectiles[i].velocity_y * deltaTime;
+          if (STATE.lastUsed == STATE.projectiles.length) {
+            STATE.lastUsed = 0;
+          }
         }
-
-        // Reset projectile and fire again
-        if (STATE.turrets[i].mesh.position.x - STATE.projectiles[i].mesh.position.x > 300)
-        {
-          STATE.projectiles[i].mesh.position.x = STATE.turrets[i].mesh.position.x;
-          STATE.projectiles[i].mesh.position.y = STATE.turrets[i].mesh.position.y;
-          STATE.projectiles[i].mesh.position.z = STATE.turrets[i].mesh.position.z - 1;
-        }
-
       }
-
-      // Reset projectile when player out of range, don't fire
-      else {
-        STATE.turrets[i].timer = 0;
-        STATE.projectiles[i].mesh.position.x = STATE.turrets[i].mesh.position.x;
-        STATE.projectiles[i].mesh.position.y = STATE.turrets[i].mesh.position.y;
-        STATE.projectiles[i].mesh.position.z = STATE.turrets[i].mesh.position.z - 1;
-      }
-
+      // Out of range, reset timer
+      else STATE.turrets[i].timer = 0;
     }
 
-    //for (let i = 0; i < STATE.projectiles.length; i++) {
 
-  //    STATE.projectiles[i].mesh.position += STATE.projectiles[i].
-  //  }
-    // Check interactions
-
+    for (let i = 0; i < STATE.projectiles.length; i++) {
+      // Fire every activated projectile in fixed direction
+      if (STATE.projectiles[i].active) {
+        STATE.projectiles[i].mesh.position.x -= STATE.projectiles[i].velocity_x * deltaTime;
+        STATE.projectiles[i].mesh.position.y -= STATE.projectiles[i].velocity_y * deltaTime;
+        // If projectile travels too far past player, reset projectile position
+        if ((STATE.player.obj.position.x - STATE.projectiles[i].mesh.position.x > turretDist) && STATE.projectiles[i].turret != null) {
+          STATE.projectiles[i].active = false;
+        }
+      }
+    }
   }
-
 }
