@@ -261,6 +261,22 @@ export default class MATERIALS {
       STATE.loader.changeCount(-1);
      });
 
+    // plasmaball
+    STATE.loader.changeCount(1);
+    loader.load( 'resources/entities/plasmaball.png',
+    function (texture) {
+      tileSet(texture, 4, 1, 0, 0, 4);
+      texture.magFilter = THREE.NearestFilter;
+      STATE.materials.mats['plasmaball'] = new THREE.MeshLambertMaterial({ map: texture });
+      STATE.materials.mats['plasmaball'].transparent = true;
+      STATE.materials.dmats['plasmaball'] = new THREE.MeshDepthMaterial( {
+        depthPacking: THREE.RGBADepthPacking,
+        map: texture,
+        alphaTest: 0.5
+      });
+      STATE.loader.changeCount(-1);
+    });
+
   }
 
   static init (STATE) {

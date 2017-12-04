@@ -42,28 +42,58 @@ export default class WORLD {
     //loader.load( 'resources/test_city/level.json', ( obj ) => {
     loader.load( 'resources/level/level.gltf', ( gltf ) => {
 
-      let obj = gltf.scene.children[0];
-
-      STATE.world = obj;
-      STATE.world.scale.set(20, 20, 20);
-      STATE.world.traverse ( (child) => {
-        if (child instanceof THREE.Mesh) {
-          child.castShadow = true;
-          child.receiveShadow = true;
-          if (Array.isArray(child.material)) {
-            for (let i = 0; i < child.material.length; i++) {
-              if (typeof child.material[i].magFilter !== "undefined")
-                child.material[i].magFilter = THREE.NearestFilter;
-            }
-          } else {
-            if (typeof child.material.magFilter !== "undefined") {
-              child.material.magFilter = THREE.NearestFilter;
+      for (let i = 0; i < gltf.scene.children.length; i++) {
+        let obj = gltf.scene.children[i];
+        obj.scale.set(20, 20, 20);
+        obj.traverse( (child) => {
+          if (child instanceof THREE.Mesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            if (Array.isArray(child.material)) {
+              for (let i = 0; i < child.material.length; i++) {
+                if (typeof child.material[i].map !== "undefined" &&
+                  typeof child.material[i].map.magFilter !== "undefined") {
+                  child.material[i].map.magFilter = THREE.NearestFilter;
+                }
+              }
+            } else {
+              if (child.material.map != null &&
+                typeof child.material.map.magFilter !== "undefined") {
+                child.material.map.magFilter = THREE.NearestFilter;
+              }
             }
           }
-          console.log(child.material);
-        }
-      });
-      STATE.scene.add( STATE.world );
+        });
+        console.log(obj);
+        STATE.scene.add( obj );
+
+        /*
+        STATE.world = obj;
+        STATE.world.scale.set(20, 20, 20);
+        STATE.world.traverse ( (child) => {
+          if (child instanceof THREE.Mesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            if (Array.isArray(child.material)) {
+              for (let i = 0; i < child.material.length; i++) {
+                if (typeof child.material[i].map !== "undefined" &&
+                  typeof child.material[i].map.magFilter !== "undefined") {
+                  child.material[i].map.magFilter = THREE.NearestFilter;
+                }
+              }
+            } else {
+              if (child.material.map != null &&
+                typeof child.material.map.magFilter !== "undefined") {
+                child.material.map.magFilter = THREE.NearestFilter;
+              }
+            }
+          }
+        });
+
+        STATE.scene.add( STATE.world );
+        */
+      }
+
       STATE.loader.changeCount(-1);
 
     }, (xhr) => { // onProgress
@@ -73,6 +103,7 @@ export default class WORLD {
       }
     }, (xhr) => { // onError
       console.log('Error loading WORLD.');
+      console.log(xhr);
     });
 
 
