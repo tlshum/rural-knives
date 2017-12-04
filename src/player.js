@@ -940,6 +940,7 @@ export default class PLAYER {
           STATE.passes[0].renderToScreen = false;
           STATE.passes[2].renderToScreen = true;
           STATE.player.health -= 10;
+          STATE.sounds.play('hurt');
           updateHealth(10);
           STATE.projectiles[i].mesh.position.x = STATE.turrets[i].mesh.position.x;
           STATE.projectiles[i].mesh.position.y = STATE.turrets[i].mesh.position.y;
