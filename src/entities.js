@@ -106,47 +106,49 @@ export default class ENTITIES {
 
   static update ( STATE, deltaTime ) {
 
-    // Detection distance for turrets to begin firing
-    const turretDist = 300;
+    if (STATE.player.jump_state != STATE.player.jump_states.FREEZE) {
+      // Detection distance for turrets to begin firing
+      const turretDist = 300;
 
 
-    // Update
+      // Update
 
 
-    for (let i = 0; i < STATE.turrets.length; i++) {
-        const dx = STATE.turrets[i].mesh.position.x - STATE.player.obj.position.x;
-        const dy = STATE.turrets[i].mesh.position.y - STATE.player.obj.position.y;
+      for (let i = 0; i < STATE.turrets.length; i++) {
+          const dx = STATE.turrets[i].mesh.position.x - STATE.player.obj.position.x;
+          const dy = STATE.turrets[i].mesh.position.y - STATE.player.obj.position.y;
 
-      // While player is in range, select projectiles and activate
-      if (dx*dx + dy*dy < turretDist*turretDist) {
-        STATE.turrets[i].timer += deltaTime;
-        if (STATE.turrets[i].timer >= .75) {
-          STATE.turrets[i].timer = 0;
-          STATE.projectiles[STATE.lastUsed].active = true;
-          STATE.projectiles[STATE.lastUsed].turret = STATE.turrets[i];
-          STATE.projectiles[STATE.lastUsed].mesh.position.x = STATE.turrets[i].mesh.position.x;
-          STATE.projectiles[STATE.lastUsed].mesh.position.y = STATE.turrets[i].mesh.position.y;
-          STATE.projectiles[STATE.lastUsed].mesh.position.z = STATE.turrets[i].mesh.position.z;
-          STATE.lastUsed++;
+        // While player is in range, select projectiles and activate
+        if (dx*dx + dy*dy < turretDist*turretDist) {
+          STATE.turrets[i].timer += deltaTime;
+          if (STATE.turrets[i].timer >= .75) {
+            STATE.turrets[i].timer = 0;
+            STATE.projectiles[STATE.lastUsed].active = true;
+            STATE.projectiles[STATE.lastUsed].turret = STATE.turrets[i];
+            STATE.projectiles[STATE.lastUsed].mesh.position.x = STATE.turrets[i].mesh.position.x;
+            STATE.projectiles[STATE.lastUsed].mesh.position.y = STATE.turrets[i].mesh.position.y;
+            STATE.projectiles[STATE.lastUsed].mesh.position.z = STATE.turrets[i].mesh.position.z;
+            STATE.lastUsed++;
 
-          if (STATE.lastUsed == STATE.projectiles.length) {
-            STATE.lastUsed = 0;
+            if (STATE.lastUsed == STATE.projectiles.length) {
+              STATE.lastUsed = 0;
+            }
           }
         }
+        // Out of range, reset timer
+        else STATE.turrets[i].timer = 0;
       }
-      // Out of range, reset timer
-      else STATE.turrets[i].timer = 0;
-    }
 
 
-    for (let i = 0; i < STATE.projectiles.length; i++) {
-      // Fire every activated projectile in fixed direction
-      if (STATE.projectiles[i].active) {
-        STATE.projectiles[i].mesh.position.x -= STATE.projectiles[i].velocity_x * deltaTime;
-        STATE.projectiles[i].mesh.position.y -= STATE.projectiles[i].velocity_y * deltaTime;
-        // If projectile travels too far past player, reset projectile position
-        if ((STATE.player.obj.position.x - STATE.projectiles[i].mesh.position.x > turretDist) && STATE.projectiles[i].turret != null) {
-          STATE.projectiles[i].active = false;
+      for (let i = 0; i < STATE.projectiles.length; i++) {
+        // Fire every activated projectile in fixed direction
+        if (STATE.projectiles[i].active) {
+          STATE.projectiles[i].mesh.position.x -= STATE.projectiles[i].velocity_x * deltaTime;
+          STATE.projectiles[i].mesh.position.y -= STATE.projectiles[i].velocity_y * deltaTime;
+          // If projectile travels too far past player, reset projectile position
+          if ((STATE.player.obj.position.x - STATE.projectiles[i].mesh.position.x > turretDist) && STATE.projectiles[i].turret != null) {
+            STATE.projectiles[i].active = false;
+          }
         }
       }
     }
