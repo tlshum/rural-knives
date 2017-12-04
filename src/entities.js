@@ -51,6 +51,7 @@ export default class ENTITIES {
     let turretMesh7 = new THREE.Mesh(turretGeo, turretMat);
     let turretMesh8 = new THREE.Mesh(turretGeo, turretMat);
     let turretMesh9 = new THREE.Mesh(turretGeo, turretMat);
+    let turretMesh10 = new THREE.Mesh(turretGeo, turretMat);
     turretMesh.position.set(-5460, 105, -10);
     turretMesh2.position.set(-4915, 125, -10);
     turretMesh3.position.set(-4350, 305, -10);
@@ -60,6 +61,7 @@ export default class ENTITIES {
     turretMesh7.position.set(-755, 130, -10);
     turretMesh8.position.set(-385, 170, -10);
     turretMesh9.position.set(-175, 225, -10);
+    turretMesh10.position.set(-1560, 695, -10);
     turretMesh.castShadow = true;
     turretMesh2.castShadow = true;
     turretMesh3.castShadow = true;
@@ -69,6 +71,7 @@ export default class ENTITIES {
     turretMesh7.castShadow = true;
     turretMesh8.castShadow = true;
     turretMesh9.castShadow = true;
+    turretMesh10.castShadow = true;
 
 
 
@@ -89,7 +92,8 @@ export default class ENTITIES {
       { mesh: turretMesh6, timer: 0, rotate: false,},
     { mesh: turretMesh7, timer: 0, rotate: false,},
     { mesh: turretMesh8, timer: 0, rotate: false,},
-    { mesh: turretMesh9, timer: 0, rotate: false,}];
+    { mesh: turretMesh9, timer: 0, rotate: false,},
+  { mesh: turretMesh10, timer: 0, rotate: false,}];
 
 
 
@@ -139,6 +143,7 @@ export default class ENTITIES {
         if (STATE.turrets[i].timer >= 1) {
           STATE.turrets[i].timer = 0;
           STATE.projectiles[STATE.lastUsed].active = true;
+          //STATE.projectiles[i].visible = true;
           STATE.projectiles[STATE.lastUsed].turret = STATE.turrets[i];
           STATE.projectiles[STATE.lastUsed].mesh.position.x = STATE.turrets[i].mesh.position.x;
           STATE.projectiles[STATE.lastUsed].mesh.position.y = STATE.turrets[i].mesh.position.y;
@@ -160,9 +165,10 @@ export default class ENTITIES {
       if (STATE.projectiles[i].active) {
         STATE.projectiles[i].mesh.position.x -= STATE.projectiles[i].velocity_x * deltaTime;
         // If projectile travels too far past player, reset projectile position
-        if ((STATE.player.obj.position.x - STATE.projectiles[i].mesh.position.x > turretDist) && STATE.projectiles[i].turret != null) {
-          STATE.projectiles[i].active = false;
-        }
+        //if ((STATE.player.obj.position.x - STATE.projectiles[i].mesh.position.x > turretDist) && STATE.projectiles[i].turret != null) {
+        //  STATE.projectiles[i].active = false;
+          //STATE.projectiles[i].visible = false;
+      //  }
       }
     }
   }
