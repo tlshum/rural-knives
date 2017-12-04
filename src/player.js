@@ -13,7 +13,7 @@ export default class PLAYER {
     let obj = new THREE.Mesh( geo, mat );
     obj.customDepthMaterial = STATE.materials.dget('playerR');
     //obj.position.set( -2880, -495, -10 );
-    obj.position.set( -6840, -495, -10 );
+    obj.position.set( -6752, -495, -10 );
     obj.castShadow = true;
 
     STATE.player = {
@@ -64,7 +64,14 @@ export default class PLAYER {
         old_jump_state: null,
         old_velocity_x: 0,
         old_velocity_y: 0
-      }
+      },
+      hurt: {
+        state: false,
+        invuln: false,
+        invuln_time: 0
+      },
+      health: 100,
+      game_over: false
     };
 
     // Add player to scene.
@@ -128,6 +135,13 @@ export default class PLAYER {
     STATE.player.dash.old_velocity_y = 0;
   }
 
+  static exit_invuln(STATE) {
+    STATE.player.hurt.invuln_time = 0;
+    STATE.player.hurt.invuln = false;
+    STATE.passes[0].renderToScreen = true;
+    STATE.passes[2].renderToScreen = false;
+  }
+
   static update ( STATE, deltaTime ) {
 
     if (STATE.player.jump_state_old != STATE.player.jump_state)  {
@@ -157,42 +171,44 @@ export default class PLAYER {
     }
 
 
-    // left
-    if (STATE.keyboard.isPressed(37)) {
-      left_key_down = true;
-    }
+    if (!STATE.player.game_over) {
+      // left
+      if (STATE.keyboard.isPressed(37)) {
+        left_key_down = true;
+      }
 
-    // Right
-    if (STATE.keyboard.isPressed(39)) {
-      right_key_down = true;
-    }
+      // Right
+      if (STATE.keyboard.isPressed(39)) {
+        right_key_down = true;
+      }
 
-    // Up
-    if (STATE.keyboard.startPressed(38)) {
-      up_key_begin_pressed = true;
-    }
-    if (STATE.keyboard.isPressed(38)) {
-      up_key_down = true;
-    }
+      // Up
+      if (STATE.keyboard.startPressed(38)) {
+        up_key_begin_pressed = true;
+      }
+      if (STATE.keyboard.isPressed(38)) {
+        up_key_down = true;
+      }
 
-    // Down
-    if (STATE.keyboard.isPressed(40)) {
-      down_key_down = true;
-    }
+      // Down
+      if (STATE.keyboard.isPressed(40)) {
+        down_key_down = true;
+      }
 
-    // Space
-    if (STATE.keyboard.startPressed(32)) {
-      STATE.sounds.play('test');
-    }
+      // Space
+      if (STATE.keyboard.startPressed(32)) {
+        STATE.sounds.play('test');
+      }
 
-    // Z
-    if (STATE.keyboard.startPressed(90)) {
-      z_key_begin_pressed = true;
-    }
+      // Z
+      if (STATE.keyboard.startPressed(90)) {
+        z_key_begin_pressed = true;
+      }
 
-    // Shift
-    if (STATE.keyboard.startPressed(16)) {
-      shift_key_begin_pressed = true;
+      // Shift
+      if (STATE.keyboard.startPressed(16)) {
+        shift_key_begin_pressed = true;
+      }
     }
 
     //animation function
@@ -221,29 +237,31 @@ export default class PLAYER {
     //In left & right key down, don't let any left/right_key_down events trigger if currently kicking on ground.
     //Also, don't update direction or animate running.
     if (left_key_down) {
-      if (!STATE.player.kick_state) {
+      if (!STATE.player.kick_state && !STATE.player.hurt.state) {
         if (STATE.player.jump_state == STATE.player.jump_states.NEUTRAL_STATE) {
           STATE.sounds.play('steps');
         }
         STATE.player.direction = STATE.player.directions.LEFT;
         animator('runL');
         STATE.materials.faceLeft = true;
-      } else {
+      }/* else {
         left_key_down = false;
       }
+      */
     }
 
     if (right_key_down) {
-      if (!STATE.player.kick_state) {
+      if (!STATE.player.kick_state && !STATE.player.hurt.state) {
         if (STATE.player.jump_state == STATE.player.jump_states.NEUTRAL_STATE) {
           STATE.sounds.play('steps');
         }
         STATE.player.direction = STATE.player.directions.RIGHT;
         animator('runR');
         STATE.materials.faceLeft = false;
-      } else {
+      }/* else {
         left_key_down = false;
       }
+      */
     }
 
     if ((!left_key_down && !right_key_down) ||
@@ -311,6 +329,27 @@ export default class PLAYER {
       } else {
         STATE.player.dash.timeout -= deltaTime;
       }
+    }
+
+    if (STATE.player.hurt.state) {
+      if (STATE.player.jump_state == STATE.player.jump_states.NEUTRAL_STATE) {
+        STATE.player.hurt.state = false;
+      }
+    }
+
+    if (STATE.player.hurt.invuln) {
+      STATE.player.hurt.invuln_time -= deltaTime;
+      if (STATE.player.hurt.invuln_time <= 0) {
+        STATE.player.hurt.invuln = false;
+        STATE.player.hurt.invuln_time = 0;
+        STATE.passes[0].renderToScreen = true;
+        STATE.passes[2].renderToScreen = false;
+      }
+    }
+
+    if (STATE.player.health <= 0 && !STATE.player.game_over) {
+      STATE.player.game_over = true;
+      gameOver();
     }
     /* */
 
@@ -431,6 +470,7 @@ export default class PLAYER {
         }
       }
       STATE.player.kick_state = false;
+      STATE.player.hurt.state = false;
     }
 
     //Exit code for if no longer DASHING
@@ -447,7 +487,7 @@ export default class PLAYER {
 
     /* X Velocity calculations */
     //
-    if (!STATE.player.kick_state &&
+    if (!STATE.player.kick_state && !STATE.player.hurt.state &&
         STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_GROUND &&
         STATE.player.jump_state != STATE.player.jump_states.DASH_STATE_AIR) {
       //Conditions for Left Key Pressed
@@ -630,6 +670,7 @@ export default class PLAYER {
     //
     if (z_key_begin_pressed && !STATE.player.kick_state) {
       STATE.player.kick_state = true;
+      STATE.player.hurt.state = false;
       STATE.sounds.stop('kick');
       STATE.sounds.play('kick');
       /*
@@ -861,6 +902,55 @@ export default class PLAYER {
 
     /* */
 
+    /* Projectile collision code */
+    //
+    if (!STATE.player.hurt.invuln) {
+      for (var i = 0; i < STATE.projectiles.length; ++i) {
+        var projectile = {
+          x: STATE.projectiles[i].mesh.position.x,
+          y: STATE.projectiles[i].mesh.position.y,
+          height: STATE.projectiles[i].mesh.geometry.parameters.height,
+          width: STATE.projectiles[i].mesh.geometry.parameters.width
+        }
+        var player = {
+          x: STATE.player.obj.position.x,
+          y: STATE.player.obj.position.y,
+          height: STATE.player.obj.geometry.parameters.height,
+          width: STATE.player.obj.geometry.parameters.width
+        }
+        if (player.x < projectile.x + projectile.width &&
+          player.x + player.width > projectile.x &&
+          player.y < projectile.y + projectile.height &&
+          player.height + player.y > projectile.y) {
+          if (player.x < projectile.x) {
+            //hit right
+            STATE.player.velocity_x = -200;
+          } else {
+            //hit left
+            STATE.player.velocity_x = 200;
+          }
+          PLAYER.exit_dash(STATE);
+          STATE.player.kick_state = false;
+          STATE.player.velocity_y = 200;
+          STATE.player.obj.position.y += 20
+          STATE.player.jump_state = STATE.player.jump_states.JUMP_STATE_NO_UP_BUTTON;
+          STATE.player.hurt.state = true;
+          STATE.player.hurt.invuln = true;
+          STATE.player.hurt.invuln_time = 0.25;
+          STATE.passes[0].renderToScreen = false;
+          STATE.passes[2].renderToScreen = true;
+          STATE.player.health -= 10;
+          updateHealth(10);
+          STATE.projectiles[i].mesh.position.x = STATE.turrets[i].mesh.position.x;
+          STATE.projectiles[i].mesh.position.y = STATE.turrets[i].mesh.position.y;
+          STATE.projectiles[i].mesh.position.z = STATE.turrets[i].mesh.position.z - 1;
+          STATE.turrets[i].timer = 0;
+          console.log("Health = " + STATE.player.health);
+        }
+      }
+    }
+
+    /* */
 
 
     // Use the above the modify player state.
