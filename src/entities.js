@@ -18,6 +18,11 @@ export default class ENTITIES {
       STATE.materials.mats['turret'] = new THREE.MeshLambertMaterial({ map: texture });
       STATE.materials.mats['turret'].transparent = true;
       STATE.materials.mats['turret'].magFilter = THREE.NearestFilter;
+      STATE.materials.dmats['turret'] = new THREE.MeshDepthMaterial( {
+        depthPacking: THREE.RGBADepthPacking,
+        map: texture,
+        alphaTest: 0.5
+      });
 
       STATE.loader.changeCount(-1);
      });
@@ -42,6 +47,7 @@ export default class ENTITIES {
     // Initialize turrets
     let turretGeo = new THREE.BoxBufferGeometry(20,30,.001);
     let turretMat = STATE.materials.get('turret');
+
     let turretMesh = new THREE.Mesh(turretGeo, turretMat);
     let turretMesh2 = new THREE.Mesh(turretGeo, turretMat);
     let turretMesh3 = new THREE.Mesh(turretGeo, turretMat);
@@ -54,6 +60,7 @@ export default class ENTITIES {
     let turretMesh10 = new THREE.Mesh(turretGeo, turretMat);
     let turretMesh11 = new THREE.Mesh(turretGeo, turretMat);
     let turretMesh12 = new THREE.Mesh(turretGeo, turretMat);
+
     turretMesh.position.set(-5460, 105, -10);
     turretMesh2.position.set(-4915, 125, -10);
     turretMesh3.position.set(-4350, 305, -10);
@@ -66,6 +73,7 @@ export default class ENTITIES {
     turretMesh10.position.set(-1560, 695, -10);
     turretMesh11.position.set(-2800, 127, -10);
     turretMesh12.position.set(-2660, 485, -10);
+
     turretMesh.castShadow = true;
     turretMesh2.castShadow = true;
     turretMesh3.castShadow = true;
@@ -79,6 +87,18 @@ export default class ENTITIES {
     turretMesh11.castShadow = true;
     turretMesh12.castShadow = true;
 
+    turretMesh.customDepthMaterial = STATE.materials.dget('turret');
+    turretMesh2.customDepthMaterial = STATE.materials.dget('turret');
+    turretMesh3.customDepthMaterial = STATE.materials.dget('turret');
+    turretMesh4.customDepthMaterial = STATE.materials.dget('turret');
+    turretMesh5.customDepthMaterial = STATE.materials.dget('turret');
+    turretMesh6.customDepthMaterial = STATE.materials.dget('turret');
+    turretMesh7.customDepthMaterial = STATE.materials.dget('turret');
+    turretMesh8.customDepthMaterial = STATE.materials.dget('turret');
+    turretMesh9.customDepthMaterial = STATE.materials.dget('turret');
+    turretMesh10.customDepthMaterial = STATE.materials.dget('turret');
+    turretMesh11.customDepthMaterial = STATE.materials.dget('turret');
+    turretMesh12.customDepthMaterial = STATE.materials.dget('turret');
 
 
     // Initialize projectiles
