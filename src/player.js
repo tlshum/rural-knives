@@ -70,7 +70,8 @@ export default class PLAYER {
         invuln: false,
         invuln_time: 0
       },
-      health: 100
+      health: 100,
+      game_over: false
     };
 
     // Add player to scene.
@@ -170,42 +171,44 @@ export default class PLAYER {
     }
 
 
-    // left
-    if (STATE.keyboard.isPressed(37)) {
-      left_key_down = true;
-    }
+    if (!STATE.player.game_over) {
+      // left
+      if (STATE.keyboard.isPressed(37)) {
+        left_key_down = true;
+      }
 
-    // Right
-    if (STATE.keyboard.isPressed(39)) {
-      right_key_down = true;
-    }
+      // Right
+      if (STATE.keyboard.isPressed(39)) {
+        right_key_down = true;
+      }
 
-    // Up
-    if (STATE.keyboard.startPressed(38)) {
-      up_key_begin_pressed = true;
-    }
-    if (STATE.keyboard.isPressed(38)) {
-      up_key_down = true;
-    }
+      // Up
+      if (STATE.keyboard.startPressed(38)) {
+        up_key_begin_pressed = true;
+      }
+      if (STATE.keyboard.isPressed(38)) {
+        up_key_down = true;
+      }
 
-    // Down
-    if (STATE.keyboard.isPressed(40)) {
-      down_key_down = true;
-    }
+      // Down
+      if (STATE.keyboard.isPressed(40)) {
+        down_key_down = true;
+      }
 
-    // Space
-    if (STATE.keyboard.startPressed(32)) {
-      STATE.sounds.play('test');
-    }
+      // Space
+      if (STATE.keyboard.startPressed(32)) {
+        STATE.sounds.play('test');
+      }
 
-    // Z
-    if (STATE.keyboard.startPressed(90)) {
-      z_key_begin_pressed = true;
-    }
+      // Z
+      if (STATE.keyboard.startPressed(90)) {
+        z_key_begin_pressed = true;
+      }
 
-    // Shift
-    if (STATE.keyboard.startPressed(16)) {
-      shift_key_begin_pressed = true;
+      // Shift
+      if (STATE.keyboard.startPressed(16)) {
+        shift_key_begin_pressed = true;
+      }
     }
 
     //animation function
@@ -342,6 +345,11 @@ export default class PLAYER {
         STATE.passes[0].renderToScreen = true;
         STATE.passes[2].renderToScreen = false;
       }
+    }
+
+    if (STATE.player.health <= 0 && !STATE.player.game_over) {
+      STATE.player.game_over = true;
+      gameOver();
     }
     /* */
 
@@ -932,6 +940,7 @@ export default class PLAYER {
           STATE.passes[0].renderToScreen = false;
           STATE.passes[2].renderToScreen = true;
           STATE.player.health -= 10;
+          updateHealth(10);
           STATE.projectiles[i].mesh.position.x = STATE.turrets[i].mesh.position.x;
           STATE.projectiles[i].mesh.position.y = STATE.turrets[i].mesh.position.y;
           STATE.projectiles[i].mesh.position.z = STATE.turrets[i].mesh.position.z - 1;
