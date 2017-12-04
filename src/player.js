@@ -361,10 +361,6 @@ export default class PLAYER {
         }
       }
 
-      if (STATE.player.health <= 0 && !STATE.player.game_over) {
-        STATE.player.game_over = true;
-        gameOver();
-      }
       /* */
 
 
@@ -963,6 +959,12 @@ export default class PLAYER {
             console.log("Health = " + STATE.player.health);
           }
         }
+      }
+
+      if (STATE.player.health <= 0 && !STATE.player.game_over) {
+        STATE.player.game_over = true;
+        gameOver();
+        PLAYER.freeze_game(STATE);
       }
 
       if (STATE.player.obj.position.x > 494) {
