@@ -23,6 +23,10 @@ STATE.clock = new THREE.Clock();
 
 STATE.stats = new Stats();
 
+window.resume_game = function() {
+  PLAYER.resume_game(STATE);
+};
+
 // Instantiate all game objects.
 
 STATE.loadingManager = new THREE.LoadingManager();

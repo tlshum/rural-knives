@@ -154,11 +154,17 @@ export default class PLAYER {
     STATE.sounds.stop('steps');
   }
 
+  static resume_game(STATE) {
+    if (STATE.player.jump_state == STATE.player.jump_states.FREEZE) {
+      STATE.player.jump_state = STATE.player.jump_state_old;
+    }
+  }
+
   static update ( STATE, deltaTime ) {
 
     if (STATE.player.jump_state != STATE.player.jump_states.FREEZE) {
       if (STATE.player.jump_state_old != STATE.player.jump_state)  {
-        //PLAYER.print_state(STATE);
+        PLAYER.print_state(STATE);
       }
       STATE.player.jump_state_old = STATE.player.jump_state;
 
@@ -174,6 +180,7 @@ export default class PLAYER {
       var down_key_down = false;
       var shift_key_begin_pressed = false;
       var z_key_begin_pressed = false;
+      var p_key_begin_pressed = false;
 
       //player facing last direction
       if (STATE.materials.faceLeft == true) {
@@ -222,6 +229,11 @@ export default class PLAYER {
         // Shift
         if (STATE.keyboard.startPressed(16)) {
           shift_key_begin_pressed = true;
+        }
+
+        // P
+        if (STATE.keyboard.startPressed(80)) {
+          p_key_begin_pressed = true;
         }
       }
 
@@ -987,6 +999,12 @@ export default class PLAYER {
       } else if (STATE.player.obj.position.x < -7094) {
         specialWin()
         PLAYER.freeze_game(STATE);
+      }
+
+      if (p_key_begin_pressed) {
+        toggleWrapper();
+        STATE.player.jump_state_old = STATE.player.jump_state;
+        STATE.player.jump_state = STATE.player.jump_states.FREEZE;
       }
 
       //console.log(STATE.player.obj.position.x + " " + STATE.player.obj.position.y);

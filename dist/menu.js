@@ -27,6 +27,7 @@ function toggleInstructions() {
 // functions to toggle wrappers
 function toggleWrapper(){
   toggleFlex(document.getElementById('menuwrapper'));
+  resume_game();
 }
 
 //2 game win screens. One for normal, one for special
