@@ -26,7 +26,7 @@ export default class PLAYER {
       fast_friction_x: 12,
       max_velocity_x: 150,
       jump_state_old: -1,
-      jump_state: -1,
+      jump_state: 8,
       jump_states: {
         INIT_STATE: -1,
         NEUTRAL_STATE: 0,
@@ -155,9 +155,7 @@ export default class PLAYER {
   }
 
   static resume_game(STATE) {
-    if (STATE.player.jump_state == STATE.player.jump_states.FREEZE) {
-      STATE.player.jump_state = STATE.player.jump_state_old;
-    }
+    STATE.player.jump_state = STATE.player.jump_state_old;
   }
 
   static update ( STATE, deltaTime ) {
