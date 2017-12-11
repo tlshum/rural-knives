@@ -235,6 +235,12 @@ export default class PLAYER {
         if (STATE.keyboard.startPressed(80)) {
           p_key_begin_pressed = true;
         }
+
+        if (STATE.keyboard.startPressed(65)) {
+          STATE.player.health += 10;
+          STATE.sounds.play('dash');
+          updateHealth(-10);
+        }
       }
 
       //animation function

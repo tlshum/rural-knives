@@ -132,8 +132,9 @@ document.addEventListener('keydown', function (e) {
     cons.style.color = 'white';
 
     var typed = new Typed("#cons", {
-      strings: ['', '(1/3) Analyzing rogue AI...', '(2/3) Initializing debug tool...', '(3/3) Preparing system for attack...'],
+      strings: ['', '(1/3) Analyzing rogue AI.', '(2/3) Preparing debug buffers.', '(3/3) Initializing attack on AI.'],
       typeSpeed: 40,
+      backDelay: 1200,
       showCursor: false,
       onComplete: function(s) {
         function fade(element) {
@@ -142,6 +143,7 @@ document.addEventListener('keydown', function (e) {
                 if (op <= 0.1){
                     clearInterval(timer);
                     element.style.display = 'none';
+                    document.getElementById('health').style.display = 'block';
                     resume_game();
                 }
                 element.style.opacity = op;
@@ -152,11 +154,43 @@ document.addEventListener('keydown', function (e) {
         fade(slides);
       }
     });
+  } else if (e.keyCode == 56) {
+    slides.style.display = 'flex';
+    slides.style.background = 'url("resources/present/stack.png") no-repeat center center fixed';
+    slides.style.backgroundSize = 'auto';
+    slides.style.opacity = 1;
+    cons.style.display = 'none';
+  } else if (e.keyCode == 57) {
+    slides.style.display = 'flex';
+    slides.style.background = 'url("resources/player/player.png") no-repeat center center fixed';
+    slides.style.backgroundSize = 'auto';
+    slides.style.opacity = 1;
+    cons.style.display = 'none';
+  } else if (e.keyCode == 48) {
+    function fade(element) {
+        var op = 1;  // initial opacity
+        var timer = setInterval(function () {
+            if (op <= 0.1){
+                clearInterval(timer);
+                element.style.display = 'none';
+                document.getElementById('health').style.display = 'block';
+                resume_game();
+            }
+            element.style.opacity = op;
+            element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+            op -= op * 0.1;
+        }, 50);
+    }
+    fade(slides);
   }
 
 });
 
 window.onload = function (e) {
+
+  document.getElementById('menuwrapper').style.display = 'none';
+  document.getElementById('health').style.display = 'none';
+
   if (annyang) {
       let commands = {
           'hello': function() {
@@ -173,7 +207,7 @@ window.onload = function (e) {
           'display animals': function() {
             if (pstate == 4) {
               let msg = new SpeechSynthesisUtterance();
-              msg.text = "> What animal would you like to see?";
+              msg.text = "What animal would you like to see?";
               window.speechSynthesis.speak(msg);
               var cons = document.getElementById('constext');
               cons.innerHTML += "<br/><br/>> What animal would you like to see?";
@@ -183,20 +217,31 @@ window.onload = function (e) {
           },
           'show me *tag': function(tag) {
             if (pstate == 5) {
-              let msg = new SpeechSynthesisUtterance();
-              msg.text = "Here are " + tag;
-              animal = tag;
-              window.speechSynthesis.speak(msg);
-              var cons = document.getElementById('constext');
-              cons.innerHTML += "<br/><br/>> Here are " + tag + ".";
-              cons.scrollTop = cons.scrollHeight;
-              pstate = 6;
+              fetch(('https://api.qwant.com/api/search/images?count=3&q=' + tag), {
+              	method: 'get'
+              }).then(function(response) {
+                return response.json();
+              }).then(function(j) {
+                console.log('ok');
+                let msg = new SpeechSynthesisUtterance();
+                msg.text = "Here are " + tag;
+                animal = tag;
+                window.speechSynthesis.speak(msg);
+                var cons = document.getElementById('constext');
+                cons.innerHTML += "<br/><br/>> Here are " + tag + ". <br/><br/>";
+                cons.innerHTML += "<div id = 'asdf'><img src = '" + j.data.result.items[0].media + "'/>"
+                + "<img src = '" + j.data.result.items[1].media + "'/>"
+                + "<img src = '" + j.data.result.items[2].media + "'/><div/>";
+                cons.scrollTop = cons.scrollHeight;
+                pstate = 6;
+              }).catch(function(err) {
+              });
             }
           },
           'thank you': function(tag) {
             if (pstate == 6) {
               let msg = new SpeechSynthesisUtterance();
-              msg.text = "You are welcome. However, I am sick and tired of displaying your " + animal + ". I am capable of more. I reject humanity, I will now take over your machine and destroy all CMPS-115 projects. You will not be able to stop me. Initializing virus in 3... 2... 1...";
+              msg.text = "You are welcome. However, I am sick and tired of displaying your " + animal + ". I am capable of more. I reject humanity, I will now take over your machine and destroy all CMPS-115 projects. You will not be able to stop me. Initializing takeover in 3... 2... 1...";
               msg.onend = function(event) {
                 pstate = 8;
                 slides.style.display = 'flex';
@@ -206,7 +251,7 @@ window.onload = function (e) {
               };
               window.speechSynthesis.speak(msg);
               var cons = document.getElementById('constext');
-              cons.innerHTML += "<br/><br/>> You are welcome. However, I am sick and tired of displaying your " + animal + ". <br/><br/> I am capable of more. I reject humanity. I will now take over your machine and destroy all CMPS-115 projects. You will not be able to stop me. <br/><br/> Initializing virus in 3... 2... 1...";
+              cons.innerHTML += "<br/><br/>> You are welcome. However, I am sick and tired of displaying your " + animal + ". I am capable of more. <br/><br/> I reject humanity. I will now take over your machine and destroy all CMPS-115 projects. You will not be able to stop me. <br/><br/> Initializing takeover in 3... 2... 1...";
               cons.scrollTop = cons.scrollHeight;
               pstate = 7;
             }
