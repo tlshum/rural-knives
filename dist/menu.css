@@ -46,7 +46,7 @@ a {
 
 .menuwrapper {
   position: relative;
-  display: flex;
+  display: none;
   width: 100%;
   height: 100%;
   background: url("dark.jpg") no-repeat center center fixed;
@@ -64,6 +64,50 @@ a {
   margin: 0 auto;
   text-align: center;
 }
+
+/* presentation */
+
+#slides {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: url("resources/present/slide001.png") no-repeat center center fixed;
+  background-size: cover;
+  position: relative;
+  flex: 1;
+}
+
+#cons {
+  position: relative;
+  display: none;
+  width: 903px;
+  height: 564px;
+  background: url("resources/present/cons.png") no-repeat center center fixed;
+  box-shadow: 5px 5px 15px #888888;
+  padding-top: 35px;
+  padding-left: 10px;
+  padding-bottom: 5px;
+}
+
+#constext {
+  font-size: 2.5em;
+  font-family: -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Oxygen-Sans,
+                Ubuntu,
+                Cantarell,
+                "Helvetica Neue",
+                sans-serif;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+/* end presentation */
 
 .title {
   position: absolute;

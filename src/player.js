@@ -152,10 +152,12 @@ export default class PLAYER {
     STATE.player.velocity_y = 0;
     STATE.player.velocity_x = 0;
     STATE.sounds.stop('steps');
+    STATE.sounds.stop('music');
   }
 
   static resume_game(STATE) {
     STATE.player.jump_state = STATE.player.jump_state_old;
+    STATE.sounds.play('music');
   }
 
   static update ( STATE, deltaTime ) {

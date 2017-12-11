@@ -60,34 +60,39 @@
           </ul>
           <a href="javascript:void(0)" onClick ="replay() "class="button restart">Play Again</a>
         </div>
-    </div>
-    <div class="popup3" id ="popup3">
-      <div id="game-won">
-        <ul>
-          <li class="end">MISSION SUCCESS!</li>
-          <li class="end">Congratulations you have saved the world!</li>
-          <li class="end"></li>
-        </ul>
-        <a href="javascript:void(0)" onClick ="replay() "class="button restart">Play Again</a>
       </div>
-  </div>
-  <div class="popup4" id ="popup4">
-    <div id="game-won2">
-      <ul>
-        <li class="end">MISSION SUCCESS!</li>
-        <li class="end">Congratulations you have found the special way to win!</li>
-        <li class="end">Not only did you save the world,</li>
-        <li class="end">but you found our little easter egg!</li>
-        <li class="end">As a reward, you get to play again!</li>
-        <li class="end">(If you want)</li>
-      </ul>
-      <a href="javascript:void(0)" onClick ="replay() "class="button restart">Play Again</a>
-    </div>
-</div>
+      <div class="popup3" id ="popup3">
+        <div id="game-won">
+          <ul>
+            <li class="end">MISSION SUCCESS!</li>
+            <li class="end">Congratulations, you have defeated the AI!</li>
+            <li class="end"></li>
+          </ul>
+        </div>
+      </div>
+      <div class="popup4" id ="popup4">
+        <div id="game-won2">
+          <ul>
+            <li class="end">MISSION SUCCESS!</li>
+            <li class="end">Congratulations you have found the special way to win!</li>
+            <li class="end">Not only did you save the world,</li>
+            <li class="end">but you found our little easter egg!</li>
+            <li class="end">As a reward, you get to play again!</li>
+            <li class="end">(If you want)</li>
+          </ul>
+          <a href="javascript:void(0)" onClick ="replay() "class="button restart">Play Again</a>
+        </div>
+      </div>
+      <div id = "slides">
+        <div id = "cons">
+          <div id = "constext"></div>
+        </div>
+      </div>
       <progress id="health" value="100" max="100" style="display: none;">100</progress>
     </div>
-    <script src="menu.js"></script>
     <script src="annyang.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.6/typed.min.js"></script>
+    <script src="menu.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

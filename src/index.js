@@ -17,7 +17,7 @@ STATE.scene.background = new THREE.Color( 0x000000 );
 
 STATE.camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 1, 2000 );
 STATE.camera.rotation.x = -(Math.PI*0.1);
-STATE.camera.position.set( -75, 75, 300 );
+STATE.camera.position.set( -6840, -420, 215 );
 
 STATE.clock = new THREE.Clock();
 
@@ -56,7 +56,11 @@ function loaded () {
     STATE.scene.add( light );
 
     STATE.directionalLight = new THREE.DirectionalLight( 0xddeedd, 1.75 );
-    //STATE.directionalLight.position.set( -500, 200, 300 );
+    STATE.directionalLight.position.set(
+      -6840 - 300,
+      -495 + 250,
+      -10 + 225
+    );
     STATE.directionalLight.target = STATE.player.obj;
     STATE.directionalLight.castShadow = true;
 
@@ -135,8 +139,8 @@ function loaded () {
 
     // let gui = new dat.GUI();
 
-    STATE.stats.showPanel( 0 );
-    document.body.appendChild( STATE.stats.dom );
+    // STATE.stats.showPanel( 0 );
+    // document.body.appendChild( STATE.stats.dom );
 
     STATE.container = document.getElementById('app');
     STATE.container.appendChild( STATE.renderer.domElement );
@@ -147,12 +151,10 @@ function loaded () {
     window.addEventListener( 'keydown', onKeyDown, false );
     window.addEventListener( 'keyup', onKeyUp, false );
 
-    // Music
-    STATE.sounds.play('music');
-
     // Test voice commands
 
     if (annyang) {
+        /*
         let commands = {
             'please respond': function() {
                 let msg = new SpeechSynthesisUtterance();
@@ -172,6 +174,7 @@ function loaded () {
         };
         annyang.addCommands(commands);
         annyang.start();
+        */
     }
 
     loop();
